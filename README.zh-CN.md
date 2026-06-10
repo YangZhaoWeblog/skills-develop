@@ -27,13 +27,13 @@
 项目级安装，适合只在当前仓库生效：
 
 ```bash
-npx skills add /Users/yangzhao/Code/skills-develop --agent claude-code --agent codex -y
+npx skills add /Users/yangzhao/Code/skills-develop -y
 ```
 
 全局安装，适合所有项目都可用：
 
 ```bash
-npx skills add /Users/yangzhao/Code/skills-develop --agent claude-code --agent codex -g -y
+npx skills add /Users/yangzhao/Code/skills-develop -g -y
 ```
 
 `npx skills add` 默认是项目级，`-g` 会切换成用户级安装。
