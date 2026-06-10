@@ -1,12 +1,17 @@
 # skills-develop
 
-> 面向 agent 的开发类 skill。不要放学习笔记，也不要放参考库。
+<p align="center"><em>面向 agent 的开发类 skill。不要放学习笔记，也不要放参考库。</em></p>
+
+<p align="center">
+  <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge">
+  <img alt="Agent Skills Standard" src="https://img.shields.io/badge/Agent%20Skills-Standard-6DA544?style=for-the-badge">
+  <img alt="skills.sh Compatible" src="https://img.shields.io/badge/skills.sh-Compatible-1E6FFF?style=for-the-badge">
+  <img alt="Runtime" src="https://img.shields.io/badge/Runtime-Claude%20Code%20·%20Codex%20·%20Cursor-8A2BE2?style=for-the-badge">
+</p>
+
+<p align="center"><strong>这个仓库只放 agent 应该发现并执行的开发类 skill。</strong></p>
 
 中文 | [English](README.md)
-
-这个仓库只放 agent 应该发现并执行的开发类 skill。
-
-其他语言：[English](README.md)
 
 * * *
 
@@ -24,13 +29,9 @@
 
 ## 安装
 
-项目级：
-
 ```bash
 npx skills add /Users/yangzhao/Code/skills-develop -y
 ```
-
-全局级：
 
 ```bash
 npx skills add /Users/yangzhao/Code/skills-develop -g -y
