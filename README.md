@@ -1,19 +1,46 @@
 # skills-develop
 
-English | [中文](#中文)
+> Agent-facing development skills. No study notes, no reference dump.
 
-## English
+English | [中文](README.zh-CN.md)
 
-This repository contains agent-callable skills for development work.
+This repository contains the skills agents should discover and execute when they are doing development work.
 
-### Rules
+Other languages: [中文](README.zh-CN.md)
 
-- Keep only workflows that should be discoverable by agents.
-- Do not place learning notes, study material, or personal reference archives here.
-- Put learning content in `skills-learning` and shared reusable skills in `skills-common`.
-- Install with `npx skills add <repo-or-path>` and choose project or global scope explicitly.
+* * *
 
-### Layout
+## What belongs here
+
+- workflows that change code, tests, config, docs, or repo structure
+- skills that help agents plan, diagnose, review, triage, or ship
+- reusable engineering flows that should stay discoverable
+
+## What stays out
+
+- learning notes and teaching material
+- personal reference archives
+- one-off external installs
+
+## Install
+
+Project scope:
+
+```bash
+npx skills add /Users/yangzhao/Code/skills-develop -y
+```
+
+Global scope:
+
+```bash
+npx skills add /Users/yangzhao/Code/skills-develop -g -y
+```
+
+Project scope is the default. `-g` switches to user-level installation.
+
+* * *
+
+## Layout
 
 - `skills/engineering/`
 - `skills/productivity/`
@@ -23,22 +50,6 @@ Sibling repos:
 
 - [skills-learning](../skills-learning/README.md)
 - [skills-common](../skills-common/README.md)
-
-### Install
-
-Use project scope for repo-local installs:
-
-```bash
-npx skills add /Users/yangzhao/Code/skills-develop -y
-```
-
-Use global scope when you want the skills available across all projects:
-
-```bash
-npx skills add /Users/yangzhao/Code/skills-develop -g -y
-```
-
-Project scope is the default. `-g` switches to user-level installation.
 
 ## 中文
 
