@@ -1,0 +1,24 @@
+pre-commit:
+  parallel: true
+  commands:
+    razor-block:
+      run: bash {{REPO_ROOT}}/scripts/check_razor_block.sh
+      glob: "AGENTS.md"
+    wip-equals-one:
+      run: bash {{REPO_ROOT}}/scripts/check_wip.sh
+      glob: "PROGRESS.md"
+    test-guard:
+      run: bash {{REPO_ROOT}}/scripts/check_test_guard.sh
+      glob: "**/*_test.{go,ts,py}"
+    full-check:
+      run: bash {{REPO_ROOT}}/scripts/pre_commit_check.sh
+
+commit-msg:
+  commands:
+    conventional:
+      run: bash {{REPO_ROOT}}/scripts/check_commit_msg.sh {1}
+
+pre-push:
+  commands:
+    full-gate:
+      run: bash {{REPO_ROOT}}/scripts/pre_push_check.sh
