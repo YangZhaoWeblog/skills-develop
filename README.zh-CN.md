@@ -34,7 +34,7 @@
 装到当前仓库。
 
 ```bash
-npx skills add /Users/yangzhao/Code/skills-develop -y
+npx skills@latest add YangZhaoWeblog/skills-develop -y
 ```
 
 ### 全局级
@@ -42,7 +42,7 @@ npx skills add /Users/yangzhao/Code/skills-develop -y
 装到你的用户空间。
 
 ```bash
-npx skills add /Users/yangzhao/Code/skills-develop -g -y
+npx skills@latest add YangZhaoWeblog/skills-develop -g -y
 ```
 
 `npx skills add` 默认是项目级，`-g` 会切换成用户级安装。
