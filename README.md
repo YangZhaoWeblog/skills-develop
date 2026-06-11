@@ -29,9 +29,17 @@ English | [中文](README.zh-CN.md)
 
 ## Install
 
+### Project scope
+
+Install into the current repo.
+
 ```bash
 npx skills add /Users/yangzhao/Code/skills-develop -y
 ```
+
+### Global scope
+
+Install into your user space.
 
 ```bash
 npx skills add /Users/yangzhao/Code/skills-develop -g -y
@@ -40,6 +48,12 @@ npx skills add /Users/yangzhao/Code/skills-develop -g -y
 Project scope is the default. `-g` switches to user-level installation.
 
 * * *
+
+## Skills
+
+| Skill | What it does |
+| --- | --- |
+| `td-harness-init` | Bootstraps the td-harness in a repo. |
 
 ## Layout
 
