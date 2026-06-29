@@ -53,7 +53,8 @@ npx skills@latest add YangZhaoWeblog/skills-develop -g -y
 
 | Skill | 作用 |
 | --- | --- |
-| `td-harness-init` | 在仓库里初始化 td-harness。 |
+| `harness-init` | 生成精炼、可演进的 AGENTS.md 与 harness/ 基线。 |
+| `harness-score` | 审视现有 harness，并输出离线 HTML 评分报告。 |
 
 ## 目录
 

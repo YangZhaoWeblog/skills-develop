@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness Score"
+  short_description: "Review a project agent harness."
+  default_prompt: "Score this project harness and produce an offline HTML report with findings and next actions."

@@ -53,7 +53,8 @@ Project scope is the default. `-g` switches to user-level installation.
 
 | Skill | What it does |
 | --- | --- |
-| `td-harness-init` | Bootstraps the td-harness in a repo. |
+| `harness-init` | Generates a concise, evolvable AGENTS.md and harness/ baseline. |
+| `harness-score` | Reviews an existing harness and renders an offline HTML score report. |
 
 ## Layout
 
