@@ -1,4 +1,4 @@
 interface:
   display_name: "Harness Init"
-  short_description: "Generate a project agent harness."
-  default_prompt: "Initialize a concise, evolvable AGENTS.md and harness/ baseline for this project."
+  short_description: "Generate a concise project agent harness."
+  default_prompt: "Use $harness-init to initialize a concise AGENTS.md, harness/ baseline, and code-project PGE support when applicable."

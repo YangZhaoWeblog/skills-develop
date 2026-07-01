@@ -39,7 +39,8 @@ Do not add new top-level directories unless the user or project convention expli
 5. Use explicit error wrapping and project-approved error surfaces when applicable.
 6. Write project-facing docs and comments in the language already used by the project.
 7. Before writing production code, pass Coding Start Check in [workflow-gates.md](harness/workflow-gates.md).
-8. Before final delivery or commit, run verification appropriate to the change and record commands.
+8. Medium+ work enters PGE in Path stage; if Generator / Evaluator cannot be independent, record fallback instead of silently working solo.
+9. Before final delivery or commit, run verification appropriate to the change and record commands.
 
 ## Task Routing
 
@@ -79,6 +80,8 @@ Rule growth, ownership, and harness maintenance are governed by [instruction-gov
 | Testing | unit, integration, regression, verification evidence | [testing.md](harness/testing.md) |
 | Code review | independent review, checklist, reject reasons | [code-review.md](harness/code-review.md) |
 | Large-work protocol | contracts, generator/evaluator, fallback, circuit breaker | [pge-protocol.md](harness/pge-protocol.md) |
+| PGE agents | generator/evaluator execution prompts | [.codex/agents/](.codex/agents/) |
+| PGE templates | sprint contract and evaluator report | [docs/pge/](docs/pge/) |
 | API | public interface and compatibility | [api-standards.md](harness/api-standards.md) |
 | Database | schema, migration, transactions | [database.md](harness/database.md) |
 | Dependencies | downstream services, events, module boundaries | [dependency-map.md](harness/dependency-map.md) |

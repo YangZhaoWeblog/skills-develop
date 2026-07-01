@@ -5,7 +5,7 @@ description: Generate a project-specific AI agent harness baseline. Use when a u
 
 # Harness Init
 
-Use this skill to create an evolvable project harness: a short `AGENTS.md` entry plus a `harness/` rule set with clear ownership, active/stub status, and a universal/profile/project-grown layer split.
+Use this skill to create an evolvable project harness: a short `AGENTS.md` entry, a `harness/` rule set, and lightweight PGE agent/templates for code projects, with clear ownership, active/stub status, and a universal/profile/project-grown layer split.
 
 ## Workflow
 
@@ -28,6 +28,8 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 
 4. **Generate**
    - If no `AGENTS.md` or `harness/` exists, create the baseline from [assets/baseline](assets/baseline).
+   - For code projects, copy the full baseline including `.codex/agents/` and `docs/pge/`.
+   - For non-code projects, keep PGE only as explicit stubs; do not omit the PGE files and then patch references piecemeal.
    - If an existing harness exists, do not overwrite by default. Generate an adoption plan from [templates/init-plan.md](templates/init-plan.md).
    - Only overwrite existing harness files when the user explicitly asks for overwrite.
 
@@ -38,6 +40,9 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 
 - Keep `AGENTS.md` short: identity, stack, commands, hard rules, task routing, workflow, index.
 - Generate all baseline harness files, but mark each as `active` or `stub`.
+- For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, and `docs/pge/eval.template.md`.
+- PGE is not only a document. It must define Generator and Evaluator roles, TDD tracer bullet expectations, independent evaluation, fallback, and the files used for handoff.
+- PGE files being present does not mean every task uses PGE. Small local changes may remain solo under `harness/pge-protocol.md`.
 - Every harness file starts with:
 
 ```md
@@ -73,6 +78,12 @@ Activate by profile, otherwise keep stub:
 - `harness/database.md`
 - `harness/dependency-map.md`
 - `harness/deployment.md`
+
+Active for code-project PGE baseline:
+- `.codex/agents/pge-generator.toml`
+- `.codex/agents/pge-evaluator.toml`
+- `docs/pge/spec.template.md`
+- `docs/pge/eval.template.md`
 
 ## Writing Style
 

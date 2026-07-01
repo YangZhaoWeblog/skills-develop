@@ -16,6 +16,13 @@
 
 For risky behavior, start with a failing test or tracer bullet before broad implementation.
 
+For PGE tasks, TDD is owned by the Generator:
+
+- one behavior test or tracer bullet at a time;
+- confirm RED before implementation when an automated test is possible;
+- if no automated test is feasible, record why and use the smallest manual verification cut;
+- Evaluator must check that tests were not weakened.
+
 ## Verification Selection
 
 - Docs only: whitespace/diff checks.

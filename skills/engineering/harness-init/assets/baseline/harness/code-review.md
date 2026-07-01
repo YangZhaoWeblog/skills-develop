@@ -19,6 +19,7 @@
 - Reference files and lines.
 - Distinguish blockers from notes.
 - Do not use author self-review as a substitute for independent review on non-trivial changes.
+- PGE tasks require independent Evaluator review before close; if unavailable, record fallback and residual risk.
 
 ## Reject Reasons
 
@@ -27,3 +28,4 @@
 - Public API or schema change without owner documentation.
 - Unrelated rewrite or formatting noise.
 - Workflow gate or circuit breaker bypass.
+- PGE Generator / Evaluator silently collapsed into one role on medium+ work.
