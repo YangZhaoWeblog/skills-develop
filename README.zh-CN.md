@@ -47,6 +47,28 @@ npx skills@latest add YangZhaoWeblog/skills-develop -g -y
 
 `npx skills add` 默认是项目级，`-g` 会切换成用户级安装。
 
+### 单个 skill
+
+只安装仓库里的一个 skill：
+
+```bash
+npx skills@latest add YangZhaoWeblog/skills-develop --skill harness-init -y
+```
+
+只安装一个本地 skill 目录：
+
+```bash
+npx skills@latest add /Users/yangzhao/Code/skills-develop/skills/engineering/harness-init -y
+```
+
+不安装，直接生成单个 skill 的使用 prompt：
+
+```bash
+npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
+```
+
+把 `harness-init` 或本地路径换成目标 skill；要全局安装这个单个 skill 时加 `-g`。
+
 * * *
 
 ## Skill

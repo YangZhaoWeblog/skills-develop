@@ -47,6 +47,28 @@ npx skills@latest add YangZhaoWeblog/skills-develop -g -y
 
 Project scope is the default. `-g` switches to user-level installation.
 
+### Single skill
+
+Install only one skill from this repository.
+
+```bash
+npx skills@latest add YangZhaoWeblog/skills-develop --skill harness-init -y
+```
+
+Install one local skill directory.
+
+```bash
+npx skills@latest add /Users/yangzhao/Code/skills-develop/skills/engineering/harness-init -y
+```
+
+Use one skill without installing it.
+
+```bash
+npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
+```
+
+Replace `harness-init` with the target skill name. Add `-g` to install that single skill globally.
+
 * * *
 
 ## Skills
@@ -104,3 +126,17 @@ npx skills add /Users/yangzhao/Code/skills-develop -g -y
 ```
 
 `npx skills add` 默认是项目级，`-g` 会切换成用户级安装。
+
+只安装一个 skill：
+
+```bash
+npx skills add /Users/yangzhao/Code/skills-develop/skills/engineering/harness-init -y
+```
+
+不安装，直接生成单个 skill 的使用 prompt：
+
+```bash
+npx skills use YangZhaoWeblog/skills-develop@harness-init
+```
+
+把 `harness-init` 或本地路径换成目标 skill；要全局安装这个单个 skill 时加 `-g`。
