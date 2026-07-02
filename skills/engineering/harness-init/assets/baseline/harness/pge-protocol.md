@@ -49,6 +49,8 @@ Default templates:
 - `docs/pge/spec.template.md`
 - `docs/pge/eval.template.md`
 
+Artifact existence and spec/eval pairing can be checked explicitly with `scripts/check_pge_artifacts.sh`. Prefer Makefile targets named `check-pge`, `check-pge-required`, and `check-pge-design-required` when the repository has a Makefile. Do not attach this check to pre-commit by default; small tasks and in-progress contracts may validly lack PGE close-out artifacts.
+
 ## Generator Protocol
 
 - Start only after the contract is locked or after an Implementation Probe is requested.

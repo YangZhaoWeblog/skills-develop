@@ -41,6 +41,14 @@ Before production code:
 
 Run the smallest meaningful verification for the change. Record commands and results. Do not silently skip required verification.
 
+For repositories using the PGE baseline, keep artifact checks explicit rather than hook-enforced:
+
+- daily self-check: `make check-pge` or `bash scripts/check_pge_artifacts.sh`;
+- medium+ / batch / single public-interface / critical-flow close-out: `make check-pge-required` or `PGE_REQUIRED=1 bash scripts/check_pge_artifacts.sh`;
+- large-work close-out: `make check-pge-design-required` or `PGE_REQUIRED=1 DESIGN_REQUIRED=1 bash scripts/check_pge_artifacts.sh`.
+
+The checker validates only file existence and spec/eval pairing for changed or explicitly provided PGE/design artifacts. It does not inspect Markdown template sections or decide whether a small task needs PGE. When reusing existing artifacts, set `PGE_SPEC=docs/pge/<sprint>-spec.md` or `DESIGN_DOC=docs/design/DESIGN-xxx-name.md`.
+
 ## Circuit Breaker Gate
 
 If the same interface or flow fails 3 rounds of tests, reference alignment, or review, stop implementation and return to design or clarification.
