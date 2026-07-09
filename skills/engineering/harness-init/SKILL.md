@@ -47,7 +47,7 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 - Generate all baseline harness files, but mark each as `active` or `stub`.
 - For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.agents/skills/pge-workflow/SKILL.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, and `docs/pge/eval.template.md`.
 - Include `scripts/check_pge_artifacts.sh` for code projects. It checks PGE artifact existence and spec/eval pairing, not Markdown template structure or task size.
-- PGE is not only a document. It must define Generator and Evaluator roles, TDD tracer bullet expectations, independent evaluation, fallback, and the files used for handoff.
+- PGE is not only a document. It must define Generator and Evaluator roles, TDD tracer bullet expectations, independent evaluation, fallback, parallel dispatch, and the files used for handoff.
 - PGE files being present does not mean every task uses PGE. Small local changes may remain solo under `harness/pge-protocol.md`.
 - Every harness file starts with:
 

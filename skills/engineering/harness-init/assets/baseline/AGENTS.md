@@ -32,7 +32,7 @@ Do not add new top-level directories unless the user or project convention expli
 
 ## Rules
 
-1. Start implementation by stating one-sentence goal and up to 3 clarification TODOs; write `无待澄清` when clear.
+1. Start implementation by stating one-sentence goal and hard-blocking clarification; write `无硬阻塞` when clear.
 2. Respect existing local changes. Never revert unrelated user work.
 3. Follow the project layering and ownership rules in [coding-style.md](harness/coding-style.md).
 4. Route data, API, dependency, deployment, and test changes to their owner harness files.
@@ -57,7 +57,7 @@ Do not add new top-level directories unless the user or project convention expli
 
 All tasks follow one main workflow. Topic-specific protocols are subflows, not bypasses.
 
-1. **Intake**: capture goal and clarification TODOs.
+1. **Intake**: capture goal and hard-blocking clarification; write `无硬阻塞` when clear.
 2. **Context**: read this file, relevant harness files, target files, tests, and failure notes.
 3. **Size & Risk**: classify small / medium / large and detect API, DB, dependency, deployment, or critical-flow risk.
 4. **Path**: small work may proceed directly; medium+ or critical work uses `$pge-workflow` to enter the relevant subflow and then returns here.

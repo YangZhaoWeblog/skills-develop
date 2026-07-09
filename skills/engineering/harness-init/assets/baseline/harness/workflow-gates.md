@@ -19,7 +19,7 @@ Escalate when scope grows, when public API/DB/deployment changes appear, or when
 
 ## Path Gate
 
-Small work may proceed after Coding Start Check. Medium+ and critical-flow work must use the relevant protocol in `pge-protocol.md` or a project-specific design process, then return to Verify and Close.
+Small work may proceed after Coding Start Check. Medium+ and critical-flow work must use `$pge-workflow` and the relevant protocol in `pge-protocol.md` or a project-specific design process, then return to Verify and Close.
 
 ## Coding Start Check
 
@@ -56,3 +56,7 @@ If the same interface or flow fails 3 rounds of tests, reference alignment, or r
 ## Commit Gate
 
 Before commit, confirm Coding Start Check still holds, verification ran, review requirements are satisfied, and no unrelated files are included.
+
+Serial tasks default to the current workspace and a semantic branch. Parallel code-writing defaults to `git worktree`, one PGE per worktree and branch. Do not let multiple agents modify production code in the same workspace.
+
+Parallel PGE must first satisfy `pge-protocol.md` independent acceptance and file-boundary requirements. Shared protocol files, migrations, state machines, public-interface hot zones, or shared helper hot zones are serial work.

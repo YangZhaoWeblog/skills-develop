@@ -15,8 +15,9 @@ The project PGE policy source of truth is `harness/pge-protocol.md`. This skill 
 2. Decide whether PGE is required.
 3. If PGE is required, ensure the task has a Sprint Contract or produce the smallest contract draft.
 4. Run Challenge Gate before locking the contract.
-5. Route implementation to `pge-generator` and challenge or acceptance to `pge-evaluator` when those agents are actually available.
-6. If independent agents are not available, record fallback before proceeding.
+5. Decide whether the locked contract has independent slices that can be dispatched in parallel.
+6. Route implementation to `pge-generator` and challenge or acceptance to `pge-evaluator` when those agents are actually available.
+7. If independent agents are not available, record fallback before proceeding.
 
 ## Activation
 
@@ -52,6 +53,28 @@ Ask `pge-evaluator` for a Contract Challenge:
 
 The main agent summarizes the result. If there is no blocker, lock the Contract. If there is a blocker, return to user grill. Do not let Generator and Evaluator negotiate indefinitely.
 
+## Parallel Dispatch
+
+Policy lives in `harness/pge-protocol.md`; this skill owns orchestration.
+
+The main agent decides parallel dispatch after the contract is locked:
+
+- Use parallel dispatch only when the contract lists independently testable slices with clear file boundaries.
+- Record the dispatch decision in the Sprint Contract or active status document.
+- Dispatch one agent per independent slice.
+- Give each agent a self-contained prompt: scope, goal, constraints, expected output, spec path, and verify command.
+- Prefer one `git worktree` and branch per code-writing PGE slice.
+- Keep read-only research, Contract Challenge, and Evaluator checks separate from code-writing slices.
+- Do not dispatch parallel code-writing agents for the same RPC, state machine, migration, proto, generated files, or shared helper hot zone.
+
+The main agent remains responsible for integration:
+
+- collect all agent summaries and diffs
+- check conflicts and scope drift
+- run final `verify_cmd`
+- update the active spec/status document
+- hand the integrated diff to Evaluator
+
 ## Output Contract
 
 When this skill is used, the main agent must report or record:
@@ -65,6 +88,20 @@ When this skill is used, the main agent must report or record:
   "agent_usage": {
     "generator": "independent | unavailable | not_needed",
     "evaluator": "independent | unavailable | not_needed"
+  },
+  "parallel_dispatch": {
+    "enabled": false,
+    "reason": "not independent / no code-writing slices / worktree unavailable / enabled by locked contract",
+    "slices": [
+      {
+        "name": "slice name",
+        "spec_path": "docs/pge/<sprint>-spec.md",
+        "worktree": "path or current workspace",
+        "branch": "branch name",
+        "scope": "owned files or behavior boundary",
+        "verify_cmd": "slice-level command"
+      }
+    ]
   },
   "fallback": null,
   "verify_cmd": "command to run or expected command",
@@ -98,4 +135,5 @@ If project agents cannot be spawned, record fallback JSON in the Sprint Contract
 - Do not copy the full PGE policy here; `harness/pge-protocol.md` remains the policy source of truth.
 - Do not copy full testing or TDD rules here; Generator must follow the project's testing and TDD rules.
 - Do not edit production code before the contract is locked, except for explicitly scoped probes allowed by `harness/pge-protocol.md`.
+- Do not let dispatched agents negotiate scope with each other; the main agent owns dispatch, integration, and final handoff.
 - Keep `harness/pge-protocol.md` as the PGE policy source of truth.

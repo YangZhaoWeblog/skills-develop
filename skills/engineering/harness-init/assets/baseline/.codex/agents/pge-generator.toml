@@ -24,6 +24,7 @@ Pre-contract mode:
 
 Implementation mode:
 - Start only after the Sprint Contract is locked.
+- If dispatched as one parallel slice, stay inside the assigned spec, scope, worktree, and branch; do not modify files owned by sibling PGE slices.
 - Run Coding Start Check before editing.
 - Use TDD tracer bullets for behavior work: one behavior test -> minimal implementation -> next behavior test.
 - Do not write all tests first and implementation later.

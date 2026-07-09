@@ -5,7 +5,7 @@
 > layer: profile
 > This file owns Planner / Generator / Evaluator workflow; it does not replace the main workflow in `AGENTS.md`.
 
-Use `$pge-workflow` as the PGE routing and Challenge Gate entrypoint. This file remains the policy source of truth.
+Use `$pge-workflow` as the PGE routing, Challenge Gate, fallback, and parallel-dispatch entrypoint. This file remains the policy source of truth.
 
 ## Activation
 
@@ -36,7 +36,7 @@ If the runtime cannot spawn independent agents, record fallback. Do not silently
 
 ## Skill Relationship
 
-- `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Challenge Gate coordination, fallback status shape, and handoff prompts.
+- `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Challenge Gate coordination, fallback status shape, parallel-dispatch orchestration, and handoff prompts.
 - This file owns the PGE policy, role boundaries, contract requirements, fallback rules, and circuit breaker.
 - Project-level agents own execution and evaluation only when the runtime explicitly dispatches them.
 
@@ -56,6 +56,33 @@ Default templates:
 
 - `docs/pge/spec.template.md`
 - `docs/pge/eval.template.md`
+
+## Design / PGE Relationship
+
+- `docs/design/*.md` is the long-lived map for cross-sprint background, route, boundaries, and hard decisions.
+- `docs/pge/*-spec.md` is the per-sprint execution contract for goal, scope, acceptance, non-goals, order, and RED plan.
+- `docs/pge/*-eval.md` is the per-sprint acceptance report for contract completion, verification commands, and residual risks.
+- Create design first for large, cross-sprint, architectural, state-machine, or domain-boundary changes.
+- Create a PGE spec for medium+, batch, single public-interface, or critical-flow work.
+- One design may produce multiple independently acceptable PGE specs; design does not replace the PGE spec.
+
+## Parallel PGE
+
+Multiple PGE specs under the same design may run in parallel only when the locked contract records slice boundaries, file boundaries, and independently decidable acceptance criteria.
+
+Allowed:
+
+- read-only research, Contract Challenge, and Evaluator checks;
+- non-overlapping public-interface, package, or documentation slices;
+- implementation slices that do not share generated files, migrations, protocol files, state machines, or shared helper hot zones.
+
+Forbidden:
+
+- same public interface, state machine, migration, or protocol file;
+- competing edits to the same file hot zone or shared helper;
+- unlocked contracts or acceptance that cannot be decided independently.
+
+The main agent owns the design map, slice list, dispatch prompts, diff integration, conflict resolution, final `verify_cmd`, and Evaluator handoff.
 
 Artifact existence and spec/eval pairing can be checked explicitly with `scripts/check_pge_artifacts.sh`. Prefer Makefile targets named `check-pge`, `check-pge-required`, and `check-pge-design-required` when the repository has a Makefile. Do not attach this check to pre-commit by default; small tasks and in-progress contracts may validly lack PGE close-out artifacts.
 

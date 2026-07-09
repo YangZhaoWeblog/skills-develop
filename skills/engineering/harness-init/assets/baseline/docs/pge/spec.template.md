@@ -13,6 +13,7 @@
 | Planner | TBD |
 | Generator | TBD |
 | Evaluator | TBD |
+| Parent design | None / `docs/design/<name>.md` |
 | Status | TBD |
 
 ## PGE Fallback
@@ -27,6 +28,33 @@
     "mitigations": [],
     "restore_condition": "",
     "owner_ack_required": false
+  }
+}
+```
+
+## Design / PGE Relationship
+
+- Parent design: None / `docs/design/<name>.md`
+- Sibling PGE specs: None / `docs/pge/<other>-spec.md`
+- Independently acceptable: yes / no, reason TBD
+
+## Parallel Dispatch
+
+```json
+{
+  "parallel_dispatch": {
+    "enabled": false,
+    "reason": "",
+    "slices": [
+      {
+        "name": "",
+        "spec_path": "",
+        "worktree": "",
+        "branch": "",
+        "scope": "",
+        "verify_cmd": ""
+      }
+    ]
   }
 }
 ```

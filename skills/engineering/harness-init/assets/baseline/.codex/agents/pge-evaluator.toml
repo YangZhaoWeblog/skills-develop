@@ -25,6 +25,7 @@ Evaluation mode:
 - Validate Contract compliance before code quality.
 - Run the smallest necessary verification commands when feasible.
 - Check that Generator used TDD tracer bullets where required.
+- If parallel dispatch was used, check the integrated diff for conflicts, scope drift, missing slice verification, and final verify_cmd coverage.
 - Check that existing tests were not weakened.
 - Check user-data, API, migration, dependency, and manual-verification risks.
 - Do not modify code, tests, generated files, or docs to fix issues.

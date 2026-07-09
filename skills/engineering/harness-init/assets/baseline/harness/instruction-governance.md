@@ -36,3 +36,17 @@
 ## Maintenance
 
 When a harness file grows too large or starts owning multiple topics, split by owner rather than adding more sections.
+
+## Hard-Blocking Clarification
+
+Hard-blocking clarification is only for questions where safe progress is impossible without the answer. It does not own design exploration, PGE planning, or review.
+
+- When clear, write `硬阻塞澄清：无硬阻塞` and continue.
+- When uncertainty can be handled by a low-risk assumption, state the assumption and continue with reversible work.
+- When continuing would be high-risk or irreversible, stop and ask only the required user question.
+
+## Multi-Agent Activation
+
+Evaluate multi-agent use when independent evaluation is required, slices are independently acceptable, the task spans multiple modules, or Planner / Generator / Evaluator separation is needed.
+
+PGE tasks use `$pge-workflow` and `harness/pge-protocol.md` to decide independent agents, fallback, or parallel dispatch. Ask the user only when owner acknowledgement, platform permission, extra workspace cost, or irreversible parallel code-writing is involved.
