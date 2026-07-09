@@ -84,7 +84,7 @@ Forbidden:
 
 The main agent owns the design map, slice list, dispatch prompts, diff integration, conflict resolution, final `verify_cmd`, and Evaluator handoff.
 
-Artifact existence and spec/eval pairing can be checked explicitly with `scripts/check_pge_artifacts.sh`. Prefer Makefile targets named `check-pge`, `check-pge-required`, and `check-pge-design-required` when the repository has a Makefile. Do not attach this check to pre-commit by default; small tasks and in-progress contracts may validly lack PGE close-out artifacts.
+Until the repository chooses an explicit check scheme, do not add standalone PGE artifact-check scripts or hook-enforced Makefile targets. Contract and eval completeness are reviewed through `$pge-workflow`, the active Sprint Contract, and the Evaluator report.
 
 ## Generator Protocol
 
