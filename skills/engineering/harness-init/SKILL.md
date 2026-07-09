@@ -28,7 +28,7 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 
 4. **Generate**
    - If no `AGENTS.md` or `harness/` exists, create the baseline from [assets/baseline](assets/baseline).
-   - For code projects, copy the full baseline including `.codex/agents/` and `docs/pge/`.
+   - For code projects, copy the full baseline including `.agents/skills/pge-workflow/`, `.codex/agents/`, and `docs/pge/`.
    - For code projects with `Makefile`, add explicit PGE artifact checks instead of hook enforcement:
      - `check-pge`: `bash scripts/check_pge_artifacts.sh`
      - `check-pge-required`: `PGE_REQUIRED=1 bash scripts/check_pge_artifacts.sh`
@@ -45,7 +45,7 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 
 - Keep `AGENTS.md` short: identity, stack, commands, hard rules, task routing, workflow, index.
 - Generate all baseline harness files, but mark each as `active` or `stub`.
-- For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, and `docs/pge/eval.template.md`.
+- For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.agents/skills/pge-workflow/SKILL.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, and `docs/pge/eval.template.md`.
 - Include `scripts/check_pge_artifacts.sh` for code projects. It checks PGE artifact existence and spec/eval pairing, not Markdown template structure or task size.
 - PGE is not only a document. It must define Generator and Evaluator roles, TDD tracer bullet expectations, independent evaluation, fallback, and the files used for handoff.
 - PGE files being present does not mean every task uses PGE. Small local changes may remain solo under `harness/pge-protocol.md`.
@@ -86,6 +86,7 @@ Activate by profile, otherwise keep stub:
 - `harness/deployment.md`
 
 Active for code-project PGE baseline:
+- `.agents/skills/pge-workflow/SKILL.md`
 - `.codex/agents/pge-generator.toml`
 - `.codex/agents/pge-evaluator.toml`
 - `docs/pge/spec.template.md`

@@ -5,6 +5,8 @@
 > layer: profile
 > This file owns Planner / Generator / Evaluator workflow; it does not replace the main workflow in `AGENTS.md`.
 
+Use `$pge-workflow` as the PGE routing and Challenge Gate entrypoint. This file remains the policy source of truth.
+
 ## Activation
 
 Use PGE by default for:
@@ -31,6 +33,12 @@ Project-level Codex agents live in:
 - `.codex/agents/pge-evaluator.toml`
 
 If the runtime cannot spawn independent agents, record fallback. Do not silently collapse roles.
+
+## Skill Relationship
+
+- `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Challenge Gate coordination, fallback status shape, and handoff prompts.
+- This file owns the PGE policy, role boundaries, contract requirements, fallback rules, and circuit breaker.
+- Project-level agents own execution and evaluation only when the runtime explicitly dispatches them.
 
 ## Sprint Contract
 
