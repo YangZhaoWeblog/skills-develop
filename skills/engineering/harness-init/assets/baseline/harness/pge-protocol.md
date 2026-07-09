@@ -57,6 +57,8 @@ Default templates:
 - `docs/pge/spec.template.md`
 - `docs/pge/eval.template.md`
 
+When `scripts/check_pge_contracts.sh` exists, check the active spec before Challenge Gate and the eval draft before Evaluator acceptance. The script checks structure only; requirement quality, semantic drift, and acceptance sufficiency remain Challenge Gate / Evaluator responsibilities.
+
 ## Design / PGE Relationship
 
 - `docs/design/*.md` is the long-lived map for cross-sprint background, route, boundaries, and hard decisions.
@@ -84,7 +86,7 @@ Forbidden:
 
 The main agent owns the design map, slice list, dispatch prompts, diff integration, conflict resolution, final `verify_cmd`, and Evaluator handoff.
 
-Until the repository chooses an explicit check scheme, do not add standalone PGE artifact-check scripts or hook-enforced Makefile targets. Contract and eval completeness are reviewed through `$pge-workflow`, the active Sprint Contract, and the Evaluator report.
+The baseline provides `scripts/check_pge_contracts.sh` as a structure checker. Hook, Make, or CI enablement remains a target-repository decision; do not write `.git/hooks/*` directly.
 
 ## Generator Protocol
 

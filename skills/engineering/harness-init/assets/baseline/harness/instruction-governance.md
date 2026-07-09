@@ -37,6 +37,12 @@
 
 When a harness file grows too large or starts owning multiple topics, split by owner rather than adding more sections.
 
+## Plan Mode Workflow Check
+
+Before outputting `<proposed_plan>`, complete a light workflow check: Intake, Context, Size & Risk, Path, and Verify.
+
+If the plan touches medium+ work, PGE, hooks, commits, cross-repository sync, or harness governance, state which workflow path is used and why full PGE is or is not required.
+
 ## Hard-Blocking Clarification
 
 Hard-blocking clarification is only for questions where safe progress is impossible without the answer. It does not own design exploration, PGE planning, or review.

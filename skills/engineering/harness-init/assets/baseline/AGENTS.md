@@ -76,6 +76,7 @@ Rule growth, ownership, and harness maintenance are governed by [instruction-gov
 | Local development | tools, commands, local run/debug | [development.md](harness/development.md) |
 | Workflow gates | context, sizing, start, verify, commit, circuit breaker | [workflow-gates.md](harness/workflow-gates.md) |
 | Instruction governance | rule ownership and harness evolution | [instruction-governance.md](harness/instruction-governance.md) |
+| Hook governance | git / Codex hook boundaries and enablement guidance | [hooks-governance.md](harness/hooks-governance.md) |
 | Coding style | architecture, naming, layering | [coding-style.md](harness/coding-style.md) |
 | Testing | unit, integration, regression, verification evidence | [testing.md](harness/testing.md) |
 | Code review | independent review, checklist, reject reasons | [code-review.md](harness/code-review.md) |

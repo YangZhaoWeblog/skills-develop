@@ -28,8 +28,8 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 
 4. **Generate**
    - If no `AGENTS.md` or `harness/` exists, create the baseline from [assets/baseline](assets/baseline).
-   - For code projects, copy the full baseline including `.agents/skills/pge-workflow/`, `.codex/agents/`, and `docs/pge/`.
-   - Do not generate PGE artifact-check scripts or Makefile targets by default; wait for the target repository to choose an explicit check scheme.
+   - For code projects, copy the full baseline including `.agents/skills/pge-workflow/`, `.codex/agents/`, `docs/pge/`, `harness/hooks-governance.md`, and `scripts/check_pge_contracts.sh`.
+   - Do not write `.git/hooks/*` directly. Tell the user the PGE checker is available and can be connected to pre-commit, Make, or CI.
    - For non-code projects, keep PGE only as explicit stubs; do not omit the PGE files and then patch references piecemeal.
    - If an existing harness exists, do not overwrite by default. Generate an adoption plan from [templates/init-plan.md](templates/init-plan.md).
    - Only overwrite existing harness files when the user explicitly asks for overwrite.
@@ -41,8 +41,8 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 
 - Keep `AGENTS.md` short: identity, stack, commands, hard rules, task routing, workflow, index.
 - Generate all baseline harness files, but mark each as `active` or `stub`.
-- For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.agents/skills/pge-workflow/SKILL.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, and `docs/pge/eval.template.md`.
-- Do not include standalone PGE artifact-check scripts in the baseline until the target repository has chosen a concrete check scheme.
+- For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.agents/skills/pge-workflow/SKILL.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, `docs/pge/eval.template.md`, and `scripts/check_pge_contracts.sh`.
+- The PGE checker is a provided capability, not an enabled hook. The target repository decides whether to connect it to pre-commit, Make, or CI.
 - PGE is not only a document. It must define Generator and Evaluator roles, TDD tracer bullet expectations, independent evaluation, fallback, parallel dispatch, and the files used for handoff.
 - PGE files being present does not mean every task uses PGE. Small local changes may remain solo under `harness/pge-protocol.md`.
 - Every harness file starts with:
@@ -66,6 +66,7 @@ Default active:
 - `harness/development.md`
 - `harness/workflow-gates.md`
 - `harness/instruction-governance.md`
+- `harness/hooks-governance.md`
 - `harness/testing.md`
 - `harness/code-review.md`
 - `harness/failures.md`
@@ -87,6 +88,7 @@ Active for code-project PGE baseline:
 - `.codex/agents/pge-evaluator.toml`
 - `docs/pge/spec.template.md`
 - `docs/pge/eval.template.md`
+- `scripts/check_pge_contracts.sh`
 
 ## Writing Style
 

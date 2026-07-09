@@ -41,7 +41,7 @@ Before production code:
 
 Run the smallest meaningful verification for the change. Record commands and results. Do not silently skip required verification.
 
-For repositories using the PGE baseline, do not add standalone artifact-check scripts or hook-enforced Makefile targets by default. Verify PGE completeness through the active Sprint Contract, Evaluator report, and recorded `verify_cmd` until a repository-specific check scheme is chosen.
+For repositories using the PGE baseline, `scripts/check_pge_contracts.sh` provides PGE document structure checks. Use it explicitly in workflow and connect it to pre-commit, Make, or CI only when the target repository chooses that integration.
 
 ## Circuit Breaker Gate
 

@@ -14,10 +14,27 @@ The project PGE policy source of truth is `harness/pge-protocol.md`. This skill 
 1. Read `AGENTS.md`, `harness/pge-protocol.md`, and any existing PGE status/spec files named by the task.
 2. Decide whether PGE is required.
 3. If PGE is required, ensure the task has a Sprint Contract or produce the smallest contract draft.
-4. Run Challenge Gate before locking the contract.
-5. Decide whether the locked contract has independent slices that can be dispatched in parallel.
-6. Route implementation to `pge-generator` and challenge or acceptance to `pge-evaluator` when those agents are actually available.
-7. If independent agents are not available, record fallback before proceeding.
+4. If `scripts/check_pge_contracts.sh` exists, run it against the active spec before Challenge Gate.
+5. Run Challenge Gate before locking the contract.
+6. Decide whether the locked contract has independent slices that can be dispatched in parallel.
+7. Route implementation to `pge-generator` and challenge or acceptance to `pge-evaluator` when those agents are actually available.
+8. If independent agents are not available, record fallback before proceeding.
+
+## Structure Check
+
+When the repository provides `scripts/check_pge_contracts.sh`, use it as a machine-only structure check:
+
+```bash
+bash scripts/check_pge_contracts.sh docs/pge/<sprint>-spec.md
+```
+
+Before Evaluator acceptance starts, check the eval draft too:
+
+```bash
+bash scripts/check_pge_contracts.sh docs/pge/<sprint>-eval.md
+```
+
+The script only checks required sections and pairing. It does not judge requirement quality, semantic drift, or acceptance sufficiency; those remain Challenge Gate and Evaluator responsibilities.
 
 ## Activation
 
