@@ -27,7 +27,10 @@
     "lost_guarantees": [],
     "mitigations": [],
     "restore_condition": "",
-    "owner_ack_required": false
+    "main_agent_self_review": "not_required",
+    "owner_ack_required": false,
+    "owner_ack_status": "not_required",
+    "independent_evaluator_assurance": "available"
   }
 }
 ```

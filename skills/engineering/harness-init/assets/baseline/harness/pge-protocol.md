@@ -27,6 +27,8 @@ Small docs/config/single-module changes may stay solo, but still need scoped ver
 | Generator | Implement only the locked contract with TDD tracer bullets | code, tests, `verify_cmd`, contract/status update |
 | Evaluator | Independently challenge contract and validate diff | `PASS`, `PASS_WITH_NOTES`, or `FAIL` with findings |
 
+The final Evaluator is also the PGE task's independent AI code review: it checks contract compliance, code quality, tests, and residual risk. Do not dispatch a duplicate generic AI reviewer after normal PGE evaluation. During fallback, a generic AI reviewer may add clearly labeled supplemental findings, but cannot substitute for a missing Evaluator or restore its assurance. This AI gate does not replace human PR review when the repository requires it.
+
 Project-level Codex agents live in:
 
 - `.codex/agents/pge-generator.toml`
@@ -104,6 +106,8 @@ The baseline provides `scripts/check_pge_contracts.sh` as a structure checker. H
 
 Evaluator is independent from implementation and does not edit files.
 
+Apply `harness/code-review.md` during final evaluation and include a separate code-quality conclusion. Any critical code-review finding requires `FAIL`.
+
 Check in this order:
 
 1. contract compliance;
@@ -116,7 +120,7 @@ Check in this order:
 Return exactly one conclusion:
 
 - `PASS`: contract met, no blocker;
-- `PASS_WITH_NOTES`: acceptable with explicit residual risk;
+- `PASS_WITH_NOTES`: acceptable only after the owner explicitly accepts the residual risk;
 - `FAIL`: blocker, key contract miss, weakened tests, or unsafe scope drift.
 
 ## Fallback
@@ -128,14 +132,27 @@ When independent Generator or Evaluator is unavailable, write:
   "pge_fallback": {
     "enabled": true,
     "reason": "runtime cannot spawn independent PGE agent",
-    "roles_collapsed": ["generator"],
-    "lost_guarantees": ["context isolation"],
-    "mitigations": ["explicit contract", "independent reviewer after implementation"],
+    "roles_collapsed": ["generator", "evaluator"],
+    "lost_guarantees": ["context isolation", "implementation and acceptance perspective split"],
+    "mitigations": ["declared main-agent checklist self-review", "human confirmation for critical acceptance", "record that independent Evaluator assurance is missing"],
     "restore_condition": "runtime exposes independent PGE agents or user authorizes subagents",
-    "owner_ack_required": false
+    "main_agent_self_review": "pending",
+    "owner_ack_required": false,
+    "owner_ack_status": "not_required",
+    "independent_evaluator_assurance": "missing"
   }
 }
 ```
+
+Use `not_required | pending | complete` for `main_agent_self_review`, `not_required | pending | confirmed` for `owner_ack_status`, and `available | missing` for `independent_evaluator_assurance`. Before close, update pending statuses.
+
+The example shows both roles unavailable. List only roles and guarantees actually lost. If only Generator is unavailable, preserve the independent Evaluator and mark its assurance `available`. If Evaluator is unavailable, mark its assurance `missing`; supplemental generic review must stay labeled as non-Evaluator evidence.
+
+Close fallback by state:
+
+- `independent_evaluator_assurance: available` requires Evaluator `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks close.
+- `independent_evaluator_assurance: missing` requires `main_agent_self_review: complete`.
+- `owner_ack_required: true` requires `owner_ack_status: confirmed`; otherwise use `not_required`.
 
 Allowed: fallback with explicit lost guarantees. Forbidden: silent solo.
 

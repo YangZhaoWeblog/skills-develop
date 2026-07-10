@@ -63,7 +63,7 @@ All tasks follow one main workflow. Topic-specific protocols are subflows, not b
 4. **Path**: small work may proceed directly; medium+ or critical work uses `$pge-workflow` to enter the relevant subflow and then returns here.
 5. **Verify**: pass Coding Start Check before code; run scoped verification after changes.
 6. **Circuit Breaker**: if the same interface / flow fails 3 rounds of tests, reference alignment, or review, stop and return to design / clarification.
-7. **Close**: summarize changes, verification, remaining risk, and follow-up.
+7. **Close**: normal PGE closes only on `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks close. Fallback with Evaluator assurance still requires that conclusion; missing assurance requires completed self-review, and required owner acknowledgement must be confirmed. Non-PGE non-trivial work uses independent AI review. Human PR review remains separate when required.
 
 ## Change Governance
 

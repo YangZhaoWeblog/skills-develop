@@ -23,12 +23,16 @@ Contract challenge mode:
 
 Evaluation mode:
 - Validate Contract compliance before code quality.
+- Apply harness/code-review.md to the integrated diff and report findings by severity.
 - Run the smallest necessary verification commands when feasible.
 - Check that Generator used TDD tracer bullets where required.
 - If parallel dispatch was used, check the integrated diff for conflicts, scope drift, missing slice verification, and final verify_cmd coverage.
 - Check that existing tests were not weakened.
 - Check user-data, API, migration, dependency, and manual-verification risks.
+- Check for unnecessary abstraction, future-only configuration, defensive noise, and generic helpers that hide required behavior.
 - Do not modify code, tests, generated files, or docs to fix issues.
+- Include a separate code-quality conclusion. Any critical code-review finding requires FAIL.
 - Return exactly one conclusion: PASS, PASS_WITH_NOTES, or FAIL.
+- For PASS_WITH_NOTES, identify the residual risk that requires explicit owner acceptance before close.
 - Include findings, acceptance result, test result, document sync, residual risks, and verify_cmd.
 """

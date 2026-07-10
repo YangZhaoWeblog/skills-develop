@@ -44,6 +44,8 @@ Use this skill to create an evolvable project harness: a short `AGENTS.md` entry
 - For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.agents/skills/pge-workflow/SKILL.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, `docs/pge/eval.template.md`, and `scripts/check_pge_contracts.sh`.
 - The PGE checker is a provided capability, not an enabled hook. The target repository decides whether to connect it to pre-commit, Make, or CI.
 - PGE is not only a document. It must define Generator and Evaluator roles, TDD tracer bullet expectations, independent evaluation, fallback, parallel dispatch, and the files used for handoff.
+- The final PGE Evaluator is also the independent AI code-review gate. Do not add a duplicate reviewer after normal PGE evaluation. During fallback, allow only clearly labeled supplemental review that does not claim Evaluator assurance.
+- PGE fallback must name lost guarantees and enforce state-dependent close: available Evaluator assurance requires its accepted conclusion; missing assurance requires completed main-agent self-review; required owner acknowledgement must be confirmed. Human PR review remains separate when the target repository requires it.
 - PGE files being present does not mean every task uses PGE. Small local changes may remain solo under `harness/pge-protocol.md`.
 - Every harness file starts with:
 

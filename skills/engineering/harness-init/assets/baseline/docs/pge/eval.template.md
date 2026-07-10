@@ -24,8 +24,10 @@
 | User-data / API safety | TBD | TBD |
 | Contract drift | TBD | Whether implementation stayed inside goal, scope, non-goals, and order |
 | Parallel integration | N/A / TBD | If parallel dispatch was used, check conflicts, scope drift, and final integrated verification |
+| Code quality / Code Review | TBD | Apply `harness/code-review.md`; any critical finding requires `FAIL` |
 | Document sync | TBD | TBD |
 | Residual risk | TBD | TBD |
+| Owner acceptance | N/A / TBD | Required before closing `PASS_WITH_NOTES` |
 
 ## Verification
 
@@ -37,7 +39,9 @@
 
 ## Findings
 
-- TBD
+| Severity | File / Location | Finding | Required Action |
+|---|---|---|---|
+| TBD | TBD | TBD | TBD |
 
 ## Next Step
 

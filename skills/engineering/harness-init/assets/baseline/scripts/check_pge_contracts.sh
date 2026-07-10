@@ -92,6 +92,9 @@ check_spec() {
   require_pattern "${file}" "implementation order section" '^##[[:space:]]+.*(实现顺序|Implementation Order)'
   require_pattern "${file}" "RED plan section" '^##[[:space:]]+.*(RED|Tracer|验证计划)'
   require_pattern "${file}" "pge_fallback block" '"pge_fallback"'
+  require_pattern "${file}" "main-agent self-review status" '"main_agent_self_review"'
+  require_pattern "${file}" "owner acknowledgement status" '"owner_ack_status"'
+  require_pattern "${file}" "independent Evaluator assurance status" '"independent_evaluator_assurance"'
 
   if [[ "${template}" == "1" ]]; then
     require_pattern "${file}" "parallel_dispatch block" '"parallel_dispatch"'
@@ -103,9 +106,12 @@ check_eval() {
   require_pattern "${file}" "result section" '^##[[:space:]]+.*(验收结果|Result)'
   require_pattern "${file}" "Contract drift row" 'Contract[[:space:]]*漂移|Contract[[:space:]]*drift'
   require_pattern "${file}" "parallel integration row" '并行集成|Parallel[[:space:]]*integration'
+  require_pattern "${file}" "code review row" '代码质量|Code[[:space:]]*(quality|Review)'
+  require_pattern "${file}" "owner acceptance record" '负责人确认|Owner[[:space:]]*(acceptance|acknowledgement)'
   require_pattern "${file}" "execution record section" '^##[[:space:]]+.*(执行记录|Verification|Execution)'
   require_pattern "${file}" "verify_cmd record" 'verify_cmd'
   require_pattern "${file}" "conclusion section" '^##[[:space:]]+.*(结论|Conclusion)'
+  require_pattern "${file}" "findings section" '^##[[:space:]]+.*(发现|Findings)'
 
   if [[ "${template}" != "1" ]]; then
     local spec_file="${file%-eval.md}-spec.md"

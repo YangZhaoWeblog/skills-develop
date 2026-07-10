@@ -49,7 +49,7 @@ If the same interface or flow fails 3 rounds of tests, reference alignment, or r
 
 ## Commit Gate
 
-Before commit, confirm Coding Start Check still holds, verification ran, review requirements are satisfied, and no unrelated files are included.
+Before commit, confirm Coding Start Check still holds, verification ran, no unrelated files are included, and the applicable review path is complete. Normal PGE and fallback with available Evaluator assurance require `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks commit and close. Fallback with missing Evaluator assurance requires `main_agent_self_review: complete`; when `owner_ack_required` is true, `owner_ack_status` must be `confirmed`. Non-PGE non-trivial work requires an independent AI review conclusion. Do not duplicate generic AI review after normal PGE evaluation. Any fallback supplemental review must stay labeled as non-Evaluator evidence. Human PR review remains separate when required.
 
 Serial tasks default to the current workspace and a semantic branch. Parallel code-writing defaults to `git worktree`, one PGE per worktree and branch. Do not let multiple agents modify production code in the same workspace.
 
