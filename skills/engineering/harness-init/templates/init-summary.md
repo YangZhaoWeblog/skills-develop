@@ -15,7 +15,7 @@ mode: fresh-init | existing-harness-plan
 - has_deployment:
 - needs_large_workflow:
 - pge_protocol: v2 / inactive
-- grill_bundle: complete / not_generated
+- upstream_grill_skills: installed / missing
 
 ## Planned Files
 

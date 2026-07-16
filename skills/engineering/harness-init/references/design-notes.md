@@ -12,7 +12,7 @@
 - Existing harness files are not overwritten by default.
 - Unknown project facts become TODOs, not invented rules.
 - An active PGE profile includes its full control path: Grill Closure, Challenge, Contract lock, revision-bound Human Start, Generator, and Evaluator.
-- The offline Grill bundle is dependency-complete. User-only wrappers remain entrypoints; PGE invokes the model-available primitives.
+- Install upstream `grilling` and `domain-modeling` directly. Do not fork them or retain the legacy wrapper skills.
 
 ## Product-Service Influence
 

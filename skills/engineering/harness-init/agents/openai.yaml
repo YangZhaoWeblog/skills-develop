@@ -1,4 +1,4 @@
 interface:
   display_name: "Harness Init"
   short_description: "Generate a code-project agent harness."
-  default_prompt: "Use $harness-init to initialize a concise code-repository AGENTS.md/harness baseline with PGE v2, Human Start, and the complete Grill skill bundle."
+  default_prompt: "Use $harness-init to initialize a concise code-repository AGENTS.md/harness baseline with PGE v2 and Human Start, then install upstream grilling and domain-modeling."

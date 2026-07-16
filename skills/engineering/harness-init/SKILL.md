@@ -5,7 +5,7 @@ description: Generate a project-specific AI agent harness baseline for a code re
 
 # Harness Init
 
-Use this skill to create an evolvable code-project harness: a short `AGENTS.md` entry, a `harness/` rule set, active PGE v2 support, and a complete Grill skill dependency closure, with clear ownership, active/stub status, and a universal/profile/project-grown layer split.
+Use this skill to create an evolvable code-project harness: a short `AGENTS.md` entry, a `harness/` rule set, active PGE v2 support, and the upstream `grilling` / `domain-modeling` dependencies, with clear ownership, active/stub status, and a universal/profile/project-grown layer split.
 
 ## Workflow
 
@@ -31,17 +31,23 @@ Use this skill to create an evolvable code-project harness: a short `AGENTS.md` 
 
 4. **Generate**
    - If no `AGENTS.md` or `harness/` exists, create the baseline from [assets/baseline](assets/baseline).
-   - Copy the full code-project baseline including `.agents/skills/{pge-workflow,grill-me,grill-with-docs,grilling,domain-modeling}/`, `.codex/agents/`, `docs/pge/`, `harness/hooks-governance.md`, and `scripts/check_pge_contracts.sh`.
-   - The Grill directories are the pinned offline snapshot documented in [references/grill-skills.lock.md](references/grill-skills.lock.md). Copy them from the baseline assets; never fetch upstream `main` during target generation.
+   - Copy the full code-project baseline including `.agents/skills/pge-workflow/`, `.codex/agents/`, `docs/pge/`, `harness/hooks-governance.md`, and `scripts/check_pge_contracts.sh`.
+   - Install the upstream Grill skills directly in the target repository:
+
+     ```bash
+     npx skills@latest add mattpocock/skills --skill grilling --skill domain-modeling -y
+     ```
+
+   - Do not copy, fork, or install the legacy `grill-me` / `grill-with-docs` wrappers.
    - Do not write `.git/hooks/*` directly. Tell the user the PGE checker is available and can be connected to pre-commit, Make, or CI.
    - If an existing harness exists, do not overwrite by default. Generate an adoption plan from [templates/init-plan.md](templates/init-plan.md).
    - Only overwrite existing harness files when the user explicitly asks for overwrite.
 
 5. **Verify**
    - Confirm all generated files named by the active baseline exist.
-   - Confirm both Grill wrappers, both model-invoked primitives, every `agents/openai.yaml`, both domain-modeling format files, and their `LICENSE` / `NOTICE` files were copied.
+   - Confirm `.agents/skills/grilling/SKILL.md`, `.agents/skills/domain-modeling/SKILL.md`, and the domain-modeling format files were installed from `mattpocock/skills`.
    - Run `scripts/check_pge_contracts.sh` against the generated spec and eval templates.
-   - Confirm generated PGE policy keeps Grill Closure separate from current-revision Human Start and does not route the model through user-only wrappers.
+   - Confirm generated PGE policy keeps Grill Closure separate from current-revision Human Start and routes directly through `grilling` / `domain-modeling`.
 
 6. **Summarize**
    Finish with changed files, assumptions, TODOs, and the next suggested `harness-score` run. Use [templates/init-summary.md](templates/init-summary.md).
@@ -51,7 +57,7 @@ Use this skill to create an evolvable code-project harness: a short `AGENTS.md` 
 - Keep `AGENTS.md` short: identity, stack, commands, hard rules, task routing, workflow, index.
 - Generate all baseline harness files, but mark each as `active` or `stub`.
 - For code projects, generate PGE support as a first-class baseline: `harness/pge-protocol.md`, `.agents/skills/pge-workflow/SKILL.md`, `.codex/agents/pge-generator.toml`, `.codex/agents/pge-evaluator.toml`, `docs/pge/spec.template.md`, `docs/pge/eval.template.md`, and `scripts/check_pge_contracts.sh`.
-- Generate the complete Grill closure: user-only `grill-me` and `grill-with-docs`, model-invoked `grilling` and `domain-modeling`, their metadata/resources, and MIT provenance. PGE internally routes to primitives, never to user-only wrappers.
+- Install `grilling` and `domain-modeling` directly from `mattpocock/skills`; do not maintain local copies or compatibility wrappers.
 - The PGE checker is a provided capability, not an enabled hook. The target repository decides whether to connect it to pre-commit, Make, or CI.
 - PGE is not only a document. It must define Grill Closure, Challenge, a revision-bound Human Start Gate, Generator and Evaluator roles, TDD tracer bullet expectations, independent evaluation, fallback, parallel dispatch, and the files used for handoff.
 - Grill confirmation, Contract lock, and fallback never authorize implementation. Production code, tests, migrations, generated files, implementation workspaces, and code-writing Agents require explicit Human Start approval for the current Contract revision.
@@ -97,8 +103,6 @@ Activate by profile, otherwise keep stub:
 
 Active for code-project PGE baseline:
 - `.agents/skills/pge-workflow/SKILL.md`
-- `.agents/skills/grill-me/SKILL.md`
-- `.agents/skills/grill-with-docs/SKILL.md`
 - `.agents/skills/grilling/SKILL.md`
 - `.agents/skills/domain-modeling/SKILL.md`
 - `.codex/agents/pge-generator.toml`

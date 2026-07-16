@@ -75,13 +75,9 @@ Replace `harness-init` with the target skill name. Add `-g` to install that sing
 
 | Skill | What it does |
 | --- | --- |
-| `harness-init` | Generates a code-repository AGENTS.md/harness baseline with PGE v2, Human Start, and the complete Grill bundle. |
+| `harness-init` | Generates a code-repository AGENTS.md/harness baseline with PGE v2 and Human Start, then installs upstream `grilling` and `domain-modeling`. |
 | `harness-score` | Reviews an existing harness and renders an offline HTML score report. |
 | `pge-workflow` | Coordinates Grill, Contract Challenge, Human Start, Generator/Evaluator roles, fallback, and parallel dispatch. |
-| `grill-me` | User entrypoint for a one-question-at-a-time plan interview. |
-| `grill-with-docs` | User entrypoint for a Grill that may maintain domain language and ADRs. |
-| `grilling` | Model-invoked interview primitive used by PGE and Grill wrappers. |
-| `domain-modeling` | Model-invoked discipline for domain language and durable decisions. |
 | `tdd` | Builds behavior incrementally with test-first red-green-refactor cycles. |
 
 ## Layout

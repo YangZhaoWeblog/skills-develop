@@ -28,6 +28,5 @@
 - Support code repositories only until a separately accepted non-code profile exists.
 - Treat Human Start as part of every active PGE baseline, not as product-specific growth. Contract lock, Grill confirmation, and fallback cannot substitute for current-revision approval.
 - Keep Grill Closure and Human Start as separate user confirmations: the first confirms shared understanding; the second authorizes implementation.
-- Bundle a pinned, offline copy of `grill-me`, `grill-with-docs`, `grilling`, and `domain-modeling` from `mattpocock/skills@e9fcdf95b402d360f90f1db8d776d5dd450f9234`, with MIT license and provenance.
-- Preserve upstream invocation boundaries: wrappers are user-only; PGE uses `grilling` and adds `domain-modeling` only for explicitly authorized planning-document work.
-- Keep installable skill directories as the canonical local snapshot and require baseline copies to remain byte-for-byte identical.
+- Install `grilling` and `domain-modeling` directly from `mattpocock/skills`; do not vendor or fork upstream skill code.
+- Do not install the legacy `grill-me` / `grill-with-docs` wrappers. PGE uses `grilling` and adds `domain-modeling` only for explicitly authorized planning-document work.

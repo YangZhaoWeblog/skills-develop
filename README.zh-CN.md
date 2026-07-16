@@ -75,13 +75,9 @@ npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
 
 | Skill | 作用 |
 | --- | --- |
-| `harness-init` | 为代码仓库生成带 PGE v2、Human Start 与完整 Grill 依赖的 AGENTS.md/harness 基线。 |
+| `harness-init` | 为代码仓库生成带 PGE v2、Human Start 的 AGENTS.md/harness 基线，并安装上游 `grilling` 与 `domain-modeling`。 |
 | `harness-score` | 审视现有 harness，并输出离线 HTML 评分报告。 |
 | `pge-workflow` | 编排 Grill、Contract Challenge、Human Start、Generator/Evaluator、fallback 与并行派发。 |
-| `grill-me` | 用户入口：一次一个问题地压力测试计划。 |
-| `grill-with-docs` | 用户入口：在 Grill 中按需维护领域语言和 ADR。 |
-| `grilling` | 供 PGE 与 Grill wrapper 调用的模型侧访谈原语。 |
-| `domain-modeling` | 供模型调用的领域语言与持久决策维护方法。 |
 | `tdd` | 通过测试先行的红-绿-重构循环逐步实现行为。 |
 
 ## 目录

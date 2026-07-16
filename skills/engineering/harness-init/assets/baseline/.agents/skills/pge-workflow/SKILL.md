@@ -51,11 +51,10 @@ Small docs, config, or local single-module changes may stay solo when `harness/p
 
 ## Grill Routing
 
-PGE orchestrators use model-invoked primitives, not user-only wrappers:
+PGE uses the upstream skills directly:
 
 - use `$grilling` for the default plan and risk interview;
 - add `$domain-modeling` only when the user explicitly chooses a docs-bearing Grill and the allowed planning-document paths are recorded before the skill writes them;
-- never model-invoke `$grill-me` or `$grill-with-docs`; they are user entrypoints that delegate to the primitives above.
 
 Before the first question, tell the user which primitive is active and why. Investigate code-answerable facts directly, ask irreducible user decisions one at a time, and cover the branches required by `harness/pge-protocol.md`. Confirmation that Grill reached shared understanding completes Grill Closure only; it is not Human Start approval.
 

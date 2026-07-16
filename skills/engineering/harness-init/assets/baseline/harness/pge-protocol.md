@@ -56,8 +56,7 @@ If the runtime cannot spawn independent agents, record fallback. Do not silently
 ## Skill Relationship
 
 - `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Grill routing, Challenge Gate coordination, Human Start tool mapping, fallback status shape, parallel dispatch, and handoff prompts.
-- `$grilling` is the model-invoked interview primitive. `$domain-modeling` may be added only for an explicitly chosen docs-bearing Grill with named planning-document write paths.
-- `$grill-me` and `$grill-with-docs` are user-only entrypoints. PGE must not model-invoke either wrapper.
+- PGE uses the upstream `$grilling` skill directly. `$domain-modeling` may be added only for an explicitly chosen docs-bearing Grill with named planning-document write paths.
 - This file owns the PGE policy, role boundaries, contract requirements, fallback rules, and circuit breaker.
 - Project-level agents own execution and evaluation only when the runtime explicitly dispatches them.
 
