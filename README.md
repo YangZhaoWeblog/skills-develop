@@ -78,6 +78,7 @@ Replace `harness-init` with the target skill name. Add `-g` to install that sing
 | `harness-init` | Generates a concise, evolvable AGENTS.md and harness/ baseline. |
 | `harness-score` | Reviews an existing harness and renders an offline HTML score report. |
 | `pge-workflow` | Coordinates PGE routing, Challenge Gate, Generator/Evaluator roles, fallback recording, and parallel dispatch. |
+| `tdd` | Builds behavior incrementally with test-first red-green-refactor cycles. |
 
 ## Layout
 

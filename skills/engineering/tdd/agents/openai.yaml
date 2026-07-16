@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test-Driven Development"
+  short_description: "Build behavior incrementally with red-green-refactor."
+  default_prompt: "Use $tdd to implement this change one observable behavior at a time with red-green-refactor."

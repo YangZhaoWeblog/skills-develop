@@ -78,6 +78,7 @@ npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
 | `harness-init` | 生成精炼、可演进的 AGENTS.md 与 harness/ 基线。 |
 | `harness-score` | 审视现有 harness，并输出离线 HTML 评分报告。 |
 | `pge-workflow` | 编排 PGE 分流、Challenge Gate、Generator/Evaluator 分工、fallback 记录与并行派发。 |
+| `tdd` | 通过测试先行的红-绿-重构循环逐步实现行为。 |
 
 ## 目录
 
