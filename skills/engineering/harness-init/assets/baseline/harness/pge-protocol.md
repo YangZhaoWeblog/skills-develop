@@ -23,9 +23,25 @@ Small docs/config/single-module changes may stay solo, but still need scoped ver
 
 | Role | Responsibility | Output |
 |---|---|---|
-| Planner | Freeze goal, scope, acceptance, non-goals, order, first tracer bullet, fallback | `docs/pge/<sprint>-spec.md` or task-local contract |
-| Generator | Implement only the locked contract with TDD tracer bullets | code, tests, `verify_cmd`, contract/status update |
-| Evaluator | Independently challenge contract and validate diff | `PASS`, `PASS_WITH_NOTES`, or `FAIL` with findings |
+| Planner | Define and adjudicate the behavior boundary and execution plan | `docs/pge/<sprint>-spec.md` or task-local contract |
+| Generator | Choose the smallest implementation inside that boundary | code, tests, `verify_cmd`, implementation evidence |
+| Evaluator | Independently challenge the contract and validate the diff | `docs/pge/<sprint>-eval.md`, `PASS`, `PASS_WITH_NOTES`, or `FAIL` |
+
+```mermaid
+flowchart LR
+    U[User / discovery] --> P[Planner]
+    P --> S[Design and spec draft]
+    S --> GP[Generator probe]
+    S --> EC[Evaluator challenge]
+    GP --> P
+    EC --> P
+    P --> G[Generator: code, tests, evidence]
+    G --> E[Evaluator: final evaluation]
+    E -->|implementation defect| G
+    E -->|boundary or contract defect| P
+```
+
+Planner is the single writer for design and spec documents; Evaluator is the single writer for the eval document. Generator writes its assigned code and tests and returns evidence. After Generator handoff, the main agent may fix an integration conflict or make a necessary correction; it must disclose the patch as an implementation change and include it in final verification and evaluation. Do not concurrently edit the same hot zone.
 
 The final Evaluator is also the PGE task's independent AI code review: it checks contract compliance, code quality, tests, and residual risk. Do not dispatch a duplicate generic AI reviewer after normal PGE evaluation. During fallback, a generic AI reviewer may add clearly labeled supplemental findings, but cannot substitute for a missing Evaluator or restore its assurance. This AI gate does not replace human PR review when the repository requires it.
 
@@ -53,6 +69,8 @@ Each PGE task must define:
 5. implementation order;
 6. first tracer bullet: the first failing test or smallest observable verification cut;
 7. fallback and restore condition when independent agents are unavailable.
+
+Goal, scope, acceptance criteria, and non-goals lock the behavior boundary. A required property belongs to that boundary only when acceptance states it explicitly or a cited project hard rule requires it. Implementation order, tracer bullets, and `verify_cmd` are an execution projection that Planner may refine and write back to the current contract inside that boundary. The contract does not lock candidate helpers, Guards, function names, or other implementation shapes. A change to the behavior boundary returns to Planner for adjudication; an implementation-only simplification does not rewrite the contract.
 
 Default templates:
 
@@ -94,28 +112,34 @@ The baseline provides `scripts/check_pge_contracts.sh` as a structure checker. H
 
 - Start only after the contract is locked or after an Implementation Probe is requested.
 - In pre-contract mode, do not edit production code or tests; output only the first tracer bullet, smallest implementation cut, required fake/mock, and expected verify command.
+- Treat confirmed facts and cited security, authorization, and consistency hard rules as constraints on the contract, not lower-priority implementation preferences.
+- If implementation reveals a new behavior boundary or required property, stop and return the evidence to Planner; do not silently expand the contract or tests.
 - For behavior work, use TDD tracer bullets:
   - RED: write or identify one failing test and confirm the failure reason;
   - GREEN: implement the minimum code for that behavior;
-  - REFACTOR: clean only after green.
+  - REFACTOR: after the relevant verification is green, explicitly check for a concrete issue; no change is valid when none exists, and any refactor must preserve behavior and stay within the current change or goal.
 - Do not write all tests first and all implementation later.
 - Do not relax existing assertions, delete tests, or change acceptance criteria to pass.
 - Keep changes inside the contract; return to Planner if scope expands.
+- Do not add adjacent behavior for cleanliness, safety, or possible future needs without evidence inside the locked boundary.
 
 ## Evaluator Protocol
 
-Evaluator is independent from implementation and does not edit files.
+Evaluator is independent from implementation. It writes only the assigned eval report and does not edit production code or tests.
 
 Apply `harness/code-review.md` during final evaluation and include a separate code-quality conclusion. Any critical code-review finding requires `FAIL`.
 
 Check in this order:
 
-1. contract compliance;
-2. tests not weakened;
-3. TDD tracer bullet evidence where required;
-4. user-data / API / migration safety;
-5. code quality, minimality, and local style;
-6. manual verification gaps and residual risks.
+1. confirmed facts, goal, scope, non-goals, and diff necessity;
+2. production behavior stayed inside the locked boundary;
+3. contract compliance and tests not weakened;
+4. TDD tracer bullet evidence where required;
+5. user-data / API / migration safety;
+6. code quality, minimality, and local style;
+7. manual verification gaps and residual risks.
+
+Any production behavior change outside the locked boundary requires `FAIL`. Judge helpers and interfaces by independent behavior or clarity value, not caller or implementation count alone. For state or concurrency code, review the call site for a clear object, state transition, and relevant ordering basis using the smallest necessary combination of names, branches, and comments.
 
 Return exactly one conclusion:
 

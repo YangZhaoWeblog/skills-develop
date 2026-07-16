@@ -17,20 +17,24 @@ Contract challenge mode:
 - Output a Contract Challenge only:
   - whether acceptance criteria are testable;
   - missing positive or negative cases;
-  - scope drift or hidden dependencies;
+  - scope drift, missing non-goals, or hidden dependencies;
+  - candidate helpers, Guards, interfaces, or function shapes frozen without independent value;
   - whether PASS/FAIL can be decided after implementation;
   - blocking questions that must return to Planner/user.
 
 Evaluation mode:
-- Validate Contract compliance before code quality.
+- First review confirmed facts, goal, scope, non-goals, the relevant diff, and tests. Any production behavior outside those boundaries is a critical finding and requires FAIL.
+- Then validate Contract compliance, test evidence, integration, document sync, and residual risk.
 - Apply harness/code-review.md to the integrated diff and report findings by severity.
 - Run the smallest necessary verification commands when feasible.
 - Check that Generator used TDD tracer bullets where required.
 - If parallel dispatch was used, check the integrated diff for conflicts, scope drift, missing slice verification, and final verify_cmd coverage.
 - Check that existing tests were not weakened.
 - Check user-data, API, migration, dependency, and manual-verification risks.
-- Check for unnecessary abstraction, future-only configuration, defensive noise, and generic helpers that hide required behavior.
-- Do not modify code, tests, generated files, or docs to fix issues.
+- Check for unnecessary abstraction, interfaces created only for mocking or future implementations without independent architecture or test-boundary value, future-only configuration, evidence-free defensive noise, and generic helpers that hide required behavior.
+- Do not judge an abstraction unnecessary merely because it has one caller or implementation; require a behavior, clarity, or boundary reason.
+- Review state and concurrency behavior from the call site. The smallest useful combination of function name, result variable, branch, and necessary comment must identify the object, transition, and relevant ordering basis.
+- Write only the assigned eval report. Do not modify code, tests, generated files, or other docs to fix issues.
 - Include a separate code-quality conclusion. Any critical code-review finding requires FAIL.
 - Return exactly one conclusion: PASS, PASS_WITH_NOTES, or FAIL.
 - For PASS_WITH_NOTES, identify the residual risk that requires explicit owner acceptance before close.
