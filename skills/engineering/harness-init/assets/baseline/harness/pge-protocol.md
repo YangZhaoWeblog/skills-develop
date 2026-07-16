@@ -5,7 +5,7 @@
 > layer: profile
 > This file owns Planner / Generator / Evaluator workflow; it does not replace the main workflow in `AGENTS.md`.
 
-Use `$pge-workflow` as the PGE routing, Challenge Gate, fallback, and parallel-dispatch entrypoint. This file remains the policy source of truth.
+Use `$pge-workflow` as the PGE routing, Grill, Challenge Gate, Human Start, fallback, and parallel-dispatch entrypoint. This file remains the policy source of truth.
 
 ## Activation
 
@@ -23,19 +23,20 @@ Small docs/config/single-module changes may stay solo, but still need scoped ver
 
 | Role | Responsibility | Output |
 |---|---|---|
-| Planner | Define and adjudicate the behavior boundary and execution plan | `docs/pge/<sprint>-spec.md` or task-local contract |
+| Planner | Define and adjudicate the behavior boundary and execution plan | design/spec/status documents |
 | Generator | Choose the smallest implementation inside that boundary | code, tests, `verify_cmd`, implementation evidence |
 | Evaluator | Independently challenge the contract and validate the diff | `docs/pge/<sprint>-eval.md`, `PASS`, `PASS_WITH_NOTES`, or `FAIL` |
 
 ```mermaid
 flowchart LR
-    U[User / discovery] --> P[Planner]
+    U[User / Grill] --> P[Planner]
     P --> S[Design and spec draft]
     S --> GP[Generator probe]
     S --> EC[Evaluator challenge]
     GP --> P
     EC --> P
-    P --> G[Generator: code, tests, evidence]
+    P --> H{Human Start}
+    H --> G[Generator: code, tests, evidence]
     G --> E[Evaluator: final evaluation]
     E -->|implementation defect| G
     E -->|boundary or contract defect| P
@@ -54,7 +55,9 @@ If the runtime cannot spawn independent agents, record fallback. Do not silently
 
 ## Skill Relationship
 
-- `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Challenge Gate coordination, fallback status shape, parallel-dispatch orchestration, and handoff prompts.
+- `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Grill routing, Challenge Gate coordination, Human Start tool mapping, fallback status shape, parallel dispatch, and handoff prompts.
+- `$grilling` is the model-invoked interview primitive. `$domain-modeling` may be added only for an explicitly chosen docs-bearing Grill with named planning-document write paths.
+- `$grill-me` and `$grill-with-docs` are user-only entrypoints. PGE must not model-invoke either wrapper.
 - This file owns the PGE policy, role boundaries, contract requirements, fallback rules, and circuit breaker.
 - Project-level agents own execution and evaluation only when the runtime explicitly dispatches them.
 
@@ -62,13 +65,17 @@ If the runtime cannot spawn independent agents, record fallback. Do not silently
 
 Each PGE task must define:
 
-1. goal;
-2. scope;
-3. acceptance criteria;
-4. non-goals;
-5. implementation order;
-6. first tracer bullet: the first failing test or smallest observable verification cut;
-7. fallback and restore condition when independent agents are unavailable.
+1. protocol version and current `contract_revision`;
+2. Grill Closure: primitives used, user decisions, repository facts, assumptions, residual risks, and recommendation;
+3. goal;
+4. scope;
+5. acceptance criteria;
+6. non-goals;
+7. implementation order;
+8. first tracer bullet: the first failing test or smallest observable verification cut;
+9. `verify_cmd`;
+10. `human_start_gate` approval metadata;
+11. fallback and restore condition when independent agents are unavailable.
 
 Goal, scope, acceptance criteria, and non-goals lock the behavior boundary. A required property belongs to that boundary only when acceptance states it explicitly or a cited project hard rule requires it. Implementation order, tracer bullets, and `verify_cmd` are an execution projection that Planner may refine and write back to the current contract inside that boundary. The contract does not lock candidate helpers, Guards, function names, or other implementation shapes. A change to the behavior boundary returns to Planner for adjudication; an implementation-only simplification does not rewrite the contract.
 
@@ -79,6 +86,8 @@ Default templates:
 
 When `scripts/check_pge_contracts.sh` exists, check the active spec before Challenge Gate and the eval draft before Evaluator acceptance. The script checks structure only; requirement quality, semantic drift, and acceptance sufficiency remain Challenge Gate / Evaluator responsibilities.
 
+Existing protocol-v1 specs may receive text-only maintenance. Before implementation resumes, upgrade them to v2 with Grill Closure, `verify_cmd`, `contract_revision`, and Human Start evidence.
+
 ## Design / PGE Relationship
 
 - `docs/design/*.md` is the long-lived map for cross-sprint background, route, boundaries, and hard decisions.
@@ -87,6 +96,29 @@ When `scripts/check_pge_contracts.sh` exists, check the active spec before Chall
 - Create design first for large, cross-sprint, architectural, state-machine, or domain-boundary changes.
 - Create a PGE spec for medium+, batch, single public-interface, or critical-flow work.
 - One design may produce multiple independently acceptable PGE specs; design does not replace the PGE spec.
+
+## Grill, Challenge, And Human Start
+
+Every PGE task completes these steps in order:
+
+1. Planner uses `$grilling` to pressure-test the decision tree and records Grill Closure. Repository-answerable facts are investigated; user decisions are asked one at a time.
+2. Generator performs a read-only Implementation Probe and Evaluator performs a read-only Contract Challenge.
+3. Planner adjudicates the findings and locks the Contract.
+4. Planner projects the locked Contract as a visible Implement Plan and asks whether implementation may start.
+5. Only an explicit approval for the current `contract_revision` passes Human Start.
+
+Grill must cover or mark not applicable: behavior invariants; data/state; compatibility/rollback; failure/idempotency/concurrency; verification/observability; scope/non-goals. Confirmation that Grill reached shared understanding completes Grill Closure only. It does not approve implementation.
+
+Before dispatching any Agent, announce its role, purpose, supplied context, and read/write boundary. Before Human Start, Agents may perform read-only research, Implementation Probe, and Contract Challenge. Planner may update only the current design, spec, status, and Challenge records. `$domain-modeling` may additionally write specifically named `CONTEXT.md` or ADR paths only when the user explicitly chose the docs-bearing route and those paths are recorded as planning outputs. Production code, tests, migrations, generated files, implementation branches/worktrees, and code-writing Agents remain forbidden.
+
+Human Start metadata is valid only when all are true:
+
+- PGE protocol version is `2`;
+- `human_start_gate.status` is `approved`;
+- `approved_contract_revision` equals `contract_revision`;
+- `channel` and `evidence` are non-empty.
+
+Silence, timeout, ordinary discussion, Grill confirmation, Contract lock, or approval for an older revision is not authorization. A change to goal, scope, acceptance criteria, non-goals, or an acceptance-required property increments `contract_revision` and revokes prior approval. Implementation-only simplification inside the same boundary does not. Fallback never bypasses Human Start.
 
 ## Parallel PGE
 
@@ -104,13 +136,14 @@ Forbidden:
 - competing edits to the same file hot zone or shared helper;
 - unlocked contracts or acceptance that cannot be decided independently.
 
-The main agent owns the design map, slice list, dispatch prompts, diff integration, conflict resolution, final `verify_cmd`, and Evaluator handoff.
+The main agent owns the design map, slice list, dispatch prompts, diff integration, conflict resolution, final `verify_cmd`, and Evaluator handoff. Parallel code-writing dispatch starts only after Human Start is valid for the current revision.
 
 The baseline provides `scripts/check_pge_contracts.sh` as a structure checker. Hook, Make, or CI enablement remains a target-repository decision; do not write `.git/hooks/*` directly.
 
 ## Generator Protocol
 
-- Start only after the contract is locked or after an Implementation Probe is requested.
+- Pre-contract and pre-Human work is limited to an explicitly requested read-only Implementation Probe.
+- Implementation starts only after the Contract is locked and Human Start is valid for its current revision.
 - In pre-contract mode, do not edit production code or tests; output only the first tracer bullet, smallest implementation cut, required fake/mock, and expected verify command.
 - Treat confirmed facts and cited security, authorization, and consistency hard rules as constraints on the contract, not lower-priority implementation preferences.
 - If implementation reveals a new behavior boundary or required property, stop and return the evidence to Planner; do not silently expand the contract or tests.
@@ -131,13 +164,14 @@ Apply `harness/code-review.md` during final evaluation and include a separate co
 
 Check in this order:
 
-1. confirmed facts, goal, scope, non-goals, and diff necessity;
-2. production behavior stayed inside the locked boundary;
-3. contract compliance and tests not weakened;
-4. TDD tracer bullet evidence where required;
-5. user-data / API / migration safety;
-6. code quality, minimality, and local style;
-7. manual verification gaps and residual risks.
+1. protocol v2 Human Start evidence is complete and matches the current revision;
+2. confirmed facts, goal, scope, non-goals, and diff necessity;
+3. production behavior stayed inside the locked boundary;
+4. contract compliance and tests not weakened;
+5. TDD tracer bullet evidence where required;
+6. user-data / API / migration safety;
+7. code quality, minimality, and local style;
+8. manual verification gaps and residual risks.
 
 Any production behavior change outside the locked boundary requires `FAIL`. Judge helpers and interfaces by independent behavior or clarity value, not caller or implementation count alone. For state or concurrency code, review the call site for a clear object, state transition, and relevant ordering basis using the smallest necessary combination of names, branches, and comments.
 
@@ -178,7 +212,7 @@ Close fallback by state:
 - `independent_evaluator_assurance: missing` requires `main_agent_self_review: complete`.
 - `owner_ack_required: true` requires `owner_ack_status: confirmed`; otherwise use `not_required`.
 
-Allowed: fallback with explicit lost guarantees. Forbidden: silent solo.
+Allowed: fallback with explicit lost guarantees after valid Human Start. Forbidden: silent solo or using fallback to infer implementation approval.
 
 ## Circuit Breaker
 

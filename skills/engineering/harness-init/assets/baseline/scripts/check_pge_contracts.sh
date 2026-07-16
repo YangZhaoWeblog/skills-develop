@@ -76,6 +76,17 @@ path_exists() {
   fi
 }
 
+exists_in_head() {
+  git cat-file -e "HEAD:$1" 2>/dev/null
+}
+
+requires_current_protocol() {
+  local file="$1" template="$2"
+  [[ "${template}" == "1" ]] && return 0
+  content_has "${file}" 'PGE.*(protocol|协议).*(version|版本)[^0-9]*2' && return 0
+  ! exists_in_head "${file}"
+}
+
 require_pattern() {
   local file="$1" label="$2" pattern="$3"
   if ! content_has "${file}" "${pattern}"; then
@@ -85,26 +96,37 @@ require_pattern() {
 
 check_spec() {
   local file="$1" template="$2"
+  requires_current_protocol "${file}" "${template}" || return 0
+
+  require_pattern "${file}" "PGE protocol version 2" 'PGE.*(protocol|协议).*(version|版本)[^0-9]*2'
   require_pattern "${file}" "goal section" '^##[[:space:]]+.*(目标|Goal)'
   require_pattern "${file}" "scope section" '^##[[:space:]]+.*(范围|Scope)'
   require_pattern "${file}" "acceptance section" '^##[[:space:]]+.*(验收标准|Acceptance)'
   require_pattern "${file}" "non-goals section" '^##[[:space:]]+.*(非目标|Non-Goals?)'
   require_pattern "${file}" "implementation order section" '^##[[:space:]]+.*(实现顺序|Implementation Order)'
   require_pattern "${file}" "RED plan section" '^##[[:space:]]+.*(RED|Tracer|验证计划)'
+  require_pattern "${file}" "Grill Closure section" '^##[[:space:]]+.*Grill[[:space:]]+Closure'
+  require_pattern "${file}" "verification commands section" '^##[[:space:]]+.*(验证命令|Verification Commands?)'
+  require_pattern "${file}" "verify_cmd record" 'verify_cmd'
+  require_pattern "${file}" "contract_revision field" '"contract_revision"'
+  require_pattern "${file}" "human_start_gate block" '"human_start_gate"'
+  require_pattern "${file}" "approved_contract_revision field" '"approved_contract_revision"'
   require_pattern "${file}" "pge_fallback block" '"pge_fallback"'
   require_pattern "${file}" "main-agent self-review status" '"main_agent_self_review"'
   require_pattern "${file}" "owner acknowledgement status" '"owner_ack_status"'
   require_pattern "${file}" "independent Evaluator assurance status" '"independent_evaluator_assurance"'
 
-  if [[ "${template}" == "1" ]]; then
-    require_pattern "${file}" "parallel_dispatch block" '"parallel_dispatch"'
-  fi
+  require_pattern "${file}" "parallel_dispatch block" '"parallel_dispatch"'
 }
 
 check_eval() {
   local file="$1" template="$2"
+  requires_current_protocol "${file}" "${template}" || return 0
+
+  require_pattern "${file}" "PGE protocol version 2" 'PGE.*(protocol|协议).*(version|版本)[^0-9]*2'
   require_pattern "${file}" "result section" '^##[[:space:]]+.*(验收结果|Result)'
   require_pattern "${file}" "Contract drift row" 'Contract[[:space:]]*漂移|Contract[[:space:]]*drift'
+  require_pattern "${file}" "Human Start Gate row" 'Human[[:space:]]+Start[[:space:]]+Gate'
   require_pattern "${file}" "parallel integration row" '并行集成|Parallel[[:space:]]*integration'
   require_pattern "${file}" "code review row" '代码质量|Code[[:space:]]*(quality|Review)'
   require_pattern "${file}" "owner acceptance record" '负责人确认|Owner[[:space:]]*(acceptance|acknowledgement)'
@@ -117,6 +139,8 @@ check_eval() {
     local spec_file="${file%-eval.md}-spec.md"
     if ! path_exists "${spec_file}"; then
       block "${file}" "missing paired spec ${spec_file}"
+    elif ! content_has "${spec_file}" 'PGE.*(protocol|协议).*(version|版本)[^0-9]*2'; then
+      block "${file}" "paired spec must use PGE protocol version 2: ${spec_file}"
     fi
   fi
 }

@@ -1,0 +1,6 @@
+This skill is vendored without modification from `skills/engineering/grill-with-docs`
+in https://github.com/mattpocock/skills.
+
+Upstream commit: `e9fcdf95b402d360f90f1db8d776d5dd450f9234`.
+
+The vendored source is distributed under the MIT License in `LICENSE`.

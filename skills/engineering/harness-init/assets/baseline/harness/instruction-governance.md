@@ -51,8 +51,17 @@ Hard-blocking clarification is only for questions where safe progress is impossi
 - When uncertainty can be handled by a low-risk assumption, state the assumption and continue with reversible work.
 - When continuing would be high-risk or irreversible, stop and ask only the required user question.
 
+When the user explicitly requests analysis only or says not to implement, keep the target repository read-only. Planning artifacts may be written only when the user authorizes that planning output and the active workflow permits it.
+
+## Confirmation And Human Start
+
+- Ordinary short acknowledgements such as “ok” or “continue” advance the current discussion step; they do not create unrelated write authority.
+- A short reply may approve PGE Human Start only when it directly answers an explicit question asking whether implementation should begin for the visible current-revision Implement Plan.
+- Grill confirmation means shared understanding was reached. It must never be reused as Human Start evidence.
+- Silence, timeout, or an approval for an older Contract revision is not approval.
+
 ## Multi-Agent Activation
 
 Evaluate multi-agent use when independent evaluation is required, slices are independently acceptable, the task spans multiple modules, or Planner / Generator / Evaluator separation is needed.
 
-PGE tasks use `$pge-workflow` and `harness/pge-protocol.md` to decide independent agents, fallback, or parallel dispatch. Ask the user only when owner acknowledgement, platform permission, extra workspace cost, or irreversible parallel code-writing is involved.
+PGE tasks use `$pge-workflow` and `harness/pge-protocol.md` to decide independent agents, fallback, or parallel dispatch. Human Start is a fixed PGE confirmation and remains required under fallback. Apart from Human Start, ask the user about Agent setup only when owner acknowledgement, platform permission, extra workspace cost, or irreversible parallel code-writing is involved.

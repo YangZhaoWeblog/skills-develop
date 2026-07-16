@@ -39,7 +39,7 @@ Do not add new top-level directories unless the user or project convention expli
 5. Use explicit error wrapping and project-approved error surfaces when applicable.
 6. Write project-facing docs and comments in the language already used by the project.
 7. Before writing production code, pass Coding Start Check in [workflow-gates.md](harness/workflow-gates.md).
-8. Medium+ work uses `$pge-workflow` to enter PGE in Path stage; if Generator / Evaluator cannot be independent, record fallback instead of silently working solo.
+8. Medium+ work uses `$pge-workflow` to enter PGE in Path stage; a locked Contract still requires explicit Human Start approval for its current revision before code or code-writing Agents may start, and fallback cannot bypass that approval.
 9. Before final delivery or commit, run verification appropriate to the change and record commands.
 
 ## Task Routing
@@ -47,7 +47,7 @@ Do not add new top-level directories unless the user or project convention expli
 | Scenario | Entry action | Reference |
 |---|---|---|
 | Local setup / commands | Read local runbook | [development.md](harness/development.md) |
-| Medium+ work / critical flow | Follow main workflow; use `$pge-workflow` to enter large-work protocol in Path stage when applicable | [pge-protocol.md](harness/pge-protocol.md) |
+| Medium+ work / critical flow | Use `$pge-workflow` for Grill, Contract, Challenge, Human Start, Generator, and Evaluator | [pge-protocol.md](harness/pge-protocol.md) |
 | API change | Update API source first, then generated code | [api-standards.md](harness/api-standards.md) |
 | Database change | Add migration; do not edit applied migrations | [database.md](harness/database.md) |
 | Dependency / event / external service | Use dependency owner rules | [dependency-map.md](harness/dependency-map.md) |
@@ -60,7 +60,7 @@ All tasks follow one main workflow. Topic-specific protocols are subflows, not b
 1. **Intake**: capture goal and hard-blocking clarification; write `无硬阻塞` when clear.
 2. **Context**: read this file, relevant harness files, target files, tests, and failure notes.
 3. **Size & Risk**: classify small / medium / large and detect API, DB, dependency, deployment, or critical-flow risk.
-4. **Path**: small work may proceed directly; medium+ or critical work uses `$pge-workflow` to enter the relevant subflow and then returns here.
+4. **Path**: small work may proceed directly; medium+ or critical work uses `$pge-workflow` to complete Grill, Contract, Challenge, and Human Start before implementation, then returns here.
 5. **Verify**: pass Coding Start Check before code; run scoped verification after changes.
 6. **Circuit Breaker**: if the same interface / flow fails 3 rounds of tests, reference alignment, or review, stop and return to design / clarification.
 7. **Close**: normal PGE closes only on `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks close. Fallback with Evaluator assurance still requires that conclusion; missing assurance requires completed self-review, and required owner acknowledgement must be confirmed. Non-PGE non-trivial work uses independent AI review. Human PR review remains separate when required.
@@ -80,8 +80,8 @@ Rule growth, ownership, and harness maintenance are governed by [instruction-gov
 | Coding style | architecture, naming, layering | [coding-style.md](harness/coding-style.md) |
 | Testing | unit, integration, regression, verification evidence | [testing.md](harness/testing.md) |
 | Code review | independent review, checklist, reject reasons | [code-review.md](harness/code-review.md) |
-| Large-work protocol | contracts, generator/evaluator, fallback, circuit breaker | [pge-protocol.md](harness/pge-protocol.md) |
-| PGE workflow skill | routing, Challenge Gate, fallback status shape | [.agents/skills/pge-workflow/SKILL.md](.agents/skills/pge-workflow/SKILL.md) |
+| Large-work protocol | Grill, Contract, Human Start, generator/evaluator, fallback | [pge-protocol.md](harness/pge-protocol.md) |
+| PGE workflow skill | routing, Challenge Gate, Human Start, fallback status shape | [.agents/skills/pge-workflow/SKILL.md](.agents/skills/pge-workflow/SKILL.md) |
 | PGE agents | generator/evaluator execution prompts | [.codex/agents/](.codex/agents/) |
 | PGE templates | sprint contract and evaluator report | [docs/pge/](docs/pge/) |
 | API | public interface and compatibility | [api-standards.md](harness/api-standards.md) |

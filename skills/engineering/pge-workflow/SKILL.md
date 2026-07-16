@@ -1,6 +1,6 @@
 ---
 name: pge-workflow
-description: Coordinate this repository's PGE flow by identifying when to use Sprint Contract, Challenge Gate, pge-generator, and pge-evaluator. Use when work mentions PGE, Generator, Evaluator, Batch, single RPC, key flow, independent acceptance, or Sprint Contract.
+description: Coordinate this repository's PGE flow through Grill, Sprint Contract, Challenge Gate, Human Start Gate, pge-generator, and pge-evaluator. Use when work mentions PGE, Generator, Evaluator, Batch, single RPC, key flow, independent acceptance, or Sprint Contract.
 ---
 
 # PGE Workflow
@@ -13,12 +13,12 @@ The project PGE policy source of truth is `harness/pge-protocol.md`. This skill 
 
 1. Read `AGENTS.md`, `harness/pge-protocol.md`, and any existing PGE status/spec files named by the task.
 2. Decide whether PGE is required.
-3. If PGE is required, ensure the task has a Sprint Contract or produce the smallest contract draft.
-4. If `scripts/check_pge_contracts.sh` exists, run it against the active spec before Challenge Gate.
-5. Run Challenge Gate before locking the contract.
-6. Decide whether the locked contract has independent slices that can be dispatched in parallel.
-7. Route implementation to `pge-generator` and challenge or acceptance to `pge-evaluator` when those agents are actually available.
-8. If independent agents are not available, record fallback before proceeding.
+3. Announce and run the chosen Grill primitive, then record Grill Closure.
+4. Produce the smallest Sprint Contract draft and run the repository structure check when available.
+5. Announce the read-only Agent roles, then run Challenge Gate and lock the Contract.
+6. Decide parallel boundaries, then mirror the locked Contract into a visible Implement Plan.
+7. Pass Human Start Gate; only afterward create implementation workspaces or dispatch `pge-generator`.
+8. Route acceptance to `pge-evaluator`; record fallback whenever an independent role is unavailable.
 
 ## Structure Check
 
@@ -49,6 +49,16 @@ Use PGE by default for:
 
 Small docs, config, or local single-module changes may stay solo when `harness/pge-protocol.md` allows it, but they still need scoped verification and review.
 
+## Grill Routing
+
+PGE orchestrators use model-invoked primitives, not user-only wrappers:
+
+- use `$grilling` for the default plan and risk interview;
+- add `$domain-modeling` only when the user explicitly chooses a docs-bearing Grill and the allowed planning-document paths are recorded before the skill writes them;
+- never model-invoke `$grill-me` or `$grill-with-docs`; they are user entrypoints that delegate to the primitives above.
+
+Before the first question, tell the user which primitive is active and why. Investigate code-answerable facts directly, ask irreducible user decisions one at a time, and cover the branches required by `harness/pge-protocol.md`. Confirmation that Grill reached shared understanding completes Grill Closure only; it is not Human Start approval.
+
 ## Challenge Gate
 
 Input: Draft Sprint Contract from user grill and Planner.
@@ -65,16 +75,28 @@ Ask `pge-evaluator` for a Contract Challenge:
 
 - whether acceptance criteria are testable
 - missing positive or negative cases
-- scope drift or hidden dependencies
+- scope drift, missing non-goals, or hidden dependencies
+- candidate helpers, Guards, interfaces, or function shapes frozen without independent value
 - whether PASS/FAIL can be decided after implementation
 
-The main agent summarizes the result. If there is no blocker, lock the Contract. If there is a blocker, return to user grill. Do not let Generator and Evaluator negotiate indefinitely.
+Before each dispatch, announce the Agent role, read-only purpose, supplied context, and write boundary. The main agent summarizes the result. If there is no blocker, lock the Contract. If there is a blocker, return it to Planner; only an irreducible user decision returns to Grill. Do not let Generator and Evaluator negotiate indefinitely.
+
+## Human Start Gate
+
+Follow `harness/pge-protocol.md`; this section maps the gate onto runtime tools.
+
+1. Mirror Contract steps into a visible task list when available. Otherwise show a concise Implement Plan in the message.
+2. Ask the start question with the runtime's structured user-input tool when available, offering “开始实现（推荐）” and “继续讨论” while preserving free-form input.
+3. If no structured question tool is available, ask the same question directly. Do not switch modes merely to obtain a tool, set an auto-resolution timeout, or infer approval from silence.
+4. Record the answer in the Contract's `human_start_gate`; only protocol v2 with `status = approved`, equal revisions, and non-empty channel/evidence permits Coding Start Check or code-writing dispatch.
+
+The visible plan is a projection of the Contract, not a second artifact. Grill confirmation, Contract lock, fallback, and a prior revision's approval do not pass this gate. A scope-changing reply revokes approval and returns to Planner.
 
 ## Parallel Dispatch
 
 Policy lives in `harness/pge-protocol.md`; this skill owns orchestration.
 
-The main agent decides parallel dispatch after the contract is locked:
+The main agent may design parallel dispatch after the Contract is locked, but may start code-writing slices only after Human Start Gate is valid for the current Contract revision:
 
 - Use parallel dispatch only when the contract lists independently testable slices with clear file boundaries.
 - Record the dispatch decision in the Sprint Contract or active status document.
@@ -99,9 +121,21 @@ When this skill is used, the main agent must report or record:
 ```json
 {
   "pge_required": true,
+  "pge_protocol_version": 2,
   "reason": "medium+ task / single RPC / key flow / batch / cross-module / independent acceptance",
+  "grill": {
+    "primitives_used": ["$grilling"],
+    "closure_status": "pending | complete"
+  },
   "contract_status": "drafted | challenged | locked | returned_to_planner | not_required",
   "challenge_gate_result": "not_run | pass | blocked",
+  "contract_revision": 1,
+  "human_start_gate": {
+    "status": "pending | approved | revoked | not_required",
+    "approved_contract_revision": null,
+    "channel": "request_user_input | AskUserQuestion | direct_reply | not_required",
+    "evidence": ""
+  },
   "agent_usage": {
     "generator": "independent | unavailable | not_needed",
     "evaluator": "independent | unavailable | not_needed"
@@ -122,7 +156,7 @@ When this skill is used, the main agent must report or record:
   },
   "fallback": null,
   "verify_cmd": "command to run or expected command",
-  "next_action": "lock_contract | grill | implement | evaluate | fallback_review"
+  "next_action": "grill | challenge | lock_contract | await_user_approval | implement | evaluate | fallback_review"
 }
 ```
 
@@ -162,6 +196,8 @@ Close fallback by state: `available` Evaluator assurance still requires `PASS` o
 - PGE AI review does not replace human PR review when the repository requires it.
 - Do not copy the full PGE policy here; `harness/pge-protocol.md` remains the policy source of truth.
 - Do not copy full testing or TDD rules here; Generator must follow the project's testing and TDD rules.
-- Do not edit production code before the contract is locked, except for explicitly scoped probes allowed by `harness/pge-protocol.md`.
+- A locked Contract is not implementation approval. Do not edit production code or tests, create code-writing worktrees, or dispatch code-writing Agents before Human Start Gate is valid for the current Contract revision.
+- Grill Closure and Human Start are separate confirmations. Fallback never bypasses Human Start.
+- Announce every Agent's role, purpose, supplied context, and read/write boundary before dispatch.
 - Do not let dispatched agents negotiate scope with each other; the main agent owns dispatch, integration, and final handoff.
 - Keep `harness/pge-protocol.md` as the PGE policy source of truth.

@@ -7,12 +7,15 @@ mode: fresh-init | existing-harness-plan
 ## Project Profile
 
 - repo_type:
+- code_repository_evidence:
 - language_stack:
 - detected_commands:
 - has_api:
 - has_database:
 - has_deployment:
 - needs_large_workflow:
+- pge_protocol: v2 / inactive
+- grill_bundle: complete / not_generated
 
 ## Planned Files
 

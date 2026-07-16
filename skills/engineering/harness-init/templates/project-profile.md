@@ -2,6 +2,8 @@
 
 project_name:
 project_description:
+is_code_repository:
+code_repository_evidence:
 repo_type:
 language_stack:
 frameworks:

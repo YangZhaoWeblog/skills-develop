@@ -8,6 +8,7 @@
 | Field | Value |
 |---|---|
 | Sprint | TBD |
+| PGE protocol version | 2 |
 | Goal | TBD |
 | Evaluator | TBD |
 | Branch | TBD |
@@ -19,6 +20,7 @@
 | Item | Result | Notes |
 |---|---|---|
 | Contract compliance | TBD | TBD |
+| Human Start Gate | TBD | Approval exists and matches the implemented Contract revision |
 | Tests | TBD | TBD |
 | TDD evidence | TBD | TBD |
 | User-data / API safety | TBD | TBD |

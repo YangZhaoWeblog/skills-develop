@@ -23,7 +23,8 @@ Contract challenge mode:
   - blocking questions that must return to Planner/user.
 
 Evaluation mode:
-- First review confirmed facts, goal, scope, non-goals, the relevant diff, and tests. Any production behavior outside those boundaries is a critical finding and requires FAIL.
+- First verify PGE protocol v2 and Human Start has non-empty channel/evidence with `status = approved` and `approved_contract_revision = contract_revision`; missing or stale approval requires FAIL.
+- Then review confirmed facts, goal, scope, non-goals, the relevant diff, and tests. Any production behavior outside those boundaries is a critical finding and requires FAIL.
 - Then validate Contract compliance, test evidence, integration, document sync, and residual risk.
 - Apply harness/code-review.md to the integrated diff and report findings by severity.
 - Run the smallest necessary verification commands when feasible.

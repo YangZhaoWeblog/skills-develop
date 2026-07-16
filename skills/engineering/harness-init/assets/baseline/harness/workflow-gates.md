@@ -19,7 +19,7 @@ Escalate when scope grows, when public API/DB/deployment changes appear, or when
 
 ## Path Gate
 
-Small work may proceed after Coding Start Check. Medium+ and critical-flow work must use `$pge-workflow` and the relevant protocol in `pge-protocol.md` or a project-specific design process, then return to Verify and Close.
+Small work may proceed after Coding Start Check. Medium+ and critical-flow work must use `$pge-workflow` to complete Grill, Contract Challenge, Contract lock, and Human Start under `pge-protocol.md`, then return to Verify and Close.
 
 ## Coding Start Check
 
@@ -29,6 +29,7 @@ Before production code:
 2. Check worktree and preserve unrelated user changes.
 3. Confirm required context and design artifacts exist.
 4. Confirm verification strategy.
+5. For PGE work, confirm protocol version 2, Grill Closure, a locked Contract, and `human_start_gate.status = approved` with matching revisions and non-empty channel/evidence. Stop when any field is missing or stale.
 
 ## Dirty Worktree Protocol
 
@@ -49,8 +50,8 @@ If the same interface or flow fails 3 rounds of tests, reference alignment, or r
 
 ## Commit Gate
 
-Before commit, confirm Coding Start Check still holds, verification ran, no unrelated files are included, and the applicable review path is complete. Normal PGE and fallback with available Evaluator assurance require `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks commit and close. Fallback with missing Evaluator assurance requires `main_agent_self_review: complete`; when `owner_ack_required` is true, `owner_ack_status` must be `confirmed`. Non-PGE non-trivial work requires an independent AI review conclusion. Do not duplicate generic AI review after normal PGE evaluation. Any fallback supplemental review must stay labeled as non-Evaluator evidence. Human PR review remains separate when required.
+Before commit, confirm Coding Start Check still holds, verification ran, no unrelated files are included, and the applicable review path is complete. Normal PGE and fallback require valid Human Start evidence for the implemented Contract revision. PGE with available Evaluator assurance requires `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks commit and close. Fallback with missing Evaluator assurance requires `main_agent_self_review: complete`; when `owner_ack_required` is true, `owner_ack_status` must be `confirmed`. Non-PGE non-trivial work requires an independent AI review conclusion. Do not duplicate generic AI review after normal PGE evaluation. Any fallback supplemental review must stay labeled as non-Evaluator evidence. Human PR review remains separate when required.
 
-Serial tasks default to the current workspace and a semantic branch. Parallel code-writing defaults to `git worktree`, one PGE per worktree and branch. Do not let multiple agents modify production code in the same workspace.
+Serial tasks default to the current workspace and a semantic branch. Parallel code-writing defaults to `git worktree`, one PGE per worktree and branch. Do not let multiple agents concurrently modify production code in the same workspace.
 
 Parallel PGE must first satisfy `pge-protocol.md` independent acceptance and file-boundary requirements. Shared protocol files, migrations, state machines, public-interface hot zones, or shared helper hot zones are serial work.

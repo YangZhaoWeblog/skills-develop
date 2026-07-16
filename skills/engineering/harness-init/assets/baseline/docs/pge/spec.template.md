@@ -8,6 +8,7 @@
 | Field | Value |
 |---|---|
 | Sprint | TBD |
+| PGE protocol version | 2 |
 | Goal | TBD |
 | Branch | TBD |
 | Planner | TBD |
@@ -40,6 +41,16 @@
 - Parent design: None / `docs/design/<name>.md`
 - Sibling PGE specs: None / `docs/pge/<other>-spec.md`
 - Independently acceptable: yes / no, reason TBD
+
+## Grill Closure
+
+- Primitives used: `$grilling` / `$grilling` + `$domain-modeling`
+- User decisions: TBD
+- Repository-confirmed facts: TBD
+- Assumptions: TBD
+- Residual risks: TBD
+- Recommendation: TBD
+- Pre-Human planning-document writes: none / exact authorized paths
 
 ## Parallel Dispatch
 
@@ -91,7 +102,27 @@
 - Required mock/fake/fixture: TBD
 - Verify command: TBD
 
+## Verification Commands
+
+- `verify_cmd:` TBD
+
 ## Risks And Circuit Breaker
 
 - Stop if: TBD
 - Return to Planner when: TBD
+
+## Human Start Gate
+
+> Grill confirmation and Contract lock do not approve implementation. This block is execution metadata and may be updated after the behavior boundary is locked.
+
+```json
+{
+  "contract_revision": 1,
+  "human_start_gate": {
+    "status": "pending",
+    "approved_contract_revision": null,
+    "channel": "",
+    "evidence": ""
+  }
+}
+```

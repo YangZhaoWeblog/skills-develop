@@ -13,6 +13,8 @@ Adopt the harness baseline without overwriting local project rules by default.
 - AGENTS.md:
 - harness_dir:
 - notable_local_rules:
+- current_pge_and_human_start_state:
+- current_grill_skill_closure:
 
 ## Gap Summary
 
