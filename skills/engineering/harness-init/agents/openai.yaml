@@ -1,4 +1,4 @@
 interface:
   display_name: "Harness Init"
-  short_description: "Generate a code-project agent harness."
-  default_prompt: "Use $harness-init to initialize a concise code-repository AGENTS.md/harness baseline with PGE v2 and Human Start, then install upstream grilling and domain-modeling."
+  short_description: "Compatibility entry for Harness Build."
+  default_prompt: "Use $harness-init as the compatibility entry and delegate the work to $harness-build."

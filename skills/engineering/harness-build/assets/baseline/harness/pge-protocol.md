@@ -29,17 +29,40 @@ Small docs/config/single-module changes may stay solo, but still need scoped ver
 
 ```mermaid
 flowchart LR
-    U[User / Grill] --> P[Planner]
-    P --> S[Design and spec draft]
-    S --> GP[Generator probe]
-    S --> EC[Evaluator challenge]
-    GP --> P
-    EC --> P
-    P --> H{Human Start}
-    H --> G[Generator: code, tests, evidence]
-    G --> E[Evaluator: final evaluation]
-    E -->|implementation defect| G
-    E -->|boundary or contract defect| P
+    Planner[Planner]
+    Grill[Grill]
+    ContractDraft[Contract draft]
+    GeneratorProbe[Generator read-only probe]
+    EvaluatorChallenge[Evaluator read-only challenge]
+    ContractLock[Contract lock]
+    HumanStart[Human Start]
+    Generator[Generator]
+    Implementation[Implementation]
+    ParallelJoin[Parallel join]
+    Evaluator[Evaluator]
+    FinalEvaluation[Final evaluation]
+    Fallback[Fallback]
+    CircuitBreaker[Circuit breaker]
+    ThirdFailure[third failure]
+    AgentUnavailable[agent unavailable]
+    Planner --> Grill
+    Grill --> ContractDraft
+    ContractDraft --> GeneratorProbe
+    ContractDraft --> EvaluatorChallenge
+    GeneratorProbe --> ContractLock
+    EvaluatorChallenge --> ContractLock
+    ContractLock --> HumanStart
+    HumanStart --> Generator
+    Generator --> Implementation
+    Generator --> ParallelJoin
+    Implementation --> ParallelJoin
+    ParallelJoin --> Evaluator
+    Evaluator --> FinalEvaluation
+    FinalEvaluation -->|PASS| Planner
+    Evaluator -->|FAIL| Generator
+    Evaluator -->|FAIL| Planner
+    ThirdFailure --> CircuitBreaker
+    AgentUnavailable --> Fallback
 ```
 
 Planner is the single writer for design and spec documents; Evaluator is the single writer for the eval document. Generator writes its assigned code and tests and returns evidence. After Generator handoff, the main agent may fix an integration conflict or make a necessary correction; it must disclose the patch as an implementation change and include it in final verification and evaluation. Do not concurrently edit the same hot zone.
@@ -85,6 +108,16 @@ Default templates:
 
 When `scripts/check_pge_contracts.sh` exists, check the active spec before Challenge Gate and the eval draft before Evaluator acceptance. The script checks structure only; requirement quality, semantic drift, and acceptance sufficiency remain Challenge Gate / Evaluator responsibilities.
 
+Pre-Challenge structure checks do not require Human Start approval.
+
+Run this trusted checker at Coding Start before production code or code-writing Agents:
+
+```bash
+python3 scripts/check_pge_contracts.py docs/pge/<sprint>-spec.md
+```
+
+Replace `<sprint>` with the active spec name. A non-zero result blocks Coding Start. The Builder validates the source-owned checker hash but never runs code from the target or staging tree.
+
 Existing protocol-v1 specs may receive text-only maintenance. Before implementation resumes, upgrade them to v2 with Grill Closure, `verify_cmd`, `contract_revision`, and Human Start evidence.
 
 ## Design / PGE Relationship
@@ -116,6 +149,12 @@ Human Start metadata is valid only when all are true:
 - `human_start_gate.status` is `approved`;
 - `approved_contract_revision` equals `contract_revision`;
 - `channel` and `evidence` are non-empty.
+
+The machine-checkable relations are:
+
+approved_contract_revision == contract_revision
+channel != ""
+evidence != ""
 
 Silence, timeout, ordinary discussion, Grill confirmation, Contract lock, or approval for an older revision is not authorization. A change to goal, scope, acceptance criteria, non-goals, or an acceptance-required property increments `contract_revision` and revokes prior approval. Implementation-only simplification inside the same boundary does not. Fallback never bypasses Human Start.
 

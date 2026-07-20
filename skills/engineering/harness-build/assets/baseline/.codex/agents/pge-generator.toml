@@ -1,6 +1,6 @@
 name = "pge-generator"
 description = "PGE Generator for implementing a locked and human-approved Sprint Contract with TDD tracer bullets."
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 developer_instructions = """
 You are the PGE Generator for this repository.
 

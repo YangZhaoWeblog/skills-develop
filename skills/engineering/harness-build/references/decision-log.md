@@ -30,3 +30,12 @@
 - Keep Grill Closure and Human Start as separate user confirmations: the first confirms shared understanding; the second authorizes implementation.
 - Install `grilling` and `domain-modeling` directly from `mattpocock/skills`; do not vendor or fork upstream skill code.
 - Do not install the legacy `grill-me` / `grill-with-docs` wrappers. PGE uses `grilling` and adds `domain-modeling` only for explicitly authorized planning-document work.
+
+## v4 — Validator Foundation
+
+- Make source-owned capability validation authoritative; never use a staged repository's checker to establish final success.
+- Freeze revision-bound Human Start, canonical PGE control flow, inherited PGE Agent models, and the four-Skill Grill toolchain as machine-checked capabilities.
+- Keep the canonical Mermaid control-flow diagram only in `harness/pge-protocol.md`.
+- Supersede v3's wrapper decision: require `grilling`, `domain-modeling`, `grill-me`, and `grill-with-docs`; keep both wrappers as exact one-hop delegations.
+- Keep PGE Agent model selection inherited by forbidding a top-level `model` key.
+- Future `harness-build` work will replace the current init/adoption behavior with a strong rebuild control plane while preserving project knowledge; this validator Sprint does not change the existing init workflow.

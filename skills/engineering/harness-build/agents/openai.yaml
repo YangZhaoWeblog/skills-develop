@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness Build"
+  short_description: "Safely force-upgrade a code repository Harness."
+  default_prompt: "Use $harness-build to build and safely apply a source-validated Harness upgrade while preserving project rules and unrelated work."

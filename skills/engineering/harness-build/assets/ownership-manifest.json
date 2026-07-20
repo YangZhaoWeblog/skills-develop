@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "builder_owned": [
+    ".agents/skills/pge-workflow/SKILL.md",
+    ".codex/agents/pge-generator.toml",
+    ".codex/agents/pge-evaluator.toml",
+    "docs/pge/spec.template.md",
+    "docs/pge/eval.template.md",
+    "harness/pge-protocol.md",
+    "scripts/check_pge_contracts.py",
+    "scripts/check_pge_contracts.sh"
+  ],
+  "project_overlay_paths": [
+    "AGENTS.md",
+    "harness/api-standards.md",
+    "harness/code-review.md",
+    "harness/coding-style.md",
+    "harness/database.md",
+    "harness/dependency-map.md",
+    "harness/deployment.md",
+    "harness/development.md",
+    "harness/failures.md",
+    "harness/glossary.md",
+    "harness/hooks-governance.md",
+    "harness/instruction-governance.md",
+    "harness/testing.md",
+    "harness/workflow-gates.md"
+  ],
+  "preserve": [
+    "ARCHITECTURE.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "harness/dependency-map.md",
+    ".agents/skills/harness-init",
+    ".agents/skills/harness-score"
+  ]
+}

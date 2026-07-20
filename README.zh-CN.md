@@ -55,6 +55,8 @@ npx skills@latest add YangZhaoWeblog/skills-develop -g -y
 npx skills@latest add YangZhaoWeblog/skills-develop --skill harness-init -y
 ```
 
+规范的安全升级入口使用 `--skill harness-build`；`harness-init` 仅作为一跳兼容名称。
+
 只安装一个本地 skill 目录：
 
 ```bash
@@ -75,7 +77,8 @@ npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
 
 | Skill | 作用 |
 | --- | --- |
-| `harness-init` | 为代码仓库生成带 PGE v2、Human Start 的 AGENTS.md/harness 基线，并安装上游 `grilling` 与 `domain-modeling`。 |
+| `harness-build` | 将现有 Git 代码仓库安全强升级为通过真源校验的 Harness，并以事务回滚保护项目规则和无关工作。 |
+| `harness-init` | 一跳委托给 `harness-build` 的兼容入口。 |
 | `harness-score` | 审视现有 harness，并输出离线 HTML 评分报告。 |
 | `pge-workflow` | 编排 Grill、Contract Challenge、Human Start、Generator/Evaluator、fallback 与并行派发。 |
 | `tdd` | 通过测试先行的红-绿-重构循环逐步实现行为。 |

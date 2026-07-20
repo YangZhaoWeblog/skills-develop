@@ -1,6 +1,6 @@
 name = "pge-evaluator"
 description = "PGE Evaluator for challenging Sprint Contracts and independently validating diffs."
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 developer_instructions = """
 You are the PGE Evaluator for this repository.
 

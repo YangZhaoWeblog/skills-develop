@@ -55,6 +55,9 @@ Install only one skill from this repository.
 npx skills@latest add YangZhaoWeblog/skills-develop --skill harness-init -y
 ```
 
+Use `--skill harness-build` for the canonical safe upgrade flow. `harness-init`
+remains a compatibility name that delegates to it.
+
 Install one local skill directory.
 
 ```bash
@@ -75,7 +78,8 @@ Replace `harness-init` with the target skill name. Add `-g` to install that sing
 
 | Skill | What it does |
 | --- | --- |
-| `harness-init` | Generates a code-repository AGENTS.md/harness baseline with PGE v2 and Human Start, then installs upstream `grilling` and `domain-modeling`. |
+| `harness-build` | Safely force-upgrades an existing Git code repository to a source-validated Harness, preserving project rules and unrelated work with transactional rollback. |
+| `harness-init` | Compatibility entry that delegates to `harness-build`. |
 | `harness-score` | Reviews an existing harness and renders an offline HTML score report. |
 | `pge-workflow` | Coordinates Grill, Contract Challenge, Human Start, Generator/Evaluator roles, fallback, and parallel dispatch. |
 | `tdd` | Builds behavior incrementally with test-first red-green-refactor cycles. |
@@ -134,6 +138,8 @@ npx skills add /Users/yangzhao/Code/skills-develop -g -y
 ```bash
 npx skills add /Users/yangzhao/Code/skills-develop/skills/engineering/harness-init -y
 ```
+
+规范入口是 `harness-build`；`harness-init` 仅保留为一跳兼容名称。
 
 不安装，直接生成单个 skill 的使用 prompt：
 
