@@ -1,6 +1,6 @@
 ---
 name: harness-build
-description: Safely force-upgrade an existing Git code repository to the canonical AI agent Harness. Use when a user asks to build, rebuild, upgrade, or refresh AGENTS.md, harness governance, PGE support, and required Grill dependencies while preserving project-grown rules and unrelated work.
+description: Safely force-upgrade an existing Git code repository to the canonical AI agent Harness. Use when a user asks to build, rebuild, upgrade, or refresh AGENTS.md, harness governance, fact-backed coding/testing/API/database rules, PGE support, and required Grill dependencies while preserving project memory and unrelated work.
 ---
 
 # Harness Build
@@ -18,7 +18,7 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
 
 ## Workflow
 
-1. For an existing Harness, prepare a reviewed project overlay in an OS temporary directory. Copy the confirmed `AGENTS.md` and every existing standard project-owned `harness/*.md` path listed by `assets/ownership-manifest.json`, preserving bytes and modes. Add `project-overlay.json`:
+1. For an existing Harness, prepare a reviewed project overlay in an OS temporary directory. Copy only the confirmed project-owned paths listed by `project_overlay_paths` in `assets/ownership-manifest.json`, preserving bytes and modes. Add `project-overlay.json`:
 
    ```json
    {
@@ -28,7 +28,7 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
    }
    ```
 
-   The list must cover every existing project-owned path. Do not include Builder-owned `harness/pge-protocol.md`, unknown governance extensions, or unreviewed content. Fresh repositories without `AGENTS.md` or `harness/` may use the baseline without an overlay.
+   The list must cover every existing project-owned path. Do not include Builder-owned paths, `fact_generated` paths, unknown governance extensions, or unreviewed content. `coding-style.md`, `testing.md`, `api-standards.md`, `database.md`, `dependency-map.md`, `development.md`, and `deployment.md` are rebuilt from canonical rules plus facts detected in repository manifests, commands, API sources, migrations, structure, CI, and deployment files. Their old text intentionally does not survive. Fresh repositories without `AGENTS.md` or `harness/` may use the baseline without an overlay.
 
 2. Run the source tests:
 
@@ -45,7 +45,7 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
      --staging-only /absolute/path/to/empty/staging
    ```
 
-4. Inspect the candidate, transaction summary, resolved upstream evidence, project-rule anchors, preserved extensions, and target diff. Confirm that overlay paths were strongly copied, inherited Agent reasoning efforts were retained, and no top-level Agent `model` key was introduced.
+4. Inspect the candidate, transaction summary, resolved upstream evidence, regenerated repository facts, preserved project memory, extensions, and target diff. Confirm that stale fact-generated rules were replaced, overlay paths were strongly copied, inherited Agent reasoning efforts were retained, and no top-level Agent `model` key was introduced.
 5. Apply only after the target workflow authorizes implementation:
 
    ```bash
@@ -62,6 +62,7 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
 - The Builder resolves `grilling`, `domain-modeling`, `grill-me`, and `grill-with-docs` from one current `mattpocock/skills` snapshot.
 - Source validation completes before backup or apply.
 - Builder-owned paths come from `assets/ownership-manifest.json`.
+- Fact-generated rule documents always start from the canonical baseline and current repository facts; existing copies cannot override them.
 - Unrelated installed Skills, ordinary Harness knowledge, project diagrams, symlinks, ignored files, build artifacts, and dirty user work are preserved.
 - Unknown Codex Agent execution entries block before staging.
 - Unknown Harness files that claim workflow, gate, PGE, Agent, instruction, or governance authority block before staging; ordinary project knowledge remains preserved.
@@ -78,5 +79,6 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
 - `assets/capability-manifest.json`: source-owned capability assertions.
 - `assets/ownership-manifest.json`: strong-overwrite and preserve classifications.
 - `scripts/build_harness.py`: staging, validation, transaction, apply, and rollback.
+- `scripts/project_rules.py`: deterministic repository fact detection and rule regeneration.
 - `scripts/validate_capabilities.py`: read-only source validator.
 - `scripts/tests/`: standard-library behavior tests.

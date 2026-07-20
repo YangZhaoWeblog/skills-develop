@@ -68,6 +68,15 @@ DIAGRAM_EDGES = [
     "ThirdFailure --> CircuitBreaker",
     "AgentUnavailable --> Fallback",
 ]
+FACT_GENERATED_PATHS = [
+    "harness/api-standards.md",
+    "harness/coding-style.md",
+    "harness/database.md",
+    "harness/dependency-map.md",
+    "harness/deployment.md",
+    "harness/development.md",
+    "harness/testing.md",
+]
 
 
 class CapabilityValidatorTest(unittest.TestCase):
@@ -207,8 +216,10 @@ class CapabilityValidatorTest(unittest.TestCase):
                 "```mermaid\nflowchart LR\n    service --> database\n```\n",
                 encoding="utf-8",
             )
-            (staging / "harness" / "dependency-map.md").write_text(
-                "```mermaid\nflowchart LR\n    logic --> dao\n```\n",
+            dependency_map = staging / "harness" / "dependency-map.md"
+            dependency_map.write_text(
+                dependency_map.read_text(encoding="utf-8")
+                + "\n```mermaid\nflowchart LR\n    logic --> dao\n```\n",
                 encoding="utf-8",
             )
 
@@ -454,6 +465,19 @@ class CapabilityValidatorTest(unittest.TestCase):
                 self.assertEqual(1, validation.returncode, validation.stderr)
                 self.assertIn("harness.skill_references.resolve", validation.stderr)
 
+    def test_rejects_project_rule_that_was_not_fact_generated(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            staging = Path(tmp_dir) / "staging"
+            self._write_complete_harness(staging)
+            stale = staging / "harness" / "testing.md"
+            stale.write_text("# Stale project testing rules\n", encoding="utf-8")
+
+            validation = self._run_validator(staging)
+
+            self.assertEqual(1, validation.returncode, validation.stderr)
+            self.assertIn("project.rules.fact_generated", validation.stderr)
+            self.assertIn("harness/testing.md was not regenerated", validation.stderr)
+
     def _run_validator(self, staging: Path) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [
@@ -494,6 +518,14 @@ class CapabilityValidatorTest(unittest.TestCase):
             "Use $pge-workflow for medium work.\n",
             encoding="utf-8",
         )
+        for relative_path in FACT_GENERATED_PATHS:
+            path = staging / relative_path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(
+                "# Generated project rule\n\n## Detected Repository Facts\n\n"
+                "- Fixture fact.\n",
+                encoding="utf-8",
+            )
 
     def _delete_contract_field(self, staging: Path, field: str) -> None:
         spec = staging / "docs" / "pge" / "spec.template.md"

@@ -17,19 +17,21 @@ VALIDATOR = SKILL_ROOT / "scripts" / "validate_capabilities.py"
 UNBUILT_BASELINE = SKILL_ROOT / "assets" / "baseline"
 PROJECT_OVERLAY_PATHS = (
     "AGENTS.md",
-    "harness/api-standards.md",
     "harness/code-review.md",
+    "harness/failures.md",
+    "harness/glossary.md",
+    "harness/hooks-governance.md",
+    "harness/instruction-governance.md",
+    "harness/workflow-gates.md",
+)
+FACT_GENERATED_PATHS = (
+    "harness/api-standards.md",
     "harness/coding-style.md",
     "harness/database.md",
     "harness/dependency-map.md",
     "harness/deployment.md",
     "harness/development.md",
-    "harness/failures.md",
-    "harness/glossary.md",
-    "harness/hooks-governance.md",
-    "harness/instruction-governance.md",
     "harness/testing.md",
-    "harness/workflow-gates.md",
 )
 
 
@@ -184,6 +186,106 @@ class HarnessBuildTest(unittest.TestCase):
                 build.stderr,
             )
             self.assertFalse(staging.exists())
+
+    def test_rebuilds_project_rules_from_repository_facts(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target = root / "target"
+            staging = root / "staging"
+            upstream = root / "upstream"
+            shutil.copytree(UNBUILT_BASELINE, target, symlinks=True)
+            subprocess.run(["git", "init", "-q", str(target)], check=True)
+            self._write_upstream_fixture(upstream)
+
+            (target / "go.mod").write_text(
+                "module example.org/product-service\n\n"
+                "go 1.24.12\n\n"
+                "require (\n"
+                "\tgithub.com/zeromicro/go-zero v1.9.2\n"
+                "\tgoogle.golang.org/grpc v1.75.1\n"
+                "\tgorm.io/gorm v1.31.0\n"
+                "\tgorm.io/driver/sqlite v1.6.0\n"
+                ")\n",
+                encoding="utf-8",
+            )
+            (target / "Makefile").write_text(
+                "ut:\n\tgo test ./...\n\n"
+                "lint:\n\tgofumpt -w .\n\n"
+                "build:\n\tgo build ./...\n\n"
+                "protoc:\n\tbuf generate\n\n"
+                "start-service:\n\tgo run ./product.go\n",
+                encoding="utf-8",
+            )
+            (target / "proto").mkdir()
+            (target / "proto" / "product.proto").write_text(
+                'syntax = "proto3";\nservice Product {}\n',
+                encoding="utf-8",
+            )
+            for dialect in ("mysql", "postgres"):
+                migration = target / "migrations" / dialect / "001_init.sql"
+                migration.parent.mkdir(parents=True)
+                migration.write_text("CREATE TABLE product(id INT);\n", encoding="utf-8")
+            (target / "migrations" / "atlas.hcl").write_text(
+                'src = "postgres://kingbase:secret@localhost/product"\n',
+                encoding="utf-8",
+            )
+            for relative in (
+                "internal/logic",
+                "internal/dao",
+                "internal/event",
+                "internal/cron",
+            ):
+                (target / relative).mkdir(parents=True)
+            (target / "Jenkinsfile").write_text("pipeline {}\n", encoding="utf-8")
+            (target / "Dockerfile").write_text("FROM scratch\n", encoding="utf-8")
+
+            for relative in FACT_GENERATED_PATHS:
+                (target / relative).write_text(
+                    "# Stale rule\n\nOLD_WEAK_RULE\n",
+                    encoding="utf-8",
+                )
+            failures = target / "harness" / "failures.md"
+            glossary = target / "harness" / "glossary.md"
+            failures.write_text("project failure memory\n", encoding="utf-8")
+            glossary.write_text("project glossary memory\n", encoding="utf-8")
+            overlay = root / "overlay"
+            self._write_project_overlay(target, overlay)
+
+            build = self._run_fixture_build(
+                target,
+                staging,
+                upstream,
+                overlay,
+            )
+
+            self.assertEqual(0, build.returncode, build.stderr)
+            generated = {
+                relative: (staging / relative).read_text(encoding="utf-8")
+                for relative in FACT_GENERATED_PATHS
+            }
+            for relative, content in generated.items():
+                self.assertNotIn("OLD_WEAK_RULE", content, relative)
+                self.assertIn("Detected Repository Facts", content, relative)
+            self.assertIn("example.org/product-service", generated["harness/coding-style.md"])
+            self.assertIn("Go 1.24.12", generated["harness/coding-style.md"])
+            self.assertIn("make ut", generated["harness/testing.md"])
+            self.assertIn("proto/product.proto", generated["harness/api-standards.md"])
+            self.assertIn("migrations/mysql", generated["harness/database.md"])
+            self.assertIn("migrations/postgres", generated["harness/database.md"])
+            self.assertIn("Kingbase", generated["harness/database.md"])
+            self.assertNotIn("SQLite", generated["harness/database.md"])
+            self.assertIn("internal/dao", generated["harness/dependency-map.md"])
+            self.assertIn("make start-service", generated["harness/development.md"])
+            self.assertIn("Jenkinsfile", generated["harness/deployment.md"])
+            self.assertIn("Dockerfile", generated["harness/deployment.md"])
+            self.assertEqual(
+                "project failure memory\n",
+                (staging / "harness" / "failures.md").read_text(encoding="utf-8"),
+            )
+            self.assertEqual(
+                "project glossary memory\n",
+                (staging / "harness" / "glossary.md").read_text(encoding="utf-8"),
+            )
 
     def test_builds_real_baseline_that_passes_source_validator(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -469,7 +571,6 @@ class HarnessBuildTest(unittest.TestCase):
             (target / "GEMINI.md").symlink_to("AGENTS.md")
             overlay = root / "overlay"
             self._write_project_overlay(target, overlay)
-            reviewed_dependency = self._node_bytes(dependency_map)
             (target / "AGENTS.md").write_text(
                 "legacy fallback must not survive\n",
                 encoding="utf-8",
@@ -507,10 +608,14 @@ class HarnessBuildTest(unittest.TestCase):
             self.assertIn("go-zero", generated_agents)
             self.assertIn("local patterns first", generated_agents)
             self.assertNotIn("legacy fallback", generated_agents)
-            self.assertEqual(
-                reviewed_dependency,
-                self._node_bytes(staging / "harness" / "dependency-map.md"),
+            generated_dependency = (
+                staging / "harness" / "dependency-map.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn(
+                "Detected Repository Facts",
+                generated_dependency,
             )
+            self.assertNotIn("legacy dependency fallback", generated_dependency)
             merged_lock = json.loads(
                 (staging / "skills-lock.json").read_text(encoding="utf-8")
             )
@@ -698,7 +803,7 @@ class HarnessBuildTest(unittest.TestCase):
             self._write_project_overlay(target, overlay)
             expected = {
                 "AGENTS.md": b"# Reviewed project AGENTS\n",
-                "harness/coding-style.md": b"# Reviewed project coding rules\n",
+                "harness/failures.md": b"# Reviewed project failures\n",
             }
             for relative, content in expected.items():
                 overlay_path = overlay / relative

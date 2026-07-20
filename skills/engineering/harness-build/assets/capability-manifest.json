@@ -97,6 +97,20 @@
         ".agents/skills/pge-workflow/SKILL.md"
       ],
       "skill_root": ".agents/skills"
+    },
+    {
+      "id": "project.rules.fact_generated",
+      "kind": "fact_generated_documents",
+      "paths": [
+        "harness/api-standards.md",
+        "harness/coding-style.md",
+        "harness/database.md",
+        "harness/dependency-map.md",
+        "harness/deployment.md",
+        "harness/development.md",
+        "harness/testing.md"
+      ],
+      "marker": "## Detected Repository Facts"
     }
   ]
 }

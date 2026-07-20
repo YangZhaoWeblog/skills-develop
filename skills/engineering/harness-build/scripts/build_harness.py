@@ -14,6 +14,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from project_rules import FACT_GENERATED_PATHS, rebuild_project_rules
 from validate_capabilities import SOURCE_MANIFEST, validate
 
 
@@ -37,6 +38,7 @@ def potential_managed_paths() -> list[str]:
     ownership = json.loads(OWNERSHIP_MANIFEST.read_text(encoding="utf-8"))
     paths = set(ownership["builder_owned"])
     paths.update(ownership["project_overlay_paths"])
+    paths.update(ownership["fact_generated"])
     paths.add("skills-lock.json")
     paths.update(f".agents/skills/{name}" for name in GRILL_SKILLS)
     paths.update(
@@ -102,6 +104,7 @@ def overlay_baseline(staging: Path) -> None:
     """Strongly replace owned files and fill only missing profile files."""
     manifest = json.loads(OWNERSHIP_MANIFEST.read_text(encoding="utf-8"))
     builder_owned = set(manifest["builder_owned"])
+    builder_owned.update(manifest["fact_generated"])
     for source in sorted(path for path in BASELINE.rglob("*") if not path.is_dir()):
         relative = source.relative_to(BASELINE).as_posix()
         destination = staging / relative
@@ -413,6 +416,7 @@ def classify_target(target: Path) -> None:
         Path(relative).as_posix()
         for relative in (
             ownership["builder_owned"] + ownership["project_overlay_paths"]
+            + ownership["fact_generated"]
         )
         if relative.startswith("harness/")
     }
@@ -450,6 +454,7 @@ def build_staging(
     assert_safe_managed_paths(staging)
     overlay_baseline(staging)
     apply_project_overlay(staging, project_overlay, project_overlay_paths)
+    rebuild_project_rules(target, staging, BASELINE)
     preserve_reasoning_effort(target, staging)
     for name, source in upstream_skills.items():
         destination = staging / ".agents" / "skills" / name
@@ -475,6 +480,7 @@ def managed_paths(
     manifest = json.loads(OWNERSHIP_MANIFEST.read_text(encoding="utf-8"))
     paths = set(manifest["builder_owned"])
     paths.update(project_overlay_paths)
+    paths.update(FACT_GENERATED_PATHS)
     paths.add("skills-lock.json")
     paths.update(f".agents/skills/{name}" for name in GRILL_SKILLS)
     for source in sorted(path for path in BASELINE.rglob("*") if not path.is_dir()):

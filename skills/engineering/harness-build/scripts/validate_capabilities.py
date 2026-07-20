@@ -195,6 +195,28 @@ def validate_skill_references(staging: Path, capability: dict) -> list[str]:
     return failures
 
 
+def validate_fact_generated_documents(
+    staging: Path, capability: dict
+) -> list[str]:
+    """Require every repository-fact document to come from the current build."""
+    failures = []
+    for relative_path in capability["paths"]:
+        path = staging / relative_path
+        if not path.is_file():
+            failures.append(f"{capability['id']}: missing {relative_path}")
+            continue
+        content = path.read_text(encoding="utf-8")
+        if capability["marker"] not in content:
+            failures.append(
+                f"{capability['id']}: {relative_path} was not regenerated"
+            )
+        if "{{" in content or "}}" in content:
+            failures.append(
+                f"{capability['id']}: {relative_path} contains an unresolved template"
+            )
+    return failures
+
+
 def validate(manifest_path: Path, staging: Path) -> list[str]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     failures = []
@@ -211,6 +233,10 @@ def validate(manifest_path: Path, staging: Path) -> list[str]:
             failures.extend(validate_skill_toolchain(staging, capability))
         elif capability["kind"] == "skill_references":
             failures.extend(validate_skill_references(staging, capability))
+        elif capability["kind"] == "fact_generated_documents":
+            failures.extend(
+                validate_fact_generated_documents(staging, capability)
+            )
         else:
             failures.append(
                 f"{capability['id']}: unsupported capability kind "

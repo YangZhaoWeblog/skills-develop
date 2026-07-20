@@ -40,6 +40,13 @@
 - Keep PGE Agent model selection inherited by forbidding a top-level `model` key.
 - Future `harness-build` work will replace the current init/adoption behavior with a strong rebuild control plane while preserving project knowledge; this validator Sprint does not change the existing init workflow.
 
+## v5 — Repository-Fact Rule Regeneration
+
+- Treat coding, testing, API, database, dependency, development, and deployment documents as fact-generated outputs, not project overlays.
+- Rebuild those documents from the canonical baseline and deterministic repository evidence; stale copies cannot override the result.
+- Keep AGENTS, review/governance decisions, failures, glossary, and ordinary project knowledge in the reviewed/preserved path.
+- Source validation requires every fact-generated document to carry the current-build marker and contain no unresolved template placeholder.
+
 ## v5 — Managed Path Symlink Boundary
 
 - Reject any symlinked ancestor of a Builder-managed path, plus symlinks at direct-write paths such as `skills-lock.json`, before staging or apply.

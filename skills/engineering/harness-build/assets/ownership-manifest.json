@@ -12,25 +12,26 @@
   ],
   "project_overlay_paths": [
     "AGENTS.md",
-    "harness/api-standards.md",
     "harness/code-review.md",
+    "harness/failures.md",
+    "harness/glossary.md",
+    "harness/hooks-governance.md",
+    "harness/instruction-governance.md",
+    "harness/workflow-gates.md"
+  ],
+  "fact_generated": [
+    "harness/api-standards.md",
     "harness/coding-style.md",
     "harness/database.md",
     "harness/dependency-map.md",
     "harness/deployment.md",
     "harness/development.md",
-    "harness/failures.md",
-    "harness/glossary.md",
-    "harness/hooks-governance.md",
-    "harness/instruction-governance.md",
-    "harness/testing.md",
-    "harness/workflow-gates.md"
+    "harness/testing.md"
   ],
   "preserve": [
     "ARCHITECTURE.md",
     "CLAUDE.md",
     "GEMINI.md",
-    "harness/dependency-map.md",
     ".agents/skills/harness-init",
     ".agents/skills/harness-score"
   ]
