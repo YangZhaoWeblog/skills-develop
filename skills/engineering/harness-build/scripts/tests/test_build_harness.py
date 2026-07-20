@@ -34,6 +34,90 @@ PROJECT_OVERLAY_PATHS = (
 
 
 class HarnessBuildTest(unittest.TestCase):
+    def test_rejects_managed_path_ancestor_symlink_before_staging(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target = root / "target"
+            staging = root / "staging"
+            upstream = root / "upstream"
+            external = root / "external"
+            target.mkdir()
+            external.mkdir()
+            subprocess.run(["git", "init", "-q", str(target)], check=True)
+            self._write_upstream_fixture(upstream)
+            (target / "scripts").symlink_to(
+                external,
+                target_is_directory=True,
+            )
+
+            build = subprocess.run(
+                [
+                    sys.executable,
+                    str(BUILDER),
+                    "--target",
+                    str(target),
+                    "--staging-only",
+                    str(staging),
+                    "--upstream-fixture",
+                    str(upstream),
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertNotEqual(0, build.returncode)
+            self.assertIn(
+                "managed path ancestor is a symlink: scripts",
+                build.stderr,
+            )
+            self.assertFalse(staging.exists())
+            self.assertEqual([], list(external.iterdir()))
+            self.assertTrue((target / "scripts").is_symlink())
+            self.assertEqual(external.resolve(), (target / "scripts").resolve())
+
+    def test_rejects_direct_write_symlink_before_staging(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target = root / "target"
+            staging = root / "staging"
+            upstream = root / "upstream"
+            external_lock = root / "external-skills-lock.json"
+            target.mkdir()
+            subprocess.run(["git", "init", "-q", str(target)], check=True)
+            self._write_upstream_fixture(upstream)
+            external_lock.write_text(
+                '{"version": 1, "skills": {}}\n',
+                encoding="utf-8",
+            )
+            external_before = external_lock.read_bytes()
+            (target / "skills-lock.json").symlink_to(external_lock)
+
+            build = subprocess.run(
+                [
+                    sys.executable,
+                    str(BUILDER),
+                    "--target",
+                    str(target),
+                    "--staging-only",
+                    str(staging),
+                    "--upstream-fixture",
+                    str(upstream),
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertNotEqual(0, build.returncode)
+            self.assertIn(
+                "direct-write managed path is a symlink: skills-lock.json",
+                build.stderr,
+            )
+            self.assertFalse(staging.exists())
+            self.assertEqual(external_before, external_lock.read_bytes())
+            self.assertTrue((target / "skills-lock.json").is_symlink())
+
     def test_existing_harness_requires_reviewed_project_overlay(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)

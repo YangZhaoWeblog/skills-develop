@@ -10,6 +10,7 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
 ## Preconditions
 
 - The target is an existing Git code repository.
+- The target, reviewed overlay, and explicit staging path must not be concurrently modified while Builder runs.
 - Read its `AGENTS.md`, relevant `harness/*.md`, current dirty work, build files, API/schema/dependency facts, and protected-branch rules.
 - State the one-sentence goal and hard blockers.
 - For medium-or-larger upgrades, use the target repository's PGE workflow and pass its Human Start Gate before apply.
@@ -65,6 +66,7 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
 - Unknown Codex Agent execution entries block before staging.
 - Unknown Harness files that claim workflow, gate, PGE, Agent, instruction, or governance authority block before staging; ordinary project knowledge remains preserved.
 - Apply is serial. Any apply or post-check failure restores the complete non-`.git` target tree by path, type, mode, file content, and symlink target.
+- Under the exclusive-access precondition, any symlinked ancestor of a Builder-managed path, or symlink at a direct-write path, blocks before staging and is rechecked before managed writes.
 - The source validator hashes the trusted Human Start checker but never executes target code.
 - The four upstream Skill directories are copied byte-for-byte from one Git snapshot; mixed snapshots block.
 - The Builder reads an installed or cached `skills` CLI version offline and never invokes `skills@latest`.

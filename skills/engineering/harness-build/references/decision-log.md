@@ -39,3 +39,11 @@
 - Supersede v3's wrapper decision: require `grilling`, `domain-modeling`, `grill-me`, and `grill-with-docs`; keep both wrappers as exact one-hop delegations.
 - Keep PGE Agent model selection inherited by forbidding a top-level `model` key.
 - Future `harness-build` work will replace the current init/adoption behavior with a strong rebuild control plane while preserving project knowledge; this validator Sprint does not change the existing init workflow.
+
+## v5 — Managed Path Symlink Boundary
+
+- Reject any symlinked ancestor of a Builder-managed path, plus symlinks at direct-write paths such as `skills-lock.json`, before staging or apply.
+- Require exclusive access to target, overlay, and explicit staging paths; concurrent external mutation is outside the rollback guarantee.
+- Recheck the copied staging tree before overlay and the target before each managed apply write as defense in depth.
+- Preserve unrelated symlinks and managed leaf symlinks under the existing ownership rules.
+- Treat preview writes outside staging as a blocking safety failure because rollback cannot restore external paths.

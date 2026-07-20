@@ -21,6 +21,7 @@ SKILL_ROOT = Path(__file__).resolve().parents[1]
 BASELINE = SKILL_ROOT / "assets" / "baseline"
 OWNERSHIP_MANIFEST = SKILL_ROOT / "assets" / "ownership-manifest.json"
 GRILL_SKILLS = ("grilling", "domain-modeling", "grill-me", "grill-with-docs")
+DIRECT_WRITE_PATHS = ("skills-lock.json",)
 KNOWN_AGENT_ENTRIES = {"pge-generator.toml", "pge-evaluator.toml"}
 GOVERNANCE_FILENAME = re.compile(
     r"(^|[-_])(workflow|gates?|pge|agents?|instructions?|governance)([-_.]|$)"
@@ -29,6 +30,40 @@ REASONING_EFFORT = re.compile(
     r'^model_reasoning_effort\s*=\s*"([^"]+)"$',
     re.MULTILINE,
 )
+
+
+def potential_managed_paths() -> list[str]:
+    """List every target-relative path the Builder may write."""
+    ownership = json.loads(OWNERSHIP_MANIFEST.read_text(encoding="utf-8"))
+    paths = set(ownership["builder_owned"])
+    paths.update(ownership["project_overlay_paths"])
+    paths.add("skills-lock.json")
+    paths.update(f".agents/skills/{name}" for name in GRILL_SKILLS)
+    paths.update(
+        source.relative_to(BASELINE).as_posix()
+        for source in BASELINE.rglob("*")
+        if not source.is_dir()
+    )
+    return sorted(paths)
+
+
+def assert_safe_managed_paths(root: Path) -> None:
+    """Reject managed writes that could follow symlinks."""
+    for relative in potential_managed_paths():
+        relative_path = Path(relative)
+        for parent in relative_path.parents:
+            if parent == Path("."):
+                continue
+            if (root / parent).is_symlink():
+                raise ValueError(
+                    "managed path ancestor is a symlink: "
+                    + parent.as_posix()
+                )
+    for relative in DIRECT_WRITE_PATHS:
+        if (root / relative).is_symlink():
+            raise ValueError(
+                "direct-write managed path is a symlink: " + relative
+            )
 
 
 def copy_tree(source: Path, destination: Path) -> None:
@@ -405,12 +440,14 @@ def build_staging(
     """Build a complete candidate without writing the target repository."""
     if staging.exists():
         raise ValueError(f"staging path already exists: {staging}")
+    assert_safe_managed_paths(target)
     shutil.copytree(
         target,
         staging,
         symlinks=True,
         ignore=shutil.ignore_patterns(".git"),
     )
+    assert_safe_managed_paths(staging)
     overlay_baseline(staging)
     apply_project_overlay(staging, project_overlay, project_overlay_paths)
     preserve_reasoning_effort(target, staging)
@@ -512,6 +549,7 @@ def apply_staging(
     failpoint: str | None,
 ) -> dict:
     """Apply a validated staging tree under a complete rollback backup."""
+    assert_safe_managed_paths(target)
     before_digest, before_nodes = tree_digest(target)
     with tempfile.TemporaryDirectory() as tmp_dir:
         backup = Path(tmp_dir) / "backup"
@@ -523,6 +561,7 @@ def apply_staging(
             for index, relative in enumerate(
                 managed_paths(target, staging, project_overlay_paths)
             ):
+                assert_safe_managed_paths(target)
                 copy_node(staging / relative, target / relative)
                 if failpoint == "apply" and index == 0:
                     raise ValueError("injected failpoint: apply")
@@ -584,12 +623,18 @@ def main() -> int:
     try:
         target = args.target.resolve()
         assert_git_repository(target)
+        assert_safe_managed_paths(target)
         classify_target(target)
-        project_overlay, project_overlay_paths = load_project_overlay(
-            target,
+        project_overlay = (
             args.project_overlay.resolve()
             if args.project_overlay is not None
-            else None,
+            else None
+        )
+        if project_overlay is not None:
+            assert_safe_managed_paths(project_overlay)
+        project_overlay, project_overlay_paths = load_project_overlay(
+            target,
+            project_overlay,
         )
         if args.failpoint == "classify":
             raise ValueError("injected failpoint: classify")
