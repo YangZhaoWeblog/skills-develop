@@ -100,6 +100,8 @@ Follow `harness/pge-protocol.md`; this section maps the gate onto runtime tools.
 3. If no structured question tool is available, ask the same question directly. Do not switch modes merely to obtain a tool, set an auto-resolution timeout, or infer approval from silence.
 4. Record the answer in the Contract's `human_start_gate`; only protocol v2 with `status = approved`, equal revisions, and non-empty channel/evidence permits Coding Start Check or code-writing dispatch.
 
+For a manual root-model switch, stop with the locked Contract still pending and emit a handoff receipt containing repository, branch, HEAD, spec path, and revision. The owner's explicit start message to the new root model is the approval evidence. That model must verify the receipt, update only the matching gate metadata as Planner, run the trusted checker, and only then enter or dispatch Generator. A dispatched `pge-generator` never self-approves. Keep the gate-only change separate when the Contract requires a clean product commit.
+
 The visible plan is a projection of the Contract, not a second artifact. Grill confirmation, Contract lock, fallback, and a prior revision's approval do not pass this gate. A scope-changing reply revokes approval and returns to Planner.
 
 ## Parallel Dispatch

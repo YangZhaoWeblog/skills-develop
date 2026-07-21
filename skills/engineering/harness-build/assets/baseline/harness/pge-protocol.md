@@ -175,6 +175,19 @@ evidence != ""
 
 Silence, timeout, ordinary discussion, Grill confirmation, Contract lock, or approval for an older revision is not authorization. A change to goal, scope, acceptance criteria, non-goals, or an acceptance-required property increments `contract_revision` and revokes prior approval. Implementation-only simplification inside the same boundary does not. Fallback never bypasses Human Start.
 
+### Manual model handoff
+
+When the owner plans to switch the root model before implementation, the Planner stops with the locked Contract still `pending` and gives a handoff receipt containing the repository, branch, HEAD, spec path, and `contract_revision`.
+
+The owner's explicit start message to the new root model is valid Human Start evidence. Before editing production code or tests, that root model must:
+
+1. verify the receipt against the current workspace and locked Contract;
+2. update only `human_start_gate` with the matching revision, `channel: direct_reply`, and the owner's exact start evidence;
+3. run the trusted Coding Start checker;
+4. stop on any branch, HEAD, revision, scope, or checker mismatch.
+
+The new root model acts as Planner while recording this gate and may then enter or dispatch the Generator role. A dispatched `pge-generator` cannot approve its own Human Start. The gate-only change stays separate from the product implementation commit when the Sprint requires a clean product projection.
+
 ## Parallel PGE
 
 Multiple PGE specs under the same design may run in parallel only when the locked contract records slice boundaries, file boundaries, and independently decidable acceptance criteria.
