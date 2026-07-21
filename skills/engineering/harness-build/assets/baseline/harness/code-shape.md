@@ -5,6 +5,12 @@
 > layer: project-grown
 > This project-owned file records local positive, negative, and valid-control schemas. Builder preserves it byte-for-byte; repository facts remain in `coding-style.md`.
 
+## How To Read
+
+- Use a schema only when its `Use when` condition matches concrete code.
+- Replace `Avoid` with `Prefer` only after checking `Exception`; do not enforce keywords mechanically.
+- Keep incident history and detailed evidence in the project's `failures.md`.
+
 ## How To Grow This Profile
 
 - Start from a real review correction or failure, not a stylistic preference.
@@ -15,156 +21,84 @@
 
 ## Schema: Object-Role Naming
 
-- **Intent**: make each production object recognizable at its use site.
-- **Trigger**: a new or renamed identifier represents a request, stored object, result, or transition participant.
-- **Risk**: vague or locally novel names force readers to reconstruct the referent.
-- **Positive**: use the repository's established role name, such as `request` or `storedRecord`, when that is what the value is.
-- **Negative**: use `data`, `item`, or `next` without a concrete object or ordering basis.
-- **Allowed exception / valid control**: `nextOffset` is precise when an ordered traversal supplies that basis; a new name is valid when it exposes a real distinction absent from nearby vocabulary.
-- **Generator action**: search the same layer and neighboring use cases before naming, then state evidence for a deliberate deviation.
-- **Evaluator evidence**: compare the production diff with nearby identifiers and require a concrete referent for each role name.
-- **Automation owner**: Generator and Evaluator; naming remains a judgment gate.
-- **Provenance**: reader-oriented naming in the [Google Go Style Guide](https://google.github.io/styleguide/go/guide.html) plus project review/failure evidence.
+- **Use when**: a new or renamed identifier represents a request, stored object, result, or transition participant.
+- **Prefer**: use the repository's established role name, such as `request` or `storedRecord`, when that is what the value is.
+- **Avoid**: use `data`, `item`, or `next` without a concrete object or ordering basis.
+- **Exception**: `nextOffset` is precise when an ordered traversal supplies that basis; a new name is valid when it exposes a real distinction absent from nearby vocabulary.
 
 ## Schema: Semantic Layout And Spatial Proximity
 
-- **Intent**: let related conditions, logs, and returns form one visual unit.
-- **Trigger**: formatting splits a short expression or related error path into mechanically uniform lines.
-- **Risk**: excessive vertical fragmentation hides the main condition and separates cause from response.
-- **Positive**: keep a short state check on one line; use multiline layout only when it creates meaningful semantic groups.
-- **Negative**: put every argument and nested error detail on its own line solely to satisfy a numeric width rule.
-- **Allowed exception / valid control**: multiline layout is valid for genuinely distinct semantic groups, long data literals, or clearer alignment.
-- **Generator action**: read the rendered block as a unit and regroup only the expressions whose meaning becomes easier to scan.
-- **Evaluator evidence**: cite the exact fragmented or overloaded block and explain which related facts are visually separated.
-- **Automation owner**: formatter for syntax; Generator, Evaluator, and human review for semantic layout.
-- **Provenance**: formatter-versus-judgment boundary in [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments) plus project review/failure evidence.
+- **Use when**: formatting splits a short expression or related error path into mechanically uniform lines.
+- **Prefer**: keep a short state check on one line; use multiline layout only when it creates meaningful semantic groups.
+- **Avoid**: put every argument and nested error detail on its own line solely to satisfy a numeric width rule.
+- **Exception**: multiline layout is valid for genuinely distinct semantic groups, long data literals, or clearer alignment.
 
 ## Schema: Independent Abstraction Value
 
-- **Intent**: keep abstractions that own behavior, a stable boundary, or a meaningful concept.
-- **Trigger**: a new helper, wrapper, interface, rank, manager, or aggregate layer mostly renames another operation.
-- **Risk**: indirection increases navigation while hiding the use-case skeleton or duplicating an existing capability.
-- **Positive**: retain a helper that owns stable storage encoding, error mapping, protocol translation, a transaction, or reusable domain policy.
-- **Negative**: add a pass-through wrapper, mirror an existing enum without independent semantics, or redistribute one flow across an aggregate core.
-- **Allowed exception / valid control**: one caller is acceptable when the helper owns an independent boundary; caller count alone neither proves nor disproves value.
-- **Generator action**: apply the deletion or inlining test and name the behavior, boundary, or clarity that would be lost.
-- **Evaluator evidence**: follow the production call chain and show whether deleting or inlining the abstraction loses independent value.
-- **Automation owner**: Generator and Evaluator; structural tools may only provide navigation evidence.
-- **Provenance**: smell-as-investigation guidance in [Martin Fowler's Code Smell](https://martinfowler.com/bliki/CodeSmell.html) plus project review/failure evidence.
+- **Use when**: a new helper, wrapper, interface, rank, manager, or aggregate layer mostly renames another operation.
+- **Prefer**: retain a helper that owns stable storage encoding, error mapping, protocol translation, a transaction, or reusable domain policy.
+- **Avoid**: add a pass-through wrapper, mirror an existing enum without independent semantics, or redistribute one flow across an aggregate core.
+- **Exception**: one caller is acceptable when the helper owns an independent boundary; caller count alone neither proves nor disproves value.
 
 ## Schema: Cohesive Domain Input
 
-- **Intent**: keep fields that describe one loaded domain snapshot together across an internal operation boundary.
-- **Trigger**: a caller already owns a cohesive domain object, while a helper consumes two or more of its identity, ownership, version, or policy fields and a change proposes adding another scalar parameter from that same object.
-- **Risk**: a growing scalar tunnel hides field relationships, permits mixed-snapshot combinations, and makes every new requirement widen the signature again.
-- **Positive**: pass the existing domain object or a smaller independently meaningful value object, then derive the coupled fields inside the operation that uses them.
-- **Negative**: turn `generatePolicy(productID, orgID)` into `generatePolicy(productID, orgID, productNumber)` when all three values already belong to the loaded `product`.
-- **Allowed exception / valid control**: keep scalars when they are independently sourced, only one field is needed, the callee is a stable primitive or protocol boundary, or passing the whole object would broaden authority or create an invalid dependency.
-- **Generator action**: list the fields the callee needs, their source and invariant; if several come from one existing object, prefer that cohesive input unless an exception has concrete evidence.
-- **Evaluator evidence**: inspect the caller and callee together, check whether the scalar combination could describe different snapshots, and verify that a proposed fix does not merely append another field to the tunnel.
-- **Automation owner**: Generator and Evaluator; type systems may encode a value object, but caller/callee review decides cohesion.
-- **Provenance**: a sealed cross-repository maintenance review missed that a correct field fix still widened an existing product scalar tunnel; the human-corrected implementation passed the loaded Product model instead.
+- **Use when**: a caller already owns a cohesive domain object, while a helper consumes two or more of its identity, ownership, version, or policy fields and a change proposes adding another scalar parameter from that same object.
+- **Prefer**: pass the existing domain object or a smaller independently meaningful value object, then derive the coupled fields inside the operation that uses them.
+- **Avoid**: turn `generatePolicy(productID, orgID)` into `generatePolicy(productID, orgID, productNumber)` when all three values already belong to the loaded `product`.
+- **Exception**: keep scalars when they are independently sourced, only one field is needed, the callee is a stable primitive or protocol boundary, or passing the whole object would broaden authority or create an invalid dependency.
 
 ## Schema: Visible Use-Case Flow
 
-- **Intent**: keep the main business stages and rejection points visible in the entry flow.
-- **Trigger**: orchestration is moved behind generic `core`, `manager`, `builder`, or callback layers, or a rejection follows an avoidable side effect.
-- **Risk**: reviewers cannot see ordering, side effects, or business branches without recursive navigation.
-- **Positive**: show validation, authorization, state decision, write/external effect, and response/event stages in use-case order.
-- **Negative**: hide a single use case behind an aggregate object that only forwards calls, or perform persistent/external work before a locally decidable rejection.
-- **Allowed exception / valid control**: a prerequisite read is valid when the decision cannot be made locally and the read is contractually side-effect free; stable transaction/protocol boundaries may remain helpers.
-- **Generator action**: keep the production skeleton at the call site and push down only independently meaningful operations.
-- **Evaluator evidence**: trace the rejection and success paths in production code, noting every persistent or external effect in order.
-- **Automation owner**: Generator, Evaluator, behavior tests, and side-effect fakes where available.
-- **Provenance**: invariant-oriented constraints in [OpenAI Harness Engineering](https://openai.com/index/harness-engineering/) plus cross-repository review evidence.
+- **Use when**: orchestration is moved behind generic `core`, `manager`, `builder`, or callback layers, or a rejection follows an avoidable side effect.
+- **Prefer**: show validation, authorization, state decision, write/external effect, and response/event stages in use-case order.
+- **Avoid**: hide a single use case behind an aggregate object that only forwards calls, or perform persistent/external work before a locally decidable rejection.
+- **Exception**: a prerequisite read is valid when the decision cannot be made locally and the read is contractually side-effect free; stable transaction/protocol boundaries may remain helpers.
 
 ## Schema: Operation-Semantic State Policy
 
-- **Intent**: express allowed state transitions in the vocabulary of the operation.
-- **Trigger**: a flow adds raw state comparisons in several methods or proposes one generic interpreter with flags, absent sentinels, and invalid parameter combinations.
-- **Risk**: scattered rules drift, while an over-generic interpreter hides which transition each operation permits.
-- **Positive**: use a small operation-semantic check or shared primitive whose call site states the current object and allowed transition.
-- **Negative**: duplicate raw `state != ...` branches across operations, or encode all lifecycle behavior in one flag-driven helper.
-- **Allowed exception / valid control**: a direct comparison is valid when it is the sole local rule and is clearer than a named helper; a generic primitive is valid when all parameter combinations are meaningful.
-- **Generator action**: inventory operations and choose the smallest shared policy that leaves each transition legible at its call site.
-- **Evaluator evidence**: compare all affected operations for drift, invalid helper combinations, and call-site clarity.
-- **Automation owner**: Generator, Evaluator, and state-transition tests.
-- **Provenance**: reader-centered clarity from the [Google Go Style Guide](https://google.github.io/styleguide/go/guide.html) plus project lifecycle review evidence.
+- **Use when**: a flow adds raw state comparisons in several methods or proposes one generic interpreter with flags, absent sentinels, and invalid parameter combinations.
+- **Prefer**: use a small operation-semantic check or shared primitive whose call site states the current object and allowed transition.
+- **Avoid**: duplicate raw `state != ...` branches across operations, or encode all lifecycle behavior in one flag-driven helper.
+- **Exception**: a direct comparison is valid when it is the sole local rule and is clearer than a named helper; a generic primitive is valid when all parameter combinations are meaningful.
 
 ## Schema: Existing Capability Reuse
 
-- **Intent**: reuse an existing project, dependency, or standard-library capability when its contract already fits.
-- **Trigger**: new code wraps, recomputes, or re-exposes behavior available nearby.
-- **Risk**: duplicate paths drift and create unnecessary tests, storage reads, or error handling.
-- **Positive**: call the existing helper or library operation directly and preserve its established contract.
-- **Negative**: add a thin existence wrapper over a get-with-exists operation or reimplement a standard set/equality primitive.
-- **Allowed exception / valid control**: a wrapper is valid when it changes the contract, owns stable encoding/error translation, or creates a real policy boundary.
-- **Generator action**: search the repository, direct dependencies, and standard library before adding a capability; record why a near match is insufficient.
-- **Evaluator evidence**: identify the existing capability and compare semantics, errors, and side effects rather than names alone.
-- **Automation owner**: Generator and Evaluator; search/static analysis supplies evidence but does not decide semantic equivalence.
-- **Provenance**: simplicity guidance in the [Google Go Style Guide](https://google.github.io/styleguide/go/guide.html) plus project duplication failures.
+- **Use when**: new code wraps, recomputes, or re-exposes behavior available nearby.
+- **Prefer**: call the existing helper or library operation directly and preserve its established contract.
+- **Avoid**: add a thin existence wrapper over a get-with-exists operation or reimplement a standard set/equality primitive.
+- **Exception**: a wrapper is valid when it changes the contract, owns stable encoding/error translation, or creates a real policy boundary.
 
 ## Schema: Staged Navigation Comments
 
-- **Intent**: give readers a fast index into a non-trivial production flow.
-- **Trigger**: a method contains several business stages or a surprising ordering decision that names alone do not expose quickly.
-- **Risk**: readers must parse every statement before locating validation, policy, state change, and side effects.
-- **Positive**: add short stage comments in the project's language and format, describing why or the business stage rather than restating syntax.
-- **Negative**: omit navigation from a long multi-stage flow, or comment every obvious line with a paraphrase of the code.
-- **Allowed exception / valid control**: a short self-explanatory function needs no stage comments; local convention may prefer numbered or unnumbered stage labels.
-- **Generator action**: add only comments that shorten navigation or preserve a non-obvious reason, then remove stale narration.
-- **Evaluator evidence**: read comments independently and verify they index real stages, remain accurate, and do not compensate for opaque code.
-- **Automation owner**: Generator, Evaluator, and human review.
-- **Provenance**: necessary-comment reasoning in [Robert C. Martin's Necessary Comments](https://blog.cleancoder.com/uncle-bob/2017/02/23/NecessaryComments.html) plus project review evidence.
+- **Use when**: a method contains several business stages or a surprising ordering decision that names alone do not expose quickly.
+- **Prefer**: add short stage comments in the project's language and format, describing why or the business stage rather than restating syntax.
+- **Avoid**: omit navigation from a long multi-stage flow, or comment every obvious line with a paraphrase of the code.
+- **Exception**: a short self-explanatory function needs no stage comments; local convention may prefer numbered or unnumbered stage labels.
 
 ## Schema: Business Constant Ownership
 
-- **Intent**: keep shared business vocabulary in the repository's designated owner.
-- **Trigger**: production code introduces a business sequence, state, method, event, parameter, or storage identifier.
-- **Risk**: local duplicates hide shared meaning and allow values to diverge.
-- **Positive**: place or reuse the constant in the established package/file for that concept.
-- **Negative**: declare a shared business constant beside one method merely because it has one current use.
-- **Allowed exception / valid control**: a private algorithmic constant may stay local when it has no domain identity and no established shared owner.
-- **Generator action**: inspect nearby constants and the project index before choosing ownership; avoid creating a new constants layer.
-- **Evaluator evidence**: cite the established owner and determine whether the value is domain vocabulary or a local implementation detail.
-- **Automation owner**: Generator, Evaluator, and project-specific lint when available.
-- **Provenance**: repository organization guidance in [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments) plus project convention failures.
+- **Use when**: production code introduces a business sequence, state, method, event, parameter, or storage identifier.
+- **Prefer**: place or reuse the constant in the established package/file for that concept.
+- **Avoid**: declare a shared business constant beside one method merely because it has one current use.
+- **Exception**: a private algorithmic constant may stay local when it has no domain identity and no established shared owner.
 
 ## Schema: Error And Log Visual Grouping
 
-- **Intent**: keep detection, diagnostic context, and returned error easy to scan as one path.
-- **Trigger**: an error branch contains a log and returned/wrapped error, especially with several context fields.
-- **Risk**: mechanical wrapping separates the condition from the diagnostic or buries the business field among formatting noise.
-- **Positive**: keep the guard, concise log, and return adjacent; wrap only the semantically large part.
-- **Negative**: expand each short function argument onto separate lines or separate a log from its corresponding return.
-- **Allowed exception / valid control**: multiline construction is valid when it groups distinct context or preserves a clear error-building hierarchy.
-- **Generator action**: compare neighboring error paths and format the branch as one readable unit without dropping causes or context.
-- **Evaluator evidence**: cite the branch and verify cause preservation, project error surface, log/return consistency, and visual grouping.
-- **Automation owner**: compiler/formatter for syntax; Generator and Evaluator for grouping and error semantics.
-- **Provenance**: error-handling review guidance in [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments) plus project readability corrections.
+- **Use when**: an error branch contains a log and returned/wrapped error, especially with several context fields.
+- **Prefer**: keep the guard, concise log, and return adjacent; wrap only the semantically large part.
+- **Avoid**: expand each short function argument onto separate lines or separate a log from its corresponding return.
+- **Exception**: multiline construction is valid when it groups distinct context or preserves a clear error-building hierarchy.
 
 ## Schema: Tests Protect Business Order
 
-- **Intent**: make tests constrain externally meaningful ordering without freezing incidental helper choreography.
-- **Trigger**: mocks use broad order chains or implementation-specific call counts while behavior remains unchanged under harmless refactoring.
-- **Risk**: tests become a duplicate implementation and create large false failures during design cleanup.
-- **Positive**: assert authorization-before-write, validation-before-side-effect, write-before-event, and observable results where those orders are contractual.
-- **Negative**: chain every helper call with ordering constraints solely because the current implementation happens to call them that way.
-- **Allowed exception / valid control**: explicit mock order is valid for business-significant order, transaction boundaries, concurrency protocols, or irreversible effects.
-- **Generator action**: classify each order assertion as contractual or incidental before adding or relaxing it.
-- **Evaluator evidence**: map ordering assertions to acceptance, a hard rule, or an externally observable failure; unmatched internal order is suspect.
-- **Automation owner**: behavior tests, Generator, and Evaluator.
-- **Provenance**: invariant-over-implementation guidance in [OpenAI Harness Engineering](https://openai.com/index/harness-engineering/) plus project mock-coupling failures.
+- **Use when**: mocks use broad order chains or implementation-specific call counts while behavior remains unchanged under harmless refactoring.
+- **Prefer**: assert authorization-before-write, validation-before-side-effect, write-before-event, and observable results where those orders are contractual.
+- **Avoid**: chain every helper call with ordering constraints solely because the current implementation happens to call them that way.
+- **Exception**: explicit mock order is valid for business-significant order, transaction boundaries, concurrency protocols, or irreversible effects.
 
 ## Schema: Evidence-Backed Defensive Checks
 
-- **Intent**: defend real trust boundaries without accumulating impossible or redundant branches.
-- **Trigger**: code adds a nil/existence cross-check, invariant comparison, fallback, or validation not required by the called contract.
-- **Risk**: impossible branches disguise interface mismatch, duplicate trusted guarantees, and increase untestable paths.
-- **Positive**: validate untrusted input and observed failure modes; rely on a documented internal contract after checking its error/existence result.
-- **Negative**: add a check that cannot be reached through the real lookup/interface, then make a mock violate reality so the branch appears tested.
-- **Allowed exception / valid control**: defense in depth is valid at an untrusted or version-skewed boundary when the failure is possible and the response is specified.
-- **Generator action**: name the threat, broken guarantee, or observed incident before adding the branch; make fakes obey production contracts.
-- **Evaluator evidence**: trace the real interface and data path, then verify the branch is reachable and the test double is physically possible.
-- **Automation owner**: Generator, Evaluator, contract tests, and security tooling for deterministic boundary checks.
-- **Provenance**: evidence-driven constraints in [OpenAI Harness Engineering](https://openai.com/index/harness-engineering/) plus project false-invariant failures.
+- **Use when**: code adds a nil/existence cross-check, invariant comparison, fallback, or validation not required by the called contract.
+- **Prefer**: validate untrusted input and observed failure modes; rely on a documented internal contract after checking its error/existence result.
+- **Avoid**: add a check that cannot be reached through the real lookup/interface, then make a mock violate reality so the branch appears tested.
+- **Exception**: defense in depth is valid at an untrusted or version-skewed boundary when the failure is possible and the response is specified.
