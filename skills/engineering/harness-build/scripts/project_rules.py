@@ -33,7 +33,16 @@ EXCLUDED_DIRECTORIES = {
 MAKE_TARGET = re.compile(r"^([A-Za-z0-9_.-]+)\s*:(?![=])", re.MULTILINE)
 GO_MODULE = re.compile(r"^module\s+(\S+)", re.MULTILINE)
 GO_VERSION = re.compile(r"^go\s+(\S+)", re.MULTILINE)
+GO_REQUIRE = re.compile(
+    r"^\s*(?:require\s+)?([^\s]+)\s+(v[^\s]+)"
+    r"(?:\s+//\s*(indirect))?\s*$",
+    re.MULTILINE,
+)
+JENKINS_COVERAGE_MIN = re.compile(
+    r"\bCOVERAGE_MIN\s*=\s*['\"]([0-9]+(?:\.[0-9]+)?)['\"]"
+)
 TODO_SECTION = re.compile(r"\n## Project Growth TODO\n.*\Z", re.DOTALL)
+CHAINMAKER_SDK = "chainmaker.org/chainmaker/contract-sdk-go/v2"
 
 
 def repository_files(target: Path) -> list[Path]:
@@ -77,7 +86,7 @@ def make_commands(target: Path) -> dict[str, list[str]]:
     targets = set(MAKE_TARGET.findall(content))
     groups = {
         "verify": ("ut", "test", "check", "lint", "build"),
-        "generate": ("protoc", "gen", "generate", "codegen"),
+        "generate": ("protoc", "gen", "generate", "codegen", "gen-code"),
         "lint": ("lint", "fmt", "format"),
         "run": ("start-service", "start", "run", "serve"),
     }
@@ -86,6 +95,35 @@ def make_commands(target: Path) -> dict[str, list[str]]:
             f"make {name}" for name in candidates if name in targets
         ]
     return commands
+
+
+def direct_go_dependencies(go_mod: str) -> set[str]:
+    """Return Go modules not marked indirect in go.mod."""
+    return {
+        module
+        for module, _, indirect in GO_REQUIRE.findall(go_mod)
+        if not indirect
+    }
+
+
+def make_target_recipe(content: str, target: str) -> str:
+    """Return the tab-indented recipe for one Make target."""
+    match = re.search(
+        rf"^{re.escape(target)}\s*:[^\n]*\n((?:\t[^\n]*(?:\n|$))*)",
+        content,
+        re.MULTILINE,
+    )
+    return match.group(1) if match else ""
+
+
+def recipe_enforces_coverage(recipe: str, threshold: str) -> bool:
+    """Detect a local recipe guard tied to the CI coverage threshold."""
+    references_threshold = threshold in recipe or "COVERAGE_MIN" in recipe
+    has_guard = re.search(
+        r"(?:\bif\b|\btest\b|\[\[?|--fail-under|\bexit\b)",
+        recipe,
+    )
+    return references_threshold and has_guard is not None
 
 
 def package_commands(target: Path) -> dict[str, list[str]]:
@@ -145,7 +183,10 @@ def collect_facts(target: Path) -> dict[str, object]:
         "database_engines": [],
         "migration_roots": [],
         "structure": [],
+        "ci": [],
         "deployment": [],
+        "coverage_threshold": "",
+        "local_coverage_gap": False,
         "test_count": 0,
         "test_files": [],
     }
@@ -159,14 +200,18 @@ def collect_facts(target: Path) -> dict[str, object]:
         )
         facts["tools"].append("Go")
         facts["module"] = module.group(1) if module else ""
+        direct_dependencies = direct_go_dependencies(go_mod)
         dependencies = {
-            "go-zero": "go-zero",
+            "github.com/zeromicro/go-zero": "go-zero",
             "google.golang.org/grpc": "gRPC",
             "gorm.io/gorm": "GORM",
+            CHAINMAKER_SDK: "ChainMaker smart contract",
         }
-        for needle, label in dependencies.items():
-            if needle in go_mod:
+        for module_path, label in dependencies.items():
+            if module_path in direct_dependencies:
                 facts["frameworks"].append(label)
+    else:
+        direct_dependencies = set()
 
     package_json = read_optional(target / "package.json")
     if package_json:
@@ -197,6 +242,19 @@ def collect_facts(target: Path) -> dict[str, object]:
         or Path(path).name.lower()
         in {"openapi.json", "openapi.yaml", "openapi.yml", "swagger.json"}
     ]
+    register_path = "internal/contract/register.go"
+    method_path = "const/method.go"
+    if (
+        CHAINMAKER_SDK in direct_dependencies
+        and register_path in file_set
+        and re.search(
+            r"\.RegisterMethod\s*\(",
+            read_optional(target / register_path),
+        )
+    ):
+        api_sources.extend(
+            path for path in (method_path, register_path) if path in file_set
+        )
     facts["api_sources"] = api_sources[:40]
 
     migration_files = [
@@ -249,9 +307,19 @@ def collect_facts(target: Path) -> dict[str, object]:
         path for path in structure_candidates if (target / path).is_dir()
     ]
 
-    deployment_candidates = (
+    ci_candidates = (
         "Jenkinsfile",
         ".gitlab-ci.yml",
+    )
+    ci = [path for path in ci_candidates if path in file_set]
+    ci.extend(
+        path
+        for path in relative_files
+        if path.startswith(".github/workflows/")
+    )
+    facts["ci"] = sorted(set(ci))[:40]
+
+    deployment_candidates = (
         "Dockerfile",
         "docker-compose.yml",
         "docker-compose.yaml",
@@ -260,10 +328,22 @@ def collect_facts(target: Path) -> dict[str, object]:
     deployment.extend(
         path
         for path in relative_files
-        if path.startswith(".github/workflows/")
-        or path.startswith(("charts/", "helm/", "k8s/"))
+        if path.startswith(("charts/", "helm/", "k8s/"))
     )
     facts["deployment"] = sorted(set(deployment))[:40]
+
+    coverage_match = JENKINS_COVERAGE_MIN.search(
+        read_optional(target / "Jenkinsfile")
+    )
+    if coverage_match:
+        threshold = coverage_match.group(1)
+        facts["coverage_threshold"] = threshold
+        makefile = read_optional(target / "Makefile")
+        recipe = make_target_recipe(makefile, "ut")
+        facts["local_coverage_gap"] = bool(recipe) and not recipe_enforces_coverage(
+            recipe,
+            threshold,
+        )
 
     test_files = [
         path
@@ -314,6 +394,15 @@ def document_facts(path: str, facts: dict[str, object]) -> list[str]:
         )
         if facts["test_count"]:
             lines.append(f"- Detected test files: {facts['test_count']}")
+        threshold = str(facts["coverage_threshold"])
+        if threshold:
+            lines.append(f"- CI coverage threshold: {threshold}%")
+            if facts["local_coverage_gap"]:
+                lines.append(
+                    f"- Local `make ut` does not enforce the {threshold}% CI "
+                    "coverage threshold; command success does not prove the CI "
+                    "coverage gate."
+                )
         return lines or ["- No reliable test command or test file detected."]
     if path.endswith("api-standards.md"):
         lines = [
@@ -346,10 +435,14 @@ def document_facts(path: str, facts: dict[str, object]) -> list[str]:
         )
         return lines or ["- No standard dependency boundary detected."]
     if path.endswith("deployment.md"):
-        return bullets(
-            [f"Deployment/CI artifact: `{name}`" for name in facts["deployment"]],
-            "No deployment or CI artifact detected.",
+        lines = [f"- CI artifact: `{name}`" for name in facts["ci"]]
+        lines.extend(
+            f"- Deployment/runtime artifact: `{name}`"
+            for name in facts["deployment"]
         )
+        if not facts["deployment"]:
+            lines.append("- No deployment/runtime artifact detected.")
+        return lines
     raise ValueError(f"unsupported fact-generated document: {path}")
 
 
@@ -408,7 +501,10 @@ def rebuild_project_rules(target: Path, staging: Path, baseline: Path) -> None:
         else:
             selected_facts = document_facts(relative_path, facts)
 
-        if selected_facts and not selected_facts[0].startswith("- No "):
+        activate = selected_facts and not selected_facts[0].startswith("- No ")
+        if relative_path.endswith("deployment.md"):
+            activate = bool(facts["deployment"])
+        if activate:
             content = content.replace("> status: stub", "> status: active", 1)
         output = (
             content

@@ -18,7 +18,7 @@
       "checker": {
         "path": "scripts/check_pge_contracts.py",
         "sha256_allowlist": [
-          "40fc04b3b63e75d2caab2cb76fceb2dff9f3994441835aab11b2aa0fdbc44af5"
+          "741db029699124428abd397757ed47629c3c88373885175966895740c8ea91fe"
         ]
       }
     },

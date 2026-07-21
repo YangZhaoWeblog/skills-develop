@@ -10,29 +10,9 @@ from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR = SKILL_ROOT / "scripts" / "validate_capabilities.py"
-VALID_CHECKER = """#!/usr/bin/env python3
-# approved_contract_revision == contract_revision
-# channel != ""
-# evidence != ""
-import json
-import re
-import sys
-from pathlib import Path
-
-content = Path(sys.argv[1]).read_text(encoding="utf-8")
-match = re.search(r"```json\\s*(\\{.*?\\})\\s*```", content, re.DOTALL)
-if match is None:
-    raise SystemExit(1)
-contract = json.loads(match.group(1))
-gate = contract["human_start_gate"]
-approved = (
-    gate["status"] == "approved"
-    and gate["approved_contract_revision"] == contract["contract_revision"]
-    and bool(gate["channel"])
-    and bool(gate["evidence"])
-)
-raise SystemExit(0 if approved else 1)
-"""
+VALID_CHECKER = (
+    SKILL_ROOT / "assets" / "baseline" / "scripts" / "check_pge_contracts.py"
+).read_text(encoding="utf-8")
 DIAGRAM_NODES = [
     "Planner",
     "Grill",
@@ -291,9 +271,9 @@ class CapabilityValidatorTest(unittest.TestCase):
             self.assertEqual(0, target_check.returncode, target_check.stderr)
             checker.write_text(
                 checker.read_text(encoding="utf-8").replace(
-                    'gate["approved_contract_revision"] '
+                    'gate.get("approved_contract_revision") '
                     '== contract["contract_revision"]',
-                    'gate["approved_contract_revision"] '
+                    'gate.get("approved_contract_revision") '
                     '!= contract["contract_revision"]',
                 ),
                 encoding="utf-8",
@@ -303,6 +283,74 @@ class CapabilityValidatorTest(unittest.TestCase):
 
             self.assertEqual(1, validation.returncode, validation.stderr)
             self.assertIn("pge.human_start.revision_bound", validation.stderr)
+
+    def test_allowlisted_checker_reads_human_start_after_unrelated_json(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            spec = Path(tmp_dir) / "spec.md"
+            content = (
+                SKILL_ROOT
+                / "assets"
+                / "baseline"
+                / "docs"
+                / "pge"
+                / "spec.template.md"
+            ).read_text(encoding="utf-8")
+            content = content.replace('"status": "pending"', '"status": "approved"')
+            content = content.replace(
+                '"approved_contract_revision": null',
+                '"approved_contract_revision": 1',
+            )
+            content = content.replace('"channel": ""', '"channel": "direct_reply"')
+            content = content.replace('"evidence": ""', '"evidence": "approved"')
+            spec.write_text(content, encoding="utf-8")
+
+            target_check = self._run_baseline_checker(spec)
+
+            self.assertEqual(0, target_check.returncode, target_check.stderr)
+            self.assertNotIn("Traceback", target_check.stderr)
+
+    def test_allowlisted_checker_rejects_ambiguous_or_malformed_gate(self):
+        valid_contract = {
+            "contract_revision": 1,
+            "human_start_gate": {
+                "status": "approved",
+                "approved_contract_revision": 1,
+                "channel": "direct_reply",
+                "evidence": "approved",
+            },
+        }
+        unrelated = '```json\n{"pge_fallback": {}}\n```\n'
+        valid_fence = f"```json\n{json.dumps(valid_contract)}\n```\n"
+        cases = {
+            "duplicate": unrelated + valid_fence + valid_fence,
+            "invalid json": unrelated + '```json\n{"contract_revision":\n```\n',
+            "non-object gate": unrelated
+            + "```json\n"
+            + json.dumps({"contract_revision": 1, "human_start_gate": []})
+            + "\n```\n",
+            "missing field": unrelated
+            + "```json\n"
+            + json.dumps(
+                {
+                    "contract_revision": 1,
+                    "human_start_gate": {
+                        "status": "approved",
+                        "approved_contract_revision": 1,
+                        "channel": "direct_reply",
+                    },
+                }
+            )
+            + "\n```\n",
+        }
+        for name, content in cases.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as tmp_dir:
+                spec = Path(tmp_dir) / "spec.md"
+                spec.write_text(content, encoding="utf-8")
+
+                target_check = self._run_baseline_checker(spec)
+
+                self.assertEqual(1, target_check.returncode, target_check.stderr)
+                self.assertNotIn("Traceback", target_check.stderr)
 
     def test_allowlisted_checker_enforces_human_start_gate(self):
         mutations = {
@@ -485,6 +533,27 @@ class CapabilityValidatorTest(unittest.TestCase):
                 str(VALIDATOR),
                 "--staging",
                 str(staging),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    def _run_baseline_checker(
+        self,
+        spec: Path,
+    ) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [
+                sys.executable,
+                str(
+                    SKILL_ROOT
+                    / "assets"
+                    / "baseline"
+                    / "scripts"
+                    / "check_pge_contracts.py"
+                ),
+                str(spec),
             ],
             check=False,
             capture_output=True,
