@@ -18,6 +18,8 @@
 - Findings first, ordered by severity.
 - Reference files and lines.
 - Distinguish blockers from notes.
+- For PGE final evaluation, read the complete production diff/code and freeze the production-only cognitive/design findings before reading tests or Generator rationale.
+- Apply triggered `coding-style.md` / `code-shape.md` schemas with their valid controls; unresolved Critical or Major code-quality findings require `FAIL`.
 - Use the final Evaluator as the PGE task's independent AI code review; do not add a duplicate generic AI reviewer after normal PGE evaluation.
 - Apply state-dependent PGE fallback review: available Evaluator assurance still requires its accepted conclusion; missing assurance requires completed main-agent self-review; required owner acknowledgement must be confirmed. A generic AI reviewer may add clearly labeled supplemental findings, but must not be presented as the missing Evaluator or restore its assurance.
 - Use an independent AI reviewer for non-PGE non-trivial changes; do not present author self-review as independent review.

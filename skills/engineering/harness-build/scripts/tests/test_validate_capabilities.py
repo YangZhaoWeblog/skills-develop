@@ -1,5 +1,6 @@
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -168,7 +169,13 @@ class CapabilityValidatorTest(unittest.TestCase):
         mutations.append(
             (
                 "diagram moved",
-                lambda content: content.replace(self._control_flow_diagram(), ""),
+                lambda content: re.sub(
+                    r"```mermaid.*?```",
+                    "",
+                    content,
+                    count=1,
+                    flags=re.DOTALL,
+                ),
             )
         )
         for name, mutate in mutations:
@@ -251,6 +258,75 @@ class CapabilityValidatorTest(unittest.TestCase):
 
                 self.assertEqual(1, validation.returncode, validation.stderr)
                 self.assertIn("agent.model.inherit", validation.stderr)
+
+    def test_rejects_broken_agent_context_contract(self):
+        mutations = {
+            "missing code-shape reference": lambda staging: self._replace(
+                staging / ".codex" / "agents" / "pge-generator.toml",
+                "@harness/code-shape.md\n",
+                "",
+            ),
+            "missing resolver": lambda staging: (
+                staging / "scripts" / "resolve_agent_context.py"
+            ).unlink(),
+            "missing receipt echo": lambda staging: self._replace_all(
+                staging / ".codex" / "agents" / "pge-evaluator.toml",
+                "context receipt SHA-256",
+                "context receipt SHA256",
+            ),
+            "copied schema": lambda staging: self._replace(
+                staging / ".codex" / "agents" / "pge-generator.toml",
+                "You are the PGE Generator for this repository.",
+                "You are the PGE Generator for this repository.\n**Intent**: copied",
+            ),
+        }
+        for name, mutate in mutations.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as tmp_dir:
+                staging = Path(tmp_dir) / "staging"
+                self._write_complete_harness(staging)
+                mutate(staging)
+
+                validation = self._run_validator(staging)
+
+                self.assertEqual(1, validation.returncode, validation.stderr)
+                self.assertIn("agent.context.required", validation.stderr)
+
+    def test_agent_context_validation_never_executes_staged_resolver(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            staging = root / "staging"
+            marker = root / "resolver-ran"
+            self._write_complete_harness(staging)
+            resolver = staging / "scripts" / "resolve_agent_context.py"
+            resolver.write_text(
+                "from pathlib import Path\n"
+                f"Path({str(marker)!r}).write_text('ran', encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+
+            validation = self._run_validator(staging)
+
+            self.assertEqual(1, validation.returncode, validation.stderr)
+            self.assertIn("agent.context.required", validation.stderr)
+            self.assertIn("unapproved SHA-256", validation.stderr)
+            self.assertFalse(marker.exists(), "validator executed staged resolver")
+
+    def test_agent_context_validation_rejects_external_context_symlink(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            staging = root / "staging"
+            external = root / "external-code-shape.md"
+            external.write_text("# External schema\n", encoding="utf-8")
+            self._write_complete_harness(staging)
+            code_shape = staging / "harness" / "code-shape.md"
+            code_shape.unlink()
+            code_shape.symlink_to(external)
+
+            validation = self._run_validator(staging)
+
+            self.assertEqual(1, validation.returncode, validation.stderr)
+            self.assertIn("agent.context.required", validation.stderr)
+            self.assertIn("escapes the staged repository", validation.stderr)
 
     def test_rejects_checker_with_mutated_human_start_relation(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -577,11 +653,16 @@ class CapabilityValidatorTest(unittest.TestCase):
             staging / ".agents" / "skills" / "pge-workflow" / "SKILL.md"
         )
         workflow.parent.mkdir(parents=True)
-        workflow.write_text(
-            "---\nname: pge-workflow\ndescription: fixture\n---\n\n"
-            "Use $grill-me or $grill-with-docs, then $grilling and "
-            "$domain-modeling when selected.\n",
-            encoding="utf-8",
+        workflow.write_bytes(
+            (
+                SKILL_ROOT
+                / "assets"
+                / "baseline"
+                / ".agents"
+                / "skills"
+                / "pge-workflow"
+                / "SKILL.md"
+            ).read_bytes()
         )
         (staging / "AGENTS.md").write_text(
             "Use $pge-workflow for medium work.\n",
@@ -595,6 +676,24 @@ class CapabilityValidatorTest(unittest.TestCase):
                 "- Fixture fact.\n",
                 encoding="utf-8",
             )
+        (staging / "harness" / "code-shape.md").write_bytes(
+            (
+                SKILL_ROOT
+                / "assets"
+                / "baseline"
+                / "harness"
+                / "code-shape.md"
+            ).read_bytes()
+        )
+        (staging / "scripts" / "resolve_agent_context.py").write_bytes(
+            (
+                SKILL_ROOT
+                / "assets"
+                / "baseline"
+                / "scripts"
+                / "resolve_agent_context.py"
+            ).read_bytes()
+        )
 
     def _delete_contract_field(self, staging: Path, field: str) -> None:
         spec = staging / "docs" / "pge" / "spec.template.md"
@@ -649,19 +748,14 @@ class CapabilityValidatorTest(unittest.TestCase):
 """.strip(),
             encoding="utf-8",
         )
-        human_start_checks = "\n".join(
-            [
-                "approved_contract_revision == contract_revision",
-                'channel != ""',
-                'evidence != ""',
-                "Pre-Challenge structure checks do not require Human Start approval.",
-                "python3 scripts/check_pge_contracts.py docs/pge/<sprint>-spec.md",
-            ]
-        )
-        (staging / "harness" / "pge-protocol.md").write_text(
-            f"# PGE Protocol\n\n{human_start_checks}\n\n"
-            f"{self._control_flow_diagram()}",
-            encoding="utf-8",
+        (staging / "harness" / "pge-protocol.md").write_bytes(
+            (
+                SKILL_ROOT
+                / "assets"
+                / "baseline"
+                / "harness"
+                / "pge-protocol.md"
+            ).read_bytes()
         )
         (staging / "scripts" / "check_pge_contracts.py").write_text(
             VALID_CHECKER,
@@ -710,10 +804,26 @@ flowchart LR
         agent_dir = staging / ".codex" / "agents"
         agent_dir.mkdir(parents=True)
         for agent_name in ("pge-generator.toml", "pge-evaluator.toml"):
-            (agent_dir / agent_name).write_text(
-                f'name = "{agent_name.removesuffix(".toml")}"\n',
-                encoding="utf-8",
+            (agent_dir / agent_name).write_bytes(
+                (
+                    SKILL_ROOT
+                    / "assets"
+                    / "baseline"
+                    / ".codex"
+                    / "agents"
+                    / agent_name
+                ).read_bytes()
             )
+
+    def _replace(self, path: Path, old: str, new: str) -> None:
+        content = path.read_text(encoding="utf-8")
+        self.assertIn(old, content)
+        path.write_text(content.replace(old, new, 1), encoding="utf-8")
+
+    def _replace_all(self, path: Path, old: str, new: str) -> None:
+        content = path.read_text(encoding="utf-8")
+        self.assertIn(old, content)
+        path.write_text(content.replace(old, new), encoding="utf-8")
 
     def _write_grill_skills(self, staging: Path) -> None:
         bodies = {

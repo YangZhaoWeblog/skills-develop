@@ -24,11 +24,11 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
    {
      "schema_version": 1,
      "reviewed": true,
-     "project_owned_paths": ["AGENTS.md", "harness/coding-style.md"]
+     "project_owned_paths": ["AGENTS.md", "harness/code-shape.md"]
    }
    ```
 
-   The list must cover every existing project-owned path. Do not include Builder-owned paths, `fact_generated` paths, unknown governance extensions, or unreviewed content. `coding-style.md`, `testing.md`, `api-standards.md`, `database.md`, `dependency-map.md`, `development.md`, and `deployment.md` are rebuilt from canonical rules plus facts detected in repository manifests, commands, API sources, migrations, structure, CI, and deployment files. Their old text intentionally does not survive. Fresh repositories without `AGENTS.md` or `harness/` may use the baseline without an overlay.
+   The list must cover every existing project-owned path. Do not include Builder-owned paths, `fact_generated` paths, unknown governance extensions, or unreviewed content. `code-shape.md` is the project-owned positive/negative/valid-control profile and survives byte-for-byte. `coding-style.md`, `testing.md`, `api-standards.md`, `database.md`, `dependency-map.md`, `development.md`, and `deployment.md` are rebuilt from canonical rules plus facts detected in repository manifests, commands, API sources, migrations, structure, CI, and deployment files. Their old text intentionally does not survive. Fresh repositories without `AGENTS.md` or `harness/` may use the baseline without an overlay.
 
 2. Run the source tests:
 
@@ -45,7 +45,7 @@ Use this Skill to build a complete candidate Harness in clean staging, validate 
      --staging-only /absolute/path/to/empty/staging
    ```
 
-4. Inspect the candidate, transaction summary, resolved upstream evidence, regenerated repository facts, preserved project memory, extensions, and target diff. Confirm that stale fact-generated rules were replaced, overlay paths were strongly copied, inherited Agent reasoning efforts were retained, and no top-level Agent `model` key was introduced.
+4. Inspect the candidate, transaction summary, resolved upstream evidence, regenerated repository facts, preserved project memory, extensions, and target diff. Confirm that stale fact-generated rules were replaced, `harness/code-shape.md` and other overlay paths were strongly copied, inherited Agent reasoning efforts were retained, and no top-level Agent `model` key was introduced. Resolve both PGE Agents with staged `scripts/resolve_agent_context.py`; verify the references, exact bundle bytes, and receipt digests before relying on the staged prompts.
 5. Apply only after the target workflow authorizes implementation:
 
    ```bash

@@ -77,6 +77,73 @@
       "key": "model"
     },
     {
+      "id": "agent.context.required",
+      "kind": "agent_context_contract",
+      "resolver": {
+        "path": "scripts/resolve_agent_context.py",
+        "sha256_allowlist": [
+          "01e9e8d6717acaed17ace4739bc3a45ac561e5fa83a50877bc797d7f731518cd"
+        ]
+      },
+      "agents": [
+        {
+          "path": ".codex/agents/pge-generator.toml",
+          "references": [
+            "@harness/coding-style.md",
+            "@harness/code-shape.md"
+          ],
+          "required_phrases": [
+            "context receipt SHA-256",
+            "For behavior code",
+            "targeted verification",
+            "cognitive refactor",
+            "full production-diff readthrough"
+          ]
+        },
+        {
+          "path": ".codex/agents/pge-evaluator.toml",
+          "references": [
+            "@harness/coding-style.md",
+            "@harness/code-shape.md"
+          ],
+          "required_phrases": [
+            "context receipt SHA-256",
+            "production diff and production code",
+            "before reading tests or Generator rationale",
+            "Critical or Major code-quality"
+          ]
+        }
+      ],
+      "forbidden_agent_phrases": [
+        "**Intent**",
+        "**Negative**"
+      ],
+      "dispatch_documents": [
+        {
+          "path": "harness/pge-protocol.md",
+          "required_phrases": [
+            "scripts/resolve_agent_context.py",
+            "append the emitted `bundle.md` bytes exactly",
+            "context receipt SHA-256",
+            "not a native Codex include",
+            "full production-diff readthrough",
+            "production-only cognitive/design pass",
+            "before reading tests or Generator rationale",
+            "unresolved Critical or Major code-quality"
+          ]
+        },
+        {
+          "path": ".agents/skills/pge-workflow/SKILL.md",
+          "required_phrases": [
+            "scripts/resolve_agent_context.py",
+            "Append the emitted bundle bytes exactly",
+            "context receipt SHA-256",
+            "not a native Codex include"
+          ]
+        }
+      ]
+    },
+    {
       "id": "grill.toolchain.complete",
       "kind": "skill_toolchain",
       "paths": [

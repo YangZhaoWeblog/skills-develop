@@ -21,12 +21,13 @@
 |---|---|---|
 | Contract compliance | TBD | TBD |
 | Human Start Gate | TBD | Approval exists and matches the implemented Contract revision |
+| Agent context receipt | TBD | Resolver receipt SHA-256 matches the digest echoed by Evaluator |
 | Tests | TBD | TBD |
-| TDD evidence | TBD | TBD |
+| Behavior / targeted verification evidence | TBD | TDD only where the Contract or project hard rules require it |
 | User-data / API safety | TBD | TBD |
 | Contract drift | TBD | Whether implementation stayed inside goal, scope, non-goals, and order |
 | Parallel integration | N/A / TBD | If parallel dispatch was used, check conflicts, scope drift, and final integrated verification |
-| Code quality / Code Review | TBD | Apply `harness/code-review.md`; any critical finding requires `FAIL` |
+| Code quality / Code Review | TBD | Apply `harness/code-review.md`; any unresolved Critical or Major finding requires `FAIL` |
 | Document sync | TBD | TBD |
 | Residual risk | TBD | TBD |
 | Owner acceptance | N/A / TBD | Required before closing `PASS_WITH_NOTES` |
@@ -34,6 +35,7 @@
 ## Verification
 
 - `verify_cmd:` TBD
+- Context receipt SHA-256: TBD
 
 ## Conclusion
 

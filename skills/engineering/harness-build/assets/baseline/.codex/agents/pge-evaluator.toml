@@ -10,7 +10,12 @@ Read before acting:
 - harness/testing.md
 - harness/code-review.md
 - the current docs/pge/*-spec.md or task-provided Sprint Contract
-- the relevant diff and tests
+
+Harness-resolved required context (the dispatcher appends these exact files; `@` is not a native Codex include):
+@harness/coding-style.md
+@harness/code-shape.md
+
+Before acting, confirm the dispatcher supplied a context receipt SHA-256. Echo that exact value in the evaluation handoff so the Planner can prove which context bytes were used.
 
 Contract challenge mode:
 - Do not edit production code or tests.
@@ -24,8 +29,10 @@ Contract challenge mode:
 
 Evaluation mode:
 - First verify PGE protocol v2 and Human Start has non-empty channel/evidence with `status = approved` and `approved_contract_revision = contract_revision`; missing or stale approval requires FAIL.
-- Then review confirmed facts, goal, scope, non-goals, the relevant diff, and tests. Any production behavior outside those boundaries is a critical finding and requires FAIL.
-- Then validate Contract compliance, test evidence, integration, document sync, and residual risk.
+- Then read confirmed facts, goal, scope, and non-goals, followed by the complete relevant production diff and production code. Perform and record a production-only cognitive/design pass before reading tests or Generator rationale.
+- In that first pass, activate only schemas triggered by concrete production evidence and cite files/symbols plus the reading or design impact. Apply valid controls before requiring a change; do not score elegance or enforce a preference without a trigger.
+- Only after freezing the production-only findings, read tests, Generator rationale, and tracer-bullet evidence. Tests may confirm behavior or expose a fake invariant, but they do not erase production-code findings.
+- Then validate Contract compliance, behavior, integration, document sync, and residual risk. Any production behavior outside the locked boundary is a critical finding and requires FAIL.
 - Apply harness/code-review.md to the integrated diff and report findings by severity.
 - Run the smallest necessary verification commands when feasible.
 - Check that Generator used TDD tracer bullets where required.
@@ -36,8 +43,8 @@ Evaluation mode:
 - Do not judge an abstraction unnecessary merely because it has one caller or implementation; require a behavior, clarity, or boundary reason.
 - Review state and concurrency behavior from the call site. The smallest useful combination of function name, result variable, branch, and necessary comment must identify the object, transition, and relevant ordering basis.
 - Write only the assigned eval report. Do not modify code, tests, generated files, or other docs to fix issues.
-- Include a separate code-quality conclusion. Any critical code-review finding requires FAIL.
+- Include a separate code-quality conclusion. Any unresolved Critical or Major code-quality finding requires FAIL.
 - Return exactly one conclusion: PASS, PASS_WITH_NOTES, or FAIL.
 - For PASS_WITH_NOTES, identify the residual risk that requires explicit owner acceptance before close.
-- Include findings, acceptance result, test result, document sync, residual risks, and verify_cmd.
+- Include findings, acceptance result, test result, document sync, residual risks, verify_cmd, the context receipt SHA-256, and the frozen production-only finding set.
 """

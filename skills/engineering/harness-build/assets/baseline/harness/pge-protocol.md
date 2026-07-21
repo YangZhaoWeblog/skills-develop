@@ -76,6 +76,23 @@ Project-level Codex agents live in:
 
 If the runtime cannot spawn independent agents, record fallback. Do not silently collapse roles.
 
+## Agent Context Resolution
+
+The `@path` lines in the two Agent TOMLs are a Harness convention, not a native Codex include. Before every Generator or Evaluator dispatch, the dispatcher runs the baseline-owned resolver from the repository root:
+
+```bash
+python3 scripts/resolve_agent_context.py --agent <agent-toml> --repo-root "$PWD" --out <bundle.md> --receipt <receipt.json>
+```
+
+The dispatcher must:
+
+1. record `receipt.json` and the context receipt SHA-256 printed by the resolver;
+2. append the emitted `bundle.md` bytes exactly to the Agent task without reformatting or retyping them;
+3. include the context receipt SHA-256 as task metadata the Agent can echo;
+4. compare the echoed digest with the recorded digest before accepting the handoff.
+
+Missing, stale, manually copied, or mismatched context blocks dispatch or acceptance. Resolve again when an Agent TOML or referenced file changes; never claim that the runtime expanded `@path` by itself.
+
 ## Skill Relationship
 
 - `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Grill routing, Challenge Gate coordination, Human Start tool mapping, fallback status shape, parallel dispatch, and handoff prompts.
@@ -193,22 +210,26 @@ The baseline provides `scripts/check_pge_contracts.sh` as a structure checker. H
 - Do not relax existing assertions, delete tests, or change acceptance criteria to pass.
 - Keep changes inside the contract; return to Planner if scope expands.
 - Do not add adjacent behavior for cleanliness, safety, or possible future needs without evidence inside the locked boundary.
+- Activate only code-style/code-shape schemas triggered by the production flow and nearby repository evidence.
+- After behavior implementation reaches GREEN, perform a cognitive refactor for concrete triggered issues, then a full production-diff readthrough before broad verification. Passing tests do not replace this readthrough.
 
 ## Evaluator Protocol
 
 Evaluator is independent from implementation. It writes only the assigned eval report and does not edit production code or tests.
 
-Apply `harness/code-review.md` during final evaluation and include a separate code-quality conclusion. Any critical code-review finding requires `FAIL`.
+Apply `harness/code-review.md` during final evaluation and include a separate code-quality conclusion. Any unresolved Critical or Major code-quality finding requires `FAIL`.
+
+After the gate and boundary facts, perform a production-only cognitive/design pass over the complete relevant production diff and code before reading tests or Generator rationale. Freeze those findings first; tests and rationale may add evidence but may not erase a production-code finding.
 
 Check in this order:
 
 1. protocol v2 Human Start evidence is complete and matches the current revision;
 2. confirmed facts, goal, scope, non-goals, and diff necessity;
-3. production behavior stayed inside the locked boundary;
-4. contract compliance and tests not weakened;
-5. TDD tracer bullet evidence where required;
-6. user-data / API / migration safety;
-7. code quality, minimality, and local style;
+3. production-only code quality, minimality, local style, and full-flow readability;
+4. production behavior stayed inside the locked boundary;
+5. contract compliance and tests not weakened;
+6. TDD tracer bullet evidence where required;
+7. user-data / API / migration safety;
 8. manual verification gaps and residual risks.
 
 Any production behavior change outside the locked boundary requires `FAIL`. Judge helpers and interfaces by independent behavior or clarity value, not caller or implementation count alone. For state or concurrency code, review the call site for a clear object, state transition, and relevant ordering basis using the smallest necessary combination of names, branches, and comments.

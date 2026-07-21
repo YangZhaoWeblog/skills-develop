@@ -55,6 +55,7 @@ PGE uses the upstream skills directly:
 
 - use `$grilling` for the default plan and risk interview;
 - add `$domain-modeling` only when the user explicitly chooses a docs-bearing Grill and the allowed planning-document paths are recorded before the skill writes them;
+- keep `$grill-me` and `$grill-with-docs` as installed compatibility entries, but do not route PGE through them.
 
 Before the first question, tell the user which primitive is active and why. Investigate code-answerable facts directly, ask irreducible user decisions one at a time, and cover the branches required by `harness/pge-protocol.md`. Confirmation that Grill reached shared understanding completes Grill Closure only; it is not Human Start approval.
 
@@ -79,6 +80,16 @@ Ask `pge-evaluator` for a Contract Challenge:
 - whether PASS/FAIL can be decided after implementation
 
 Before each dispatch, announce the Agent role, read-only purpose, supplied context, and write boundary. The main agent summarizes the result. If there is no blocker, lock the Contract. If there is a blocker, return it to Planner; only an irreducible user decision returns to Grill. Do not let Generator and Evaluator negotiate indefinitely.
+
+## Required Agent Context
+
+The `@path` lines in Agent TOML are a Harness convention, not a native Codex include. Before every Generator or Evaluator dispatch, create temporary output paths and run from the repository root:
+
+```bash
+python3 scripts/resolve_agent_context.py --agent .codex/agents/<role>.toml --repo-root "$PWD" --out <bundle.md> --receipt <receipt.json>
+```
+
+Record `receipt.json` and the context receipt SHA-256 printed by the command. Append the emitted bundle bytes exactly to the task, add the receipt digest as task metadata, and require the Agent to echo it in the handoff. A missing or mismatched echo blocks acceptance. Re-resolve after any Agent or referenced-context change; do not manually reproduce the referenced rules in the dispatch prompt.
 
 ## Human Start Gate
 

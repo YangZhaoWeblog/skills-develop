@@ -17,6 +17,7 @@ VALIDATOR = SKILL_ROOT / "scripts" / "validate_capabilities.py"
 UNBUILT_BASELINE = SKILL_ROOT / "assets" / "baseline"
 PROJECT_OVERLAY_PATHS = (
     "AGENTS.md",
+    "harness/code-shape.md",
     "harness/code-review.md",
     "harness/failures.md",
     "harness/glossary.md",
@@ -36,6 +37,33 @@ FACT_GENERATED_PATHS = (
 
 
 class HarnessBuildTest(unittest.TestCase):
+    def test_rebuild_preserves_project_code_shape_bytes_and_mode(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target = root / "target"
+            staging = root / "staging"
+            upstream = root / "upstream"
+            overlay = root / "overlay"
+            shutil.copytree(UNBUILT_BASELINE, target, symlinks=True)
+            subprocess.run(["git", "init", "-q", str(target)], check=True)
+            self._write_upstream_fixture(upstream)
+
+            code_shape = target / "harness" / "code-shape.md"
+            code_shape.write_bytes(b"# Reviewed project code shape\n\nproject schema\n")
+            code_shape.chmod(0o640)
+            self._write_project_overlay(target, overlay)
+            expected = self._node_bytes(overlay / "harness" / "code-shape.md")
+
+            build = self._run_fixture_build(target, staging, upstream, overlay)
+
+            self.assertEqual(0, build.returncode, build.stderr)
+            staged = staging / "harness" / "code-shape.md"
+            self.assertEqual(expected, self._node_bytes(staged))
+            self.assertEqual(
+                stat.S_IMODE((overlay / "harness" / "code-shape.md").stat().st_mode),
+                stat.S_IMODE(staged.stat().st_mode),
+            )
+
     def test_rejects_managed_path_ancestor_symlink_before_staging(self):
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)

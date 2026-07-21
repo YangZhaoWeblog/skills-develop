@@ -16,6 +16,34 @@ SOURCE_MANIFEST = (
 )
 
 
+def staged_regular_file(
+    staging: Path,
+    relative_path: str,
+    capability_id: str,
+    failures: list[str],
+) -> Path | None:
+    """Resolve one staged file without accepting an external symlink."""
+    try:
+        root = staging.resolve(strict=True)
+        resolved = (staging / relative_path).resolve(strict=True)
+    except FileNotFoundError:
+        failures.append(f"{capability_id}: missing {relative_path}")
+        return None
+    try:
+        resolved.relative_to(root)
+    except ValueError:
+        failures.append(
+            f"{capability_id}: {relative_path} escapes the staged repository"
+        )
+        return None
+    if not resolved.is_file():
+        failures.append(
+            f"{capability_id}: {relative_path} is not a regular file"
+        )
+        return None
+    return resolved
+
+
 def validate_human_start_revision_bound(
     staging: Path, capability: dict
 ) -> list[str]:
@@ -161,6 +189,104 @@ def validate_toml_absent_top_level_key(
     return failures
 
 
+def validate_agent_context_contract(
+    staging: Path, capability: dict
+) -> list[str]:
+    """Validate static context references without executing staged code."""
+    capability_id = capability["id"]
+    failures = []
+
+    required_context_paths = {
+        reference.removeprefix("@")
+        for agent in capability["agents"]
+        for reference in agent["references"]
+    }
+    for relative_path in sorted(required_context_paths):
+        staged_regular_file(
+            staging,
+            relative_path,
+            capability_id,
+            failures,
+        )
+
+    resolver = capability["resolver"]
+    resolver_path = staged_regular_file(
+        staging,
+        resolver["path"],
+        capability_id,
+        failures,
+    )
+    if resolver_path is not None:
+        digest = hashlib.sha256(resolver_path.read_bytes()).hexdigest()
+        if digest not in resolver["sha256_allowlist"]:
+            failures.append(
+                f"{capability_id}: {resolver['path']} has unapproved SHA-256 "
+                f"{digest}"
+            )
+
+    forbidden = capability.get("forbidden_agent_phrases", [])
+    for agent in capability["agents"]:
+        relative_path = agent["path"]
+        source_path = staged_regular_file(
+            staging,
+            relative_path,
+            capability_id,
+            failures,
+        )
+        if source_path is None:
+            continue
+        try:
+            document = tomllib.loads(source_path.read_text(encoding="utf-8"))
+        except (UnicodeDecodeError, tomllib.TOMLDecodeError) as error:
+            failures.append(
+                f"{capability_id}: invalid Agent TOML {relative_path}: {error}"
+            )
+            continue
+        instructions = document.get("developer_instructions")
+        if not isinstance(instructions, str):
+            failures.append(
+                f"{capability_id}: {relative_path} lacks developer_instructions"
+            )
+            continue
+        references = [
+            line for line in instructions.splitlines() if line.startswith("@")
+        ]
+        if references != agent["references"]:
+            failures.append(
+                f"{capability_id}: {relative_path} must contain standalone "
+                f"references in order {agent['references']!r}"
+            )
+        for phrase in agent["required_phrases"]:
+            if phrase not in instructions:
+                failures.append(
+                    f"{capability_id}: {relative_path} missing {phrase!r}"
+                )
+        for phrase in forbidden:
+            if phrase in instructions:
+                failures.append(
+                    f"{capability_id}: {relative_path} copies schema marker "
+                    f"{phrase!r}"
+                )
+
+    for document in capability["dispatch_documents"]:
+        relative_path = document["path"]
+        source_path = staged_regular_file(
+            staging,
+            relative_path,
+            capability_id,
+            failures,
+        )
+        if source_path is None:
+            continue
+        content = source_path.read_text(encoding="utf-8")
+        for phrase in document["required_phrases"]:
+            if phrase not in content:
+                failures.append(
+                    f"{capability_id}: {relative_path} missing {phrase!r}"
+                )
+    return failures
+
+
 def validate_skill_toolchain(staging: Path, capability: dict) -> list[str]:
     capability_id = capability["id"]
     failures = []
@@ -229,6 +355,8 @@ def validate(manifest_path: Path, staging: Path) -> list[str]:
             failures.extend(validate_mermaid_control_flow(staging, capability))
         elif capability["kind"] == "toml_absent_top_level_key":
             failures.extend(validate_toml_absent_top_level_key(staging, capability))
+        elif capability["kind"] == "agent_context_contract":
+            failures.extend(validate_agent_context_contract(staging, capability))
         elif capability["kind"] == "skill_toolchain":
             failures.extend(validate_skill_toolchain(staging, capability))
         elif capability["kind"] == "skill_references":

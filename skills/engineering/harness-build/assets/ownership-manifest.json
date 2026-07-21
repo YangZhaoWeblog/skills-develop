@@ -8,10 +8,12 @@
     "docs/pge/eval.template.md",
     "harness/pge-protocol.md",
     "scripts/check_pge_contracts.py",
-    "scripts/check_pge_contracts.sh"
+    "scripts/check_pge_contracts.sh",
+    "scripts/resolve_agent_context.py"
   ],
   "project_overlay_paths": [
     "AGENTS.md",
+    "harness/code-shape.md",
     "harness/code-review.md",
     "harness/failures.md",
     "harness/glossary.md",
