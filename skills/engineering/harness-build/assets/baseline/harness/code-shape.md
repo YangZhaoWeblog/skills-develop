@@ -52,6 +52,19 @@
 - **Automation owner**: Generator and Evaluator; structural tools may only provide navigation evidence.
 - **Provenance**: smell-as-investigation guidance in [Martin Fowler's Code Smell](https://martinfowler.com/bliki/CodeSmell.html) plus project review/failure evidence.
 
+## Schema: Cohesive Domain Input
+
+- **Intent**: keep fields that describe one loaded domain snapshot together across an internal operation boundary.
+- **Trigger**: a caller already owns a cohesive domain object, while a helper consumes two or more of its identity, ownership, version, or policy fields and a change proposes adding another scalar parameter from that same object.
+- **Risk**: a growing scalar tunnel hides field relationships, permits mixed-snapshot combinations, and makes every new requirement widen the signature again.
+- **Positive**: pass the existing domain object or a smaller independently meaningful value object, then derive the coupled fields inside the operation that uses them.
+- **Negative**: turn `generatePolicy(productID, orgID)` into `generatePolicy(productID, orgID, productNumber)` when all three values already belong to the loaded `product`.
+- **Allowed exception / valid control**: keep scalars when they are independently sourced, only one field is needed, the callee is a stable primitive or protocol boundary, or passing the whole object would broaden authority or create an invalid dependency.
+- **Generator action**: list the fields the callee needs, their source and invariant; if several come from one existing object, prefer that cohesive input unless an exception has concrete evidence.
+- **Evaluator evidence**: inspect the caller and callee together, check whether the scalar combination could describe different snapshots, and verify that a proposed fix does not merely append another field to the tunnel.
+- **Automation owner**: Generator and Evaluator; type systems may encode a value object, but caller/callee review decides cohesion.
+- **Provenance**: a sealed cross-repository maintenance review missed that a correct field fix still widened an existing product scalar tunnel; the human-corrected implementation passed the loaded Product model instead.
+
 ## Schema: Visible Use-Case Flow
 
 - **Intent**: keep the main business stages and rejection points visible in the entry flow.

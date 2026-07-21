@@ -23,6 +23,7 @@
 ## Abstractions And Capabilities
 
 - Prefer existing repository, dependency, or standard-library capabilities when their contracts match.
+- Preserve an already-loaded cohesive domain object across a helper boundary when the helper consumes several of its identity or policy fields; avoid a growing tunnel of scalars that can describe different snapshots.
 - Apply a deletion or inlining test to a proposed abstraction: keep it when removing it loses independent behavior, a stable boundary, reusable policy, or material clarity.
 - Caller count is evidence, not a rule. A one-caller storage/protocol boundary may be valuable; a many-caller pass-through wrapper may still be noise.
 - Do not add interfaces solely for mocking, future-only configuration, mirrored enums/ranks without independent semantics, or aggregate layers that only redistribute one use case.
