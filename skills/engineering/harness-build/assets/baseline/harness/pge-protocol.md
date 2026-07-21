@@ -62,7 +62,7 @@ Pre-Challenge review does not require Human Start approval.
 `docs/pge/<sprint>-spec.md` records:
 
 - goal, scope, acceptance criteria, non-goals, and implementation order;
-- branch, fixed `Review base`, and candidate commit used for `git diff <base>...<candidate>`;
+- branch label, immutable full commit SHAs for `Review base` and candidate, used for `git diff <base-sha>...<candidate-sha>`;
 - approved behavior/test seams or the targeted verification boundary;
 - first tracer bullet for behavior work, `verify_cmd`, risks, and circuit breaker;
 - Grill closure, independent challenge, parallel slices, fallback, and Human Start state.
@@ -100,7 +100,7 @@ Challenge mode checks whether the draft is testable, complete, independently dec
 
 Evaluation mode:
 
-1. Validate Human Start, required context, Contract revision, fixed Review base, clean candidate commit, and classified untracked paths.
+1. Validate Human Start, required context, Contract revision, immutable Review base commit SHA, clean candidate commit SHA, and classified untracked paths.
 2. Read the complete production diff and freeze **Standards** findings before tests or Generator rationale.
 3. Check **Spec** separately for missing/incorrect behavior and scope creep.
 4. Read tests and verification evidence, inspect integration/document risks, and apply `harness/code-review.md` severity.

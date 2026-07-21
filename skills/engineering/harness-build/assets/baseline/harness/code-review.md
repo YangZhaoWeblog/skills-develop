@@ -7,7 +7,7 @@
 
 ## Review Order
 
-1. Fix the Review base and candidate commit. PGE evaluation requires in-scope changes committed, no staged/unstaged production diff, and every untracked path classified; then read `git diff <base>...<candidate>` completely.
+1. Record immutable full commit SHAs for the Review base and candidate. PGE evaluation requires in-scope changes committed, no staged/unstaged production diff, and every untracked path classified; then read `git diff <base-sha>...<candidate-sha>` completely.
 2. **Standards**: freeze findings against `coding-style.md`, triggered `code-shape.md` schemas, and relevant API/storage/database owners before reading tests or author rationale.
 3. **Spec**: compare the implementation with the originating Contract, issue, or approved plan; identify missing behavior, incorrect behavior, and scope creep.
 4. Read tests and verification evidence; they may confirm behavior but cannot erase production findings.

@@ -11,8 +11,8 @@
 | PGE protocol version | 2 |
 | Goal | TBD |
 | Branch | TBD |
-| Review base | fixed commit / branch / tag |
-| Review candidate | clean candidate commit; assigned before final evaluation |
+| Review base commit | immutable full commit SHA; branch/tag may be recorded separately as a label |
+| Review candidate commit | clean immutable full commit SHA; assigned before final evaluation |
 | Planner | TBD |
 | Generator | TBD |
 | Evaluator | TBD |

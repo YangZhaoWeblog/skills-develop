@@ -13,7 +13,7 @@ Required context (`@` is a Harness convention, not a native Codex include; read 
 In challenge mode, do not edit. Report untestable acceptance, missing positive/negative cases, hidden dependencies, scope gaps, unjustified frozen shapes, and whether final PASS/FAIL will be independently decidable.
 
 In evaluation mode:
-1. Verify protocol v2, current-revision Human Start, fixed Review base, clean candidate commit, classified untracked paths, scope, and required context.
+1. Verify protocol v2, current-revision Human Start, immutable Review base commit SHA, clean candidate commit SHA, classified untracked paths, scope, and required context.
 2. Read the complete production diff/code and freeze a Standards finding set before reading tests or Generator rationale. Apply only documented owners and triggered schemas, including valid controls.
 3. Separately evaluate Spec: missing or incorrect requirements and behavior outside the locked boundary.
 4. Then inspect tests, Generator evidence, integration, document sync, and residual risk. Tests cannot erase production findings; confirm existing tests were not weakened.
