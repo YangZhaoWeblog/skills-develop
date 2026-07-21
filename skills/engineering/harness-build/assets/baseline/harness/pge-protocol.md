@@ -140,7 +140,7 @@ Existing protocol-v1 specs may receive text-only maintenance. Before implementat
 ## Design / PGE Relationship
 
 - `docs/design/*.md` is the long-lived map for cross-sprint background, route, boundaries, and hard decisions.
-- `docs/pge/*-spec.md` is the per-sprint execution contract for goal, scope, acceptance, non-goals, order, and RED plan.
+- `docs/pge/*-spec.md` is the per-sprint execution contract for goal, scope, acceptance, non-goals, order, and either a RED/tracer plan for behavior work or a targeted verification plan for non-behavior work.
 - `docs/pge/*-eval.md` is the per-sprint acceptance report for contract completion, verification commands, and residual risks.
 - Create design first for large, cross-sprint, architectural, state-machine, or domain-boundary changes.
 - Create a PGE spec for medium+, batch, single public-interface, or critical-flow work.

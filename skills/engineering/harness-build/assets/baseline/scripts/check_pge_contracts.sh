@@ -104,7 +104,7 @@ check_spec() {
   require_pattern "${file}" "acceptance section" '^##[[:space:]]+.*(验收标准|Acceptance)'
   require_pattern "${file}" "non-goals section" '^##[[:space:]]+.*(非目标|Non-Goals?)'
   require_pattern "${file}" "implementation order section" '^##[[:space:]]+.*(实现顺序|Implementation Order)'
-  require_pattern "${file}" "RED plan section" '^##[[:space:]]+.*(RED|Tracer|验证计划)'
+  require_pattern "${file}" "RED/tracer or targeted verification plan section" '^##[[:space:]]+.*(RED|Tracer|Targeted.*(Verification|Regression)|(验证|回归).*计划)'
   require_pattern "${file}" "Grill Closure section" '^##[[:space:]]+.*Grill[[:space:]]+Closure'
   require_pattern "${file}" "verification commands section" '^##[[:space:]]+.*(验证命令|Verification Commands?)'
   require_pattern "${file}" "verify_cmd record" 'verify_cmd'

@@ -95,9 +95,10 @@
 2. TBD
 3. TBD
 
-## RED / Tracer Bullet Plan
+## RED / Tracer Bullet Or Targeted Verification Plan
 
-- First failing test or smallest manual verification cut: TBD
+- Change classification: behavior / non-behavior
+- First failing test or smallest targeted verification cut: TBD
 - Behavior verified: TBD
 - Required mock/fake/fixture: TBD
 - Verify command: TBD
