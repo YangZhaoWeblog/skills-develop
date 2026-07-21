@@ -30,7 +30,7 @@ Before production code:
 3. Confirm required context and design artifacts exist.
 4. Confirm verification strategy.
 5. For PGE work, confirm protocol version 2, Grill Closure, a locked Contract, and `human_start_gate.status = approved` with matching revisions and non-empty channel/evidence. Stop when any field is missing or stale.
-6. For PGE work, run the trusted checker against the active spec: `python3 scripts/check_pge_contracts.py docs/pge/<sprint>-spec.md`. A non-zero result blocks production code and code-writing Agents.
+6. For PGE work, read the active Contract and confirm the current revision, locked decisions, Review base, and Human Start evidence directly. Missing or stale evidence blocks production code and code-writing Agents.
 
 ## Dirty Worktree Protocol
 
@@ -42,8 +42,6 @@ Before production code:
 ## Verification Gate
 
 Run the smallest meaningful verification for the change. Record commands and results. Do not silently skip required verification.
-
-For repositories using the PGE baseline, `scripts/check_pge_contracts.sh` provides PGE document structure checks. Pre-Challenge structure checks do not require Human Start approval. Use the script explicitly in workflow and connect it to pre-commit, Make, or CI only when the target repository chooses that integration.
 
 ## Circuit Breaker Gate
 

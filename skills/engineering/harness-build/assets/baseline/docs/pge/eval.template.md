@@ -21,9 +21,11 @@
 |---|---|---|
 | Contract compliance | TBD | TBD |
 | Human Start Gate | TBD | Approval exists and matches the implemented Contract revision |
-| Agent context receipt | TBD | Resolver receipt SHA-256 matches the digest echoed by Evaluator |
+| Agent context | TBD | Evaluator read the required Harness owners and locked Contract |
+| Standards | TBD | Repository rules and triggered schemas; frozen before reading tests |
+| Spec | TBD | Missing/incorrect requirements and scope creep |
 | Tests | TBD | TBD |
-| Behavior / targeted verification evidence | TBD | TDD only where the Contract or project hard rules require it |
+| Behavior / targeted verification evidence | TBD | `$tdd` for behavior; targeted verification for non-behavior work |
 | User-data / API safety | TBD | TBD |
 | Contract drift | TBD | Whether implementation stayed inside goal, scope, non-goals, and order |
 | Parallel integration | N/A / TBD | If parallel dispatch was used, check conflicts, scope drift, and final integrated verification |
@@ -35,7 +37,7 @@
 ## Verification
 
 - `verify_cmd:` TBD
-- Context receipt SHA-256: TBD
+- Context read: TBD
 
 ## Conclusion
 

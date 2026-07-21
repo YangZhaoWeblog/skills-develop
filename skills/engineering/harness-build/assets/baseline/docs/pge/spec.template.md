@@ -11,6 +11,8 @@
 | PGE protocol version | 2 |
 | Goal | TBD |
 | Branch | TBD |
+| Review base | fixed commit / branch / tag |
+| Review candidate | clean candidate commit; assigned before final evaluation |
 | Planner | TBD |
 | Generator | TBD |
 | Evaluator | TBD |
@@ -95,9 +97,10 @@
 2. TBD
 3. TBD
 
-## RED / Tracer Bullet Or Targeted Verification Plan
+## Test / Verification Plan
 
 - Change classification: behavior / non-behavior
+- Approved behavior and test seams: TBD / not applicable
 - First failing test or smallest targeted verification cut: TBD
 - Behavior verified: TBD
 - Required mock/fake/fixture: TBD

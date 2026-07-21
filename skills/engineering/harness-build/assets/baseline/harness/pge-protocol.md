@@ -1,39 +1,30 @@
 # PGE Protocol
 
 > status: active
-> owner: large-work-protocol
+> owner: pge-protocol
 > layer: profile
-> This file owns Planner / Generator / Evaluator workflow; it does not replace the main workflow in `AGENTS.md`.
-
-Use `$pge-workflow` as the PGE routing, Grill, Challenge Gate, Human Start, fallback, and parallel-dispatch entrypoint. This file remains the policy source of truth.
+> Owns the Planner / Generator / Evaluator state machine, artifacts, and acceptance gates. Runtime orchestration belongs to `$pge-workflow`.
 
 ## Activation
 
-Use PGE by default for:
-
-- medium / large tasks;
-- critical user-data or public-interface behavior;
-- multi-module changes;
-- batch work, migrations, or repeated failure;
-- work that needs independent validation to be trusted.
-
-Small docs/config/single-module changes may stay solo, but still need scoped verification and review.
+Use PGE for medium+, critical-flow, public-interface, state/schema, cross-module, batch, or independently accepted work. Small local work may remain solo after Coding Start Check and still needs proportionate verification and review.
 
 ## Roles
 
-| Role | Responsibility | Output |
-|---|---|---|
-| Planner | Define and adjudicate the behavior boundary and execution plan | design/spec/status documents |
-| Generator | Choose the smallest implementation inside that boundary | code, tests, `verify_cmd`, implementation evidence |
-| Evaluator | Independently challenge the contract and validate the diff | `docs/pge/<sprint>-eval.md`, `PASS`, `PASS_WITH_NOTES`, or `FAIL` |
+- Planner owns facts, decisions, Contract revisions, slices, and Human Start recording.
+- Generator implements only a locked, approved Contract and never edits the Contract or evaluation.
+- Evaluator challenges the draft and later independently evaluates the integrated diff. It never fixes code or tests.
+- Human owner resolves business choices, approves implementation for one Contract revision, and accepts any `PASS_WITH_NOTES` risk.
+
+## Normative Flow
 
 ```mermaid
-flowchart LR
+flowchart TD
     Planner[Planner]
     Grill[Grill]
     ContractDraft[Contract draft]
-    GeneratorProbe[Generator read-only probe]
-    EvaluatorChallenge[Evaluator read-only challenge]
+    GeneratorProbe[Generator probe]
+    EvaluatorChallenge[Evaluator challenge]
     ContractLock[Contract lock]
     HumanStart[Human Start]
     Generator[Generator]
@@ -41,10 +32,10 @@ flowchart LR
     ParallelJoin[Parallel join]
     Evaluator[Evaluator]
     FinalEvaluation[Final evaluation]
-    Fallback[Fallback]
+    ThirdFailure[Third failure]
     CircuitBreaker[Circuit breaker]
-    ThirdFailure[third failure]
-    AgentUnavailable[agent unavailable]
+    AgentUnavailable[Agent unavailable]
+    Fallback[Fallback]
     Planner --> Grill
     Grill --> ContractDraft
     ContractDraft --> GeneratorProbe
@@ -58,239 +49,69 @@ flowchart LR
     Implementation --> ParallelJoin
     ParallelJoin --> Evaluator
     Evaluator --> FinalEvaluation
-    FinalEvaluation -->|PASS| Planner
     Evaluator -->|FAIL| Generator
     Evaluator -->|FAIL| Planner
     ThirdFailure --> CircuitBreaker
     AgentUnavailable --> Fallback
 ```
 
-Planner is the single writer for design and spec documents; Evaluator is the single writer for the eval document. Generator writes its assigned code and tests and returns evidence. After Generator handoff, the main agent may fix an integration conflict or make a necessary correction; it must disclose the patch as an implementation change and include it in final verification and evaluation. Do not concurrently edit the same hot zone.
-
-The final Evaluator is also the PGE task's independent AI code review: it checks contract compliance, code quality, tests, and residual risk. Do not dispatch a duplicate generic AI reviewer after normal PGE evaluation. During fallback, a generic AI reviewer may add clearly labeled supplemental findings, but cannot substitute for a missing Evaluator or restore its assurance. This AI gate does not replace human PR review when the repository requires it.
-
-Project-level Codex agents live in:
-
-- `.codex/agents/pge-generator.toml`
-- `.codex/agents/pge-evaluator.toml`
-
-If the runtime cannot spawn independent agents, record fallback. Do not silently collapse roles.
-
-## Agent Context Resolution
-
-The `@path` lines in the two Agent TOMLs are a Harness convention, not a native Codex include. Before every Generator or Evaluator dispatch, the dispatcher runs the baseline-owned resolver from the repository root:
-
-```bash
-python3 scripts/resolve_agent_context.py --agent <agent-toml> --repo-root "$PWD" --out <bundle.md> --receipt <receipt.json>
-```
-
-The dispatcher must:
-
-1. record `receipt.json` and the context receipt SHA-256 printed by the resolver;
-2. append the emitted `bundle.md` bytes exactly to the Agent task without reformatting or retyping them;
-3. include the context receipt SHA-256 as task metadata the Agent can echo;
-4. compare the echoed digest with the recorded digest before accepting the handoff.
-
-Missing, stale, manually copied, or mismatched context blocks dispatch or acceptance. Resolve again when an Agent TOML or referenced file changes; never claim that the runtime expanded `@path` by itself.
-
-## Skill Relationship
-
-- `.agents/skills/pge-workflow/SKILL.md` owns trigger discipline, Grill routing, Challenge Gate coordination, Human Start tool mapping, fallback status shape, parallel dispatch, and handoff prompts.
-- PGE uses the upstream `$grilling` skill directly. `$domain-modeling` may be added only for an explicitly chosen docs-bearing Grill with named planning-document write paths.
-- This file owns the PGE policy, role boundaries, contract requirements, fallback rules, and circuit breaker.
-- Project-level agents own execution and evaluation only when the runtime explicitly dispatches them.
+Pre-Challenge review does not require Human Start approval.
 
 ## Sprint Contract
 
-Each PGE task must define:
+`docs/pge/<sprint>-spec.md` records:
 
-1. protocol version and current `contract_revision`;
-2. Grill Closure: primitives used, user decisions, repository facts, assumptions, residual risks, and recommendation;
-3. goal;
-4. scope;
-5. acceptance criteria;
-6. non-goals;
-7. implementation order;
-8. first tracer bullet: the first failing test or smallest observable verification cut;
-9. `verify_cmd`;
-10. `human_start_gate` approval metadata;
-11. fallback and restore condition when independent agents are unavailable.
+- goal, scope, acceptance criteria, non-goals, and implementation order;
+- branch, fixed `Review base`, and candidate commit used for `git diff <base>...<candidate>`;
+- approved behavior/test seams or the targeted verification boundary;
+- first tracer bullet for behavior work, `verify_cmd`, risks, and circuit breaker;
+- Grill closure, independent challenge, parallel slices, fallback, and Human Start state.
 
-Goal, scope, acceptance criteria, and non-goals lock the behavior boundary. A required property belongs to that boundary only when acceptance states it explicitly or a cited project hard rule requires it. Implementation order, tracer bullets, and `verify_cmd` are an execution projection that Planner may refine and write back to the current contract inside that boundary. The contract does not lock candidate helpers, Guards, function names, or other implementation shapes. A change to the behavior boundary returns to Planner for adjudication; an implementation-only simplification does not rewrite the contract.
+The Contract binds behavior and evidence, not an unnecessary helper, interface, or abstraction shape. Scope changes return to Planner and increment `contract_revision`.
 
-Default templates:
+Final evaluation starts from a clean candidate commit. `git status --short` must show no staged or unstaged in-scope production/test/document change, and every untracked path must be classified. Dirty implementation bytes are not covered by `git diff <base>...<candidate>` and therefore block evaluation.
 
-- `docs/pge/spec.template.md`
-- `docs/pge/eval.template.md`
+## Human Start
 
-When `scripts/check_pge_contracts.sh` exists, check the active spec before Challenge Gate and the eval draft before Evaluator acceptance. The script checks structure only; requirement quality, semantic drift, and acceptance sufficiency remain Challenge Gate / Evaluator responsibilities.
-
-Pre-Challenge structure checks do not require Human Start approval.
-
-Run this trusted checker at Coding Start before production code or code-writing Agents:
-
-```bash
-python3 scripts/check_pge_contracts.py docs/pge/<sprint>-spec.md
-```
-
-Replace `<sprint>` with the active spec name. A non-zero result blocks Coding Start. The Builder validates the source-owned checker hash but never runs code from the target or staging tree.
-
-Existing protocol-v1 specs may receive text-only maintenance. Before implementation resumes, upgrade them to v2 with Grill Closure, `verify_cmd`, `contract_revision`, and Human Start evidence.
-
-## Design / PGE Relationship
-
-- `docs/design/*.md` is the long-lived map for cross-sprint background, route, boundaries, and hard decisions.
-- `docs/pge/*-spec.md` is the per-sprint execution contract for goal, scope, acceptance, non-goals, order, and either a RED/tracer plan for behavior work or a targeted verification plan for non-behavior work.
-- `docs/pge/*-eval.md` is the per-sprint acceptance report for contract completion, verification commands, and residual risks.
-- Create design first for large, cross-sprint, architectural, state-machine, or domain-boundary changes.
-- Create a PGE spec for medium+, batch, single public-interface, or critical-flow work.
-- One design may produce multiple independently acceptable PGE specs; design does not replace the PGE spec.
-
-## Grill, Challenge, And Human Start
-
-Every PGE task completes these steps in order:
-
-1. Planner uses `$grilling` to pressure-test the decision tree and records Grill Closure. Repository-answerable facts are investigated; user decisions are asked one at a time.
-2. Generator performs a read-only Implementation Probe and Evaluator performs a read-only Contract Challenge.
-3. Planner adjudicates the findings and locks the Contract.
-4. Planner projects the locked Contract as a visible Implement Plan and asks whether implementation may start.
-5. Only an explicit approval for the current `contract_revision` passes Human Start.
-
-Grill must cover or mark not applicable: behavior invariants; data/state; compatibility/rollback; failure/idempotency/concurrency; verification/observability; scope/non-goals. Confirmation that Grill reached shared understanding completes Grill Closure only. It does not approve implementation.
-
-Before dispatching any Agent, announce its role, purpose, supplied context, and read/write boundary. Before Human Start, Agents may perform read-only research, Implementation Probe, and Contract Challenge. Planner may update only the current design, spec, status, and Challenge records. `$domain-modeling` may additionally write specifically named `CONTEXT.md` or ADR paths only when the user explicitly chose the docs-bearing route and those paths are recorded as planning outputs. Production code, tests, migrations, generated files, implementation branches/worktrees, and code-writing Agents remain forbidden.
-
-Human Start metadata is valid only when all are true:
-
-- PGE protocol version is `2`;
-- `human_start_gate.status` is `approved`;
-- `approved_contract_revision` equals `contract_revision`;
-- `channel` and `evidence` are non-empty.
-
-The machine-checkable relations are:
+Implementation starts only when all statements are true:
 
 approved_contract_revision == contract_revision
 channel != ""
 evidence != ""
 
-Silence, timeout, ordinary discussion, Grill confirmation, Contract lock, or approval for an older revision is not authorization. A change to goal, scope, acceptance criteria, non-goals, or an acceptance-required property increments `contract_revision` and revokes prior approval. Implementation-only simplification inside the same boundary does not. Fallback never bypasses Human Start.
+The gate also requires `status == "approved"`. A locked Contract, Grill confirmation, silence, fallback, or approval for an older revision is insufficient.
 
-### Manual model handoff
+## Required Agent Context
 
-When the owner plans to switch the root model before implementation, the Planner stops with the locked Contract still `pending` and gives a handoff receipt containing the repository, branch, HEAD, spec path, and `contract_revision`.
+Standalone `@path` entries in Agent prompts are a Harness convention, not a native Codex include. Before dispatch, require the Agent to read each referenced file directly. The required sources are `harness/coding-style.md` and `harness/code-shape.md`; the locked Contract and relevant owners remain discoverable through `AGENTS.md`.
 
-The owner's explicit start message to the new root model is valid Human Start evidence. Before editing production code or tests, that root model must:
+## Generator
 
-1. verify the receipt against the current workspace and locked Contract;
-2. update only `human_start_gate` with the matching revision, `channel: direct_reply`, and the owner's exact start evidence;
-3. run the trusted Coding Start checker;
-4. stop on any branch, HEAD, revision, scope, or checker mismatch.
+- Pre-contract mode returns only an implementation probe; it does not edit.
+- Implementation mode verifies Human Start, branch/worktree, scope, and required context.
+- Behavior work invokes `$tdd`. Contract-approved seams satisfy the Skill's user-confirmation requirement; ask again only when the Contract leaves a behavior choice unresolved.
+- Non-behavior work uses the Contract's targeted verification plan without manufacturing RED/GREEN ceremony.
+- After all relevant behavior tests are GREEN, perform an author Review against the injected standards. Refactor only a concrete current-change finding, then rerun affected verification.
+- Return changed scope, test/verification evidence, triggered schemas, `verify_cmd`, and residual risk.
 
-The new root model acts as Planner while recording this gate and may then enter or dispatch the Generator role. A dispatched `pge-generator` cannot approve its own Human Start. The gate-only change stays separate from the product implementation commit when the Sprint requires a clean product projection.
+## Evaluator
 
-## Parallel PGE
+Challenge mode checks whether the draft is testable, complete, independently decidable, and free of unjustified implementation shape.
 
-Multiple PGE specs under the same design may run in parallel only when the locked contract records slice boundaries, file boundaries, and independently decidable acceptance criteria.
+Evaluation mode:
 
-Allowed:
+1. Validate Human Start, required context, Contract revision, fixed Review base, clean candidate commit, and classified untracked paths.
+2. Read the complete production diff and freeze **Standards** findings before tests or Generator rationale.
+3. Check **Spec** separately for missing/incorrect behavior and scope creep.
+4. Read tests and verification evidence, inspect integration/document risks, and apply `harness/code-review.md` severity.
+5. Return exactly `PASS`, `PASS_WITH_NOTES`, or `FAIL`; unresolved Critical or Major findings require `FAIL`.
 
-- read-only research, Contract Challenge, and Evaluator checks;
-- non-overlapping public-interface, package, or documentation slices;
-- implementation slices that do not share generated files, migrations, protocol files, state machines, or shared helper hot zones.
+## Parallel And Fallback
 
-Forbidden:
+Parallel code work requires independently acceptable slices, disjoint files, separate branches/worktrees, and slice-level `verify_cmd`. Shared public interfaces, schemas, state machines, migrations, generated files, or helper hot zones remain serial. The Planner owns integration and final verification.
 
-- same public interface, state machine, migration, or protocol file;
-- competing edits to the same file hot zone or shared helper;
-- unlocked contracts or acceptance that cannot be decided independently.
-
-The main agent owns the design map, slice list, dispatch prompts, diff integration, conflict resolution, final `verify_cmd`, and Evaluator handoff. Parallel code-writing dispatch starts only after Human Start is valid for the current revision.
-
-The baseline provides `scripts/check_pge_contracts.sh` as a structure checker. Hook, Make, or CI enablement remains a target-repository decision; do not write `.git/hooks/*` directly.
-
-## Generator Protocol
-
-- Pre-contract and pre-Human work is limited to an explicitly requested read-only Implementation Probe.
-- Implementation starts only after the Contract is locked and Human Start is valid for its current revision.
-- In pre-contract mode, do not edit production code or tests; output only the first tracer bullet, smallest implementation cut, required fake/mock, and expected verify command.
-- Treat confirmed facts and cited security, authorization, and consistency hard rules as constraints on the contract, not lower-priority implementation preferences.
-- If implementation reveals a new behavior boundary or required property, stop and return the evidence to Planner; do not silently expand the contract or tests.
-- For behavior work, use TDD tracer bullets:
-  - RED: write or identify one failing test and confirm the failure reason;
-  - GREEN: implement the minimum code for that behavior;
-  - REFACTOR: after the relevant verification is green, explicitly check for a concrete issue; no change is valid when none exists, and any refactor must preserve behavior and stay within the current change or goal.
-- Do not write all tests first and all implementation later.
-- Do not relax existing assertions, delete tests, or change acceptance criteria to pass.
-- Keep changes inside the contract; return to Planner if scope expands.
-- Do not add adjacent behavior for cleanliness, safety, or possible future needs without evidence inside the locked boundary.
-- Activate only code-style/code-shape schemas triggered by the production flow and nearby repository evidence.
-- After behavior implementation reaches GREEN, perform a cognitive refactor for concrete triggered issues, then a full production-diff readthrough before broad verification. Passing tests do not replace this readthrough.
-
-## Evaluator Protocol
-
-Evaluator is independent from implementation. It writes only the assigned eval report and does not edit production code or tests.
-
-Apply `harness/code-review.md` during final evaluation and include a separate code-quality conclusion. Any unresolved Critical or Major code-quality finding requires `FAIL`.
-
-After the gate and boundary facts, perform a production-only cognitive/design pass over the complete relevant production diff and code before reading tests or Generator rationale. Freeze those findings first; tests and rationale may add evidence but may not erase a production-code finding.
-
-Check in this order:
-
-1. protocol v2 Human Start evidence is complete and matches the current revision;
-2. confirmed facts, goal, scope, non-goals, and diff necessity;
-3. production-only code quality, minimality, local style, and full-flow readability;
-4. production behavior stayed inside the locked boundary;
-5. contract compliance and tests not weakened;
-6. TDD tracer bullet evidence where required;
-7. user-data / API / migration safety;
-8. manual verification gaps and residual risks.
-
-Any production behavior change outside the locked boundary requires `FAIL`. Judge helpers and interfaces by independent behavior or clarity value, not caller or implementation count alone. For state or concurrency code, review the call site for a clear object, state transition, and relevant ordering basis using the smallest necessary combination of names, branches, and comments.
-
-Return exactly one conclusion:
-
-- `PASS`: contract met, no blocker;
-- `PASS_WITH_NOTES`: acceptable only after the owner explicitly accepts the residual risk;
-- `FAIL`: blocker, key contract miss, weakened tests, or unsafe scope drift.
-
-## Fallback
-
-When independent Generator or Evaluator is unavailable, write:
-
-```json
-{
-  "pge_fallback": {
-    "enabled": true,
-    "reason": "runtime cannot spawn independent PGE agent",
-    "roles_collapsed": ["generator", "evaluator"],
-    "lost_guarantees": ["context isolation", "implementation and acceptance perspective split"],
-    "mitigations": ["declared main-agent checklist self-review", "human confirmation for critical acceptance", "record that independent Evaluator assurance is missing"],
-    "restore_condition": "runtime exposes independent PGE agents or user authorizes subagents",
-    "main_agent_self_review": "pending",
-    "owner_ack_required": false,
-    "owner_ack_status": "not_required",
-    "independent_evaluator_assurance": "missing"
-  }
-}
-```
-
-Use `not_required | pending | complete` for `main_agent_self_review`, `not_required | pending | confirmed` for `owner_ack_status`, and `available | missing` for `independent_evaluator_assurance`. Before close, update pending statuses.
-
-The example shows both roles unavailable. List only roles and guarantees actually lost. If only Generator is unavailable, preserve the independent Evaluator and mark its assurance `available`. If Evaluator is unavailable, mark its assurance `missing`; supplemental generic review must stay labeled as non-Evaluator evidence.
-
-Close fallback by state:
-
-- `independent_evaluator_assurance: available` requires Evaluator `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks close.
-- `independent_evaluator_assurance: missing` requires `main_agent_self_review: complete`.
-- `owner_ack_required: true` requires `owner_ack_status: confirmed`; otherwise use `not_required`.
-
-Allowed: fallback with explicit lost guarantees after valid Human Start. Forbidden: silent solo or using fallback to infer implementation approval.
+If a required Agent is unavailable, record roles collapsed, guarantees lost, mitigations, restore condition, self-review state, owner acknowledgement state, and independent Evaluator assurance. Fallback never bypasses Human Start and never presents a generic reviewer as the missing Evaluator.
 
 ## Circuit Breaker
 
-If the same interface or flow fails 3 rounds of tests, reference alignment, or evaluator review:
-
-1. stop implementation;
-2. record the mismatch and recovery condition;
-3. return to Planner / user clarification;
-4. add a failure note when it is a reusable pitfall.
+After three failures on the same interface or flow, stop patching. Record evidence and recovery conditions, then return to Planner or the owner. `FAIL` blocks close; `PASS_WITH_NOTES` closes only after explicit owner acceptance.

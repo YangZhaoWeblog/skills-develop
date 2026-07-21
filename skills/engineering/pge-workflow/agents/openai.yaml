@@ -1,0 +1,4 @@
+interface:
+  display_name: "PGE Workflow"
+  short_description: "Coordinate gated Planner, Generator, and Evaluator work."
+  default_prompt: "Use $pge-workflow to coordinate this change through Contract, Human Start, implementation, and independent evaluation."

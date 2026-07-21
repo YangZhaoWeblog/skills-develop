@@ -3,35 +3,30 @@
 > status: active
 > owner: code-review
 > layer: universal
-> This file owns review standards; it does not own test implementation details.
+> Owns review order, severity, evidence, and conclusions. Domain rules remain in their Harness owner files.
 
-## Required Focus
+## Review Order
 
-- Correctness and behavior changes.
-- Compatibility and migration risk.
-- Layering and ownership.
-- Error handling and observability.
-- Tests and verification evidence.
+1. Fix the Review base and candidate commit. PGE evaluation requires in-scope changes committed, no staged/unstaged production diff, and every untracked path classified; then read `git diff <base>...<candidate>` completely.
+2. **Standards**: freeze findings against `coding-style.md`, triggered `code-shape.md` schemas, and relevant API/storage/database owners before reading tests or author rationale.
+3. **Spec**: compare the implementation with the originating Contract, issue, or approved plan; identify missing behavior, incorrect behavior, and scope creep.
+4. Read tests and verification evidence; they may confirm behavior but cannot erase production findings.
+5. Report both axes separately, then produce the required overall conclusion.
 
-## Review Rules
+Do not paste a generic smell catalog into every review. A documented repository rule wins, schema valid controls prevent mechanical findings, and tooling-owned formatting is not relitigated manually.
 
-- Findings first, ordered by severity.
-- Reference files and lines.
-- Distinguish blockers from notes.
-- For PGE final evaluation, read the complete production diff/code and freeze the production-only cognitive/design findings before reading tests or Generator rationale.
-- Apply triggered `coding-style.md` / `code-shape.md` schemas with their valid controls; unresolved Critical or Major code-quality findings require `FAIL`.
-- Use the final Evaluator as the PGE task's independent AI code review; do not add a duplicate generic AI reviewer after normal PGE evaluation.
-- Apply state-dependent PGE fallback review: available Evaluator assurance still requires its accepted conclusion; missing assurance requires completed main-agent self-review; required owner acknowledgement must be confirmed. A generic AI reviewer may add clearly labeled supplemental findings, but must not be presented as the missing Evaluator or restore its assurance.
-- Use an independent AI reviewer for non-PGE non-trivial changes; do not present author self-review as independent review.
-- Keep human PR review separate when the repository requires it; AI review does not replace it.
+## Severity
 
-## Reject Reasons
+- Critical: security, authorization, data/state corruption, deterministic-runtime breach, or implementation outside the approved behavior boundary.
+- Major: incorrect behavior, missing acceptance, fake verification, materially harmful design, or a broken workflow gate.
+- Minor: maintainability or clarity issue that does not block acceptance.
 
-- Unverified behavior.
-- Missing regression test for bug fix.
-- Public API or schema change without owner documentation.
-- Unrelated rewrite or formatting noise.
-- Workflow gate or circuit breaker bypass.
-- PGE Generator / Evaluator silently collapsed into one role on medium+ work.
-- Generic AI review presented as independent PGE Evaluator acceptance.
-- Commit or close attempted after Evaluator `FAIL`, or before owner acceptance of `PASS_WITH_NOTES`.
+Every finding cites the file/location, evidence, impact, governing rule or Contract clause, and required action. Do not invent findings to fill a quota.
+
+## Conclusions
+
+- PGE returns exactly `PASS`, `PASS_WITH_NOTES`, or `FAIL`.
+- Any unresolved Critical or Major finding requires `FAIL`.
+- `PASS_WITH_NOTES` requires explicit owner acceptance before close.
+- The PGE Evaluator is the task's independent AI review; do not add a duplicate generic reviewer.
+- Non-PGE non-trivial work still needs independent review. Human PR review remains separate.

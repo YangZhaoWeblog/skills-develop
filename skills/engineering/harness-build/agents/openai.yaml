@@ -1,4 +1,4 @@
 interface:
   display_name: "Harness Build"
-  short_description: "Safely force-upgrade a code repository Harness."
-  default_prompt: "Use $harness-build to rebuild project rules from repository facts and safely apply a source-validated Harness upgrade while preserving project memory and unrelated work."
+  short_description: "Build or simplify a repository AI Agent Harness."
+  default_prompt: "Use $harness-build to upgrade this repository Harness with Git, explicit ownership, concise templates, preserved project knowledge, and independent review."

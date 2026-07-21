@@ -1,84 +1,42 @@
 ---
 name: harness-build
-description: Safely force-upgrade an existing Git code repository to the canonical AI agent Harness. Use when a user asks to build, rebuild, upgrade, or refresh AGENTS.md, harness governance, fact-backed coding/testing/API/database rules, PGE support, and required Grill dependencies while preserving project memory and unrelated work.
+description: Build or upgrade a repository AI Agent Harness using Git, reviewed Markdown/TOML templates, explicit ownership, and independent review. Use when Codex needs to create, simplify, migrate, or refresh AGENTS.md, harness/*.md, PGE templates, or Generator/Evaluator prompts without introducing a custom installer or validator.
 ---
 
 # Harness Build
 
-Use this Skill to build a complete candidate Harness in clean staging, validate it with source-owned capabilities, and apply only managed paths with full rollback.
-
-## Preconditions
-
-- The target is an existing Git code repository.
-- The target, reviewed overlay, and explicit staging path must not be concurrently modified while Builder runs.
-- Read its `AGENTS.md`, relevant `harness/*.md`, current dirty work, build files, API/schema/dependency facts, and protected-branch rules.
-- State the one-sentence goal and hard blockers.
-- For medium-or-larger upgrades, use the target repository's PGE workflow and pass its Human Start Gate before apply.
-- Do not infer permission to commit, push, enable hooks, or change product code.
+Use the Agent's native Git, file editing, repository inspection, and review abilities. Do not create an installer, checksum system, generated fact layer, rollback framework, or Harness-specific test suite.
 
 ## Workflow
 
-1. For an existing Harness, prepare a reviewed project overlay in an OS temporary directory. Copy only the confirmed project-owned paths listed by `project_overlay_paths` in `assets/ownership-manifest.json`, preserving bytes and modes. Add `project-overlay.json`:
+1. Read the target `AGENTS.md`, relevant Harness files, Git status, current branch, nearby project rules, and existing failures.
+2. Read [ownership.md](references/ownership.md). Classify every existing and proposed Harness path before editing.
+3. Work on a normal feature branch from the target integration branch. Preserve unrelated and uncommitted user work.
+4. Compare the target with `assets/baseline/`:
+   - replace universal files with the reviewed baseline;
+   - merge project-owned files intentionally instead of copying either side blindly;
+   - generate optional API/database/deployment profiles only when target evidence requires them;
+   - delete retired files and stale references;
+   - preserve Claude-owned adapters and unrelated extensions byte-for-byte.
+5. Keep `AGENTS.md` short: identity, commands, hard rules, routing, workflow, and index only.
+6. Keep project corrections in `harness/code-shape.md`. Read [code-shape.md](references/code-shape.md) before adding or rewriting schemas.
+7. Install or update `$pge-workflow` and `$tdd` separately from the same reviewed `skills-develop` revision. Do not copy their instructions into the Harness.
+8. For `@path` entries in Agent prompts, read those files directly and include them in the handoff. `@` is a Harness convention, not an automatic include.
+9. Inspect `git diff --check`, `git status --short`, the full Harness diff, deleted paths, stale references, and preserved project knowledge. Run only the target repository's applicable validation commands.
+10. Request an independent Agent review of ownership, instruction conflicts, project-memory loss, positive/negative schemas, and PGE gate integrity.
+11. Present one clean review commit. Use Git to amend, revert, or discard the branch when the upgrade is rejected.
 
-   ```json
-   {
-     "schema_version": 1,
-     "reviewed": true,
-     "project_owned_paths": ["AGENTS.md", "harness/code-shape.md"]
-   }
-   ```
+## Boundaries
 
-   The list must cover every existing project-owned path. Do not include Builder-owned paths, `fact_generated` paths, unknown governance extensions, or unreviewed content. `code-shape.md` is the project-owned positive/negative/valid-control profile and survives byte-for-byte. `coding-style.md`, `testing.md`, `api-standards.md`, `database.md`, `dependency-map.md`, `development.md`, and `deployment.md` are rebuilt from canonical rules plus facts detected in repository manifests, commands, API sources, migrations, structure, CI, and deployment files. Their old text intentionally does not survive. Fresh repositories without `AGENTS.md` or `harness/` may use the baseline without an overlay.
+- Harness work is documentation/configuration work and does not use TDD.
+- `$tdd` applies later when a Generator changes product behavior.
+- Never modify product code while upgrading the Harness.
+- Never overwrite project-owned knowledge without reading and merging it.
+- Never claim semantic effectiveness from keyword checks. Validate difficult rule changes with fresh Agent tasks that receive the real Contract and project context but not the expected answer.
+- Human Start, fixed Review base, clean candidate commit, and human MR review remain explicit decisions; no script substitutes for them.
 
-2. Run the source tests:
+## Resources
 
-   ```bash
-   python3 -m unittest discover -s scripts/tests -p 'test_*.py'
-   ```
-
-3. Preview the exact candidate without writing the target:
-
-   ```bash
-   python3 scripts/build_harness.py \
-     --target /absolute/path/to/repository \
-     --project-overlay /absolute/path/to/reviewed/overlay \
-     --staging-only /absolute/path/to/empty/staging
-   ```
-
-4. Inspect the candidate, transaction summary, resolved upstream evidence, regenerated repository facts, preserved project memory, extensions, and target diff. Confirm that stale fact-generated rules were replaced, `harness/code-shape.md` and other overlay paths were strongly copied, inherited Agent reasoning efforts were retained, and no top-level Agent `model` key was introduced. Resolve both PGE Agents with staged `scripts/resolve_agent_context.py`; verify the references, exact bundle bytes, and receipt digests before relying on the staged prompts.
-5. Apply only after the target workflow authorizes implementation:
-
-   ```bash
-   python3 scripts/build_harness.py \
-     --target /absolute/path/to/repository \
-     --project-overlay /absolute/path/to/reviewed/overlay
-   ```
-
-6. After Builder returns, run the target repository's structure checks, trusted Human Start checker at Coding Start, tests, lint, and build in the scope required by its harness. These are caller-controlled verification commands; Builder never executes target or staging scripts.
-7. Record the resolved upstream commit/tree digest, four Skill digests, offline-resolved `skills` CLI version, exact verification commands, and results in the task's eval or handoff. Do not create a persistent build-state file.
-
-## Safety Boundary
-
-- The Builder resolves `grilling`, `domain-modeling`, `grill-me`, and `grill-with-docs` from one current `mattpocock/skills` snapshot.
-- Source validation completes before backup or apply.
-- Builder-owned paths come from `assets/ownership-manifest.json`.
-- Fact-generated rule documents always start from the canonical baseline and current repository facts; existing copies cannot override them.
-- Unrelated installed Skills, ordinary Harness knowledge, project diagrams, symlinks, ignored files, build artifacts, and dirty user work are preserved.
-- Unknown Codex Agent execution entries block before staging.
-- Unknown Harness files that claim workflow, gate, PGE, Agent, instruction, or governance authority block before staging; ordinary project knowledge remains preserved.
-- Apply is serial. Any apply or post-check failure restores the complete non-`.git` target tree by path, type, mode, file content, and symlink target.
-- Under the exclusive-access precondition, any symlinked ancestor of a Builder-managed path, or symlink at a direct-write path, blocks before staging and is rechecked before managed writes.
-- The source validator hashes the trusted Human Start checker but never executes target code.
-- The four upstream Skill directories are copied byte-for-byte from one Git snapshot; mixed snapshots block.
-- The Builder reads an installed or cached `skills` CLI version offline and never invokes `skills@latest`.
-- Network access is used only to clone the one upstream snapshot that supplies the four Grill Skills.
-
-## Files
-
-- `assets/baseline/`: canonical generated Harness files.
-- `assets/capability-manifest.json`: source-owned capability assertions.
-- `assets/ownership-manifest.json`: strong-overwrite and preserve classifications.
-- `scripts/build_harness.py`: staging, validation, transaction, apply, and rollback.
-- `scripts/project_rules.py`: deterministic repository fact detection and rule regeneration.
-- `scripts/validate_capabilities.py`: read-only source validator.
-- `scripts/tests/`: standard-library behavior tests.
+- `assets/baseline/`: output templates; copy or adapt only the files the target needs.
+- [ownership.md](references/ownership.md): replacement, merge, retirement, and preservation rules.
+- [code-shape.md](references/code-shape.md): compact positive/negative schema design and examples.

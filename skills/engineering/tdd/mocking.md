@@ -1,8 +1,6 @@
 # When to Mock
 
-Follow the project's test strategy. Mock or fake at the tested unit's declared dependency boundary when the real dependency is slow, nondeterministic, unavailable, or intentionally excluded from that test level. Prefer the real dependency when it is cheap, deterministic, and adds useful confidence.
-
-Common boundaries include:
+Mock at **system boundaries** only:
 
 - External APIs (payment, email, etc.)
 - Databases (sometimes - prefer test DB)
@@ -11,9 +9,9 @@ Common boundaries include:
 
 Don't mock:
 
-- pure in-process logic merely to isolate each function;
-- collaborators only to assert call counts or order with no observable behavior;
-- a new production interface created solely for mocking when the project architecture does not need that boundary.
+- Your own classes/modules
+- Internal collaborators
+- Anything you control
 
 ## Designing for Mockability
 

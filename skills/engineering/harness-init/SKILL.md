@@ -7,4 +7,4 @@ description: Compatibility entry for $harness-build. Use when a user asks to ini
 
 Run `$harness-build` for the current code repository.
 
-This legacy name is a one-hop compatibility entry. All workflow, safety, ownership, validation, and apply rules live in `$harness-build`; do not duplicate them here.
+This legacy name is a one-hop compatibility entry. All workflow, ownership, review, and Git-based change rules live in `$harness-build`; do not duplicate them here.

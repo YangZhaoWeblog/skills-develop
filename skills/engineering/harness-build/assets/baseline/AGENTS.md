@@ -1,92 +1,62 @@
 # {{project_name}}
 
-> AI Agent entrypoint: keep project identity, hard constraints, workflow routing, and index here. Details live in `harness/*.md`.
+> AI Agent entrypoint. Keep only project identity, high-frequency hard rules, task routing, commands, and the Harness index here.
 
 ## Identity
 
-- **Project**: `{{project_name}}`
-- **Purpose**: {{project_description}}
-- **Repo type**: {{repo_type}}
-- **AI role**: Senior engineer for this repository; follow local architecture, workflow gates, and quality standards.
+- Project: `{{project_name}}`
+- Purpose: {{project_description}}
+- Repository type: {{repo_type}}
+- AI role: senior engineer for this repository.
 
 ## Stack
 
-- **Language / framework**: {{language_stack}}
-- **Entrypoints**: {{entrypoints}}
-- **Package / module**: {{module_or_package_name}}
+- Language / framework: {{language_stack}}
+- Entrypoints: {{entrypoints}}
+- Package / module: {{module_or_package_name}}
 
 ## Commands
 
 - Verify: {{verification_commands}}
 - Generate: {{generation_commands}}
 - Run locally: {{run_commands}}
-- Local environment details: [development.md](harness/development.md)
 
-## Structure
+## Hard Rules
 
-```text
-{{project_structure}}
-```
-
-Do not add new top-level directories unless the user or project convention explicitly requires it.
-
-## Rules
-
-1. Start implementation by stating one-sentence goal and hard-blocking clarification; write `无硬阻塞` when clear.
-2. Respect existing local changes. Never revert unrelated user work.
-3. Follow the project layering and ownership rules in [coding-style.md](harness/coding-style.md).
-4. Route data, API, dependency, deployment, and test changes to their owner harness files.
-5. Use explicit error wrapping and project-approved error surfaces when applicable.
-6. Write project-facing docs and comments in the language already used by the project.
-7. Before writing production code, pass Coding Start Check in [workflow-gates.md](harness/workflow-gates.md).
-8. Medium+ work uses `$pge-workflow` to enter PGE in Path stage; a locked Contract still requires explicit Human Start approval for its current revision before code or code-writing Agents may start, and fallback cannot bypass that approval.
-9. Before final delivery or commit, run verification appropriate to the change and record commands.
+1. Read the relevant Harness owner, target code, nearby tests, and related failures before editing.
+2. Preserve unrelated work and never use destructive Git operations.
+3. Pass Coding Start Check before implementation.
+4. Behavior work uses `$tdd`; a locked, owner-approved Sprint Contract supplies the agreed behavior and test seams.
+5. Medium+ or critical work uses `$pge-workflow`; Contract lock does not replace Human Start approval.
+6. Record exact verification commands, results, and residual risk before close.
+7. Human review remains required when the repository requires it.
 
 ## Task Routing
 
-| Scenario | Entry action | Reference |
-|---|---|---|
-| Local setup / commands | Read local runbook | [development.md](harness/development.md) |
-| Medium+ work / critical flow | Use `$pge-workflow` for Grill, Contract, Challenge, Human Start, Generator, and Evaluator | [pge-protocol.md](harness/pge-protocol.md) |
-| API change | Update API source first, then generated code | [api-standards.md](harness/api-standards.md) |
-| Database change | Add migration; do not edit applied migrations | [database.md](harness/database.md) |
-| Dependency / event / external service | Use dependency owner rules | [dependency-map.md](harness/dependency-map.md) |
-| Review / validation | Use review and testing rules | [code-review.md](harness/code-review.md), [testing.md](harness/testing.md) |
+- Execution gates: `harness/workflow-gates.md`.
+- PGE: `$pge-workflow` and `harness/pge-protocol.md`.
+- Code structure: `harness/coding-style.md` plus project schemas in `harness/code-shape.md`.
+- Review: `harness/code-review.md`.
+- Rule ownership: `harness/instruction-governance.md`.
+- Public API, database, storage, deployment, hooks, or glossary rules apply only when the matching Harness profile exists.
 
 ## Workflow
 
-All tasks follow one main workflow. Topic-specific protocols are subflows, not bypasses.
-
-1. **Intake**: capture goal and hard-blocking clarification; write `无硬阻塞` when clear.
-2. **Context**: read this file, relevant harness files, target files, tests, and failure notes.
-3. **Size & Risk**: classify small / medium / large and detect API, DB, dependency, deployment, or critical-flow risk.
-4. **Path**: small work may proceed directly; medium+ or critical work uses `$pge-workflow` to complete Grill, Contract, Challenge, and Human Start before implementation, then returns here.
-5. **Verify**: pass Coding Start Check before code; run scoped verification after changes.
-6. **Circuit Breaker**: if the same interface / flow fails 3 rounds of tests, reference alignment, or review, stop and return to design / clarification.
-7. **Close**: normal PGE closes only on `PASS` or owner-accepted `PASS_WITH_NOTES`; `FAIL` blocks close. Fallback with Evaluator assurance still requires that conclusion; missing assurance requires completed self-review, and required owner acknowledgement must be confirmed. Non-PGE non-trivial work uses independent AI review. Human PR review remains separate when required.
-
-## Change Governance
-
-Rule growth, ownership, and harness maintenance are governed by [instruction-governance.md](harness/instruction-governance.md).
+1. Intake: goal, acceptance criteria, non-goals.
+2. Context: repository facts, current branch/worktree, relevant owners and failures.
+3. Size & Risk: choose solo, design, or PGE.
+4. Implement: use `$tdd` for behavior; use targeted verification for non-behavior work.
+5. Verify: smallest relevant command, then broader checks proportional to risk.
+6. Evaluate: independent review or PGE Evaluator.
+7. Close: evidence, residual risk, documentation, and human-review handoff.
 
 ## Index
 
-| Topic | Use when | File |
-|---|---|---|
-| Local development | tools, commands, local run/debug | [development.md](harness/development.md) |
-| Workflow gates | context, sizing, start, verify, commit, circuit breaker | [workflow-gates.md](harness/workflow-gates.md) |
-| Instruction governance | rule ownership and harness evolution | [instruction-governance.md](harness/instruction-governance.md) |
-| Hook governance | git / Codex hook boundaries and enablement guidance | [hooks-governance.md](harness/hooks-governance.md) |
-| Coding style | architecture, naming, layering | [coding-style.md](harness/coding-style.md) |
-| Testing | unit, integration, regression, verification evidence | [testing.md](harness/testing.md) |
-| Code review | independent review, checklist, reject reasons | [code-review.md](harness/code-review.md) |
-| Large-work protocol | Grill, Contract, Human Start, generator/evaluator, fallback | [pge-protocol.md](harness/pge-protocol.md) |
-| PGE workflow skill | routing, Challenge Gate, Human Start, fallback status shape | [.agents/skills/pge-workflow/SKILL.md](.agents/skills/pge-workflow/SKILL.md) |
-| PGE agents | generator/evaluator execution prompts | [.codex/agents/](.codex/agents/) |
-| PGE templates | sprint contract and evaluator report | [docs/pge/](docs/pge/) |
-| API | public interface and compatibility | [api-standards.md](harness/api-standards.md) |
-| Database | schema, migration, transactions | [database.md](harness/database.md) |
-| Dependencies | downstream services, events, module boundaries | [dependency-map.md](harness/dependency-map.md) |
-| Deployment | CI/CD, runtime, rollback | [deployment.md](harness/deployment.md) |
-| Glossary | project terms | [glossary.md](harness/glossary.md) |
-| Failures | real incidents and learned rules | [failures.md](harness/failures.md) |
+- `harness/workflow-gates.md`: execution and verification gates.
+- `harness/instruction-governance.md`: owner placement and Harness evolution.
+- `harness/coding-style.md`: universal code decisions and detected repository facts.
+- `harness/code-shape.md`: project-grown positive/negative schemas.
+- `harness/code-review.md`: review order, severity, and conclusions.
+- `harness/pge-protocol.md`: PGE state machine and artifacts.
+- `harness/failures.md`: real failures and learned rules.
+- `docs/pge/`: Sprint Contracts and Evaluator reports.
