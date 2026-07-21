@@ -61,7 +61,7 @@ is_pge_contract_file() {
 content_has() {
   local file="$1" pattern="$2"
   if [[ "${MODE}" == "staged" ]]; then
-    git show ":${file}" 2>/dev/null | grep -Eq "${pattern}"
+    git show ":${file}" 2>/dev/null | grep -E "${pattern}" >/dev/null
   else
     grep -Eq "${pattern}" "${file}" 2>/dev/null
   fi

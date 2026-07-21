@@ -46,6 +46,32 @@ class PGEContractCheckerTests(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertIn("RED/tracer or targeted verification plan", result.stderr)
 
+    def test_staged_mode_accepts_complete_contract(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            spec = root / "docs" / "pge" / "governance-spec.md"
+            spec.parent.mkdir(parents=True)
+            content = SPEC_TEMPLATE.read_text(encoding="utf-8") + ("\npadding" * 20_000)
+            spec.write_text(content, encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", str(spec.relative_to(root))], cwd=root, check=True)
+
+            result = subprocess.run(
+                [
+                    "bash",
+                    str(CHECKER),
+                    "--staged",
+                    "docs/pge/governance-spec.md",
+                ],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIn("[OK] pge_contracts", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
