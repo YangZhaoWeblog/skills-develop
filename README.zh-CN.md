@@ -3,7 +3,6 @@
 <p align="center"><em>面向 agent 的开发类 skill。不要放学习笔记，也不要放参考库。</em></p>
 
 <p align="center">
-  <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge">
   <img alt="Agent Skills Standard" src="https://img.shields.io/badge/Agent%20Skills-Standard-6DA544?style=for-the-badge">
   <img alt="skills.sh Compatible" src="https://img.shields.io/badge/skills.sh-Compatible-1E6FFF?style=for-the-badge">
   <img alt="Runtime" src="https://img.shields.io/badge/Runtime-Claude%20Code%20·%20Codex%20·%20Cursor-8A2BE2?style=for-the-badge">
@@ -52,24 +51,24 @@ npx skills@latest add YangZhaoWeblog/skills-develop -g -y
 只安装仓库里的一个 skill：
 
 ```bash
-npx skills@latest add YangZhaoWeblog/skills-develop --skill harness-init -y
+npx skills@latest add YangZhaoWeblog/skills-develop --skill td-harness-build -y
 ```
 
-规范的安全升级入口使用 `--skill harness-build`；`harness-init` 仅作为一跳兼容名称。
+规范入口使用 `--skill td-harness-build`。
 
 只安装一个本地 skill 目录：
 
 ```bash
-npx skills@latest add /Users/yangzhao/Code/skills-develop/skills/engineering/harness-init -y
+npx skills@latest add ./skills/engineering/td-harness-build -y
 ```
 
 不安装，直接生成单个 skill 的使用 prompt：
 
 ```bash
-npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
+npx skills@latest use YangZhaoWeblog/skills-develop@td-harness-build
 ```
 
-把 `harness-init` 或本地路径换成目标 skill；要全局安装这个单个 skill 时加 `-g`。
+把 `td-harness-build` 或本地路径换成目标 skill；要全局安装这个单个 skill 时加 `-g`。
 
 * * *
 
@@ -77,11 +76,7 @@ npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
 
 | Skill | 作用 |
 | --- | --- |
-| `harness-build` | 将现有 Git 代码仓库安全强升级为通过真源校验的 Harness，并以事务回滚保护项目规则和无关工作。 |
-| `harness-init` | 一跳委托给 `harness-build` 的兼容入口。 |
-| `harness-score` | 审视现有 harness，并输出离线 HTML 评分报告。 |
-| `pge-workflow` | 编排 Grill、Contract Challenge、Human Start、Generator/Evaluator、fallback 与并行派发。 |
-| `tdd` | 通过测试先行的红-绿-重构循环逐步实现行为。 |
+| `td-harness-build` | 为项目搭建或升级 AI harness：AGENTS.md、`.harness` 模板、模板优先融合、内置 TDD 方法和 Git hooks。 |
 
 ## 目录
 

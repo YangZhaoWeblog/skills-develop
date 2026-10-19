@@ -1,0 +1,8 @@
+The TDD guidance in tdd.md is adapted from `skills/engineering/tdd` from
+https://github.com/mattpocock/skills.
+
+Upstream commit: `9603c1cc8118d08bc1b3bf34cf714f62178dea3b`.
+
+The mirrored work is distributed under the MIT License in `tdd-LICENSE`.
+
+Local adaptation: Chinese guidance consolidated into the Harness, with project-specific test boundaries and red-green-refactor alignment.

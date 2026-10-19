@@ -3,7 +3,6 @@
 <p align="center"><em>Agent-facing development skills. No study notes, no reference dump.</em></p>
 
 <p align="center">
-  <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge">
   <img alt="Agent Skills Standard" src="https://img.shields.io/badge/Agent%20Skills-Standard-6DA544?style=for-the-badge">
   <img alt="skills.sh Compatible" src="https://img.shields.io/badge/skills.sh-Compatible-1E6FFF?style=for-the-badge">
   <img alt="Runtime" src="https://img.shields.io/badge/Runtime-Claude%20Code%20·%20Codex%20·%20Cursor-8A2BE2?style=for-the-badge">
@@ -52,25 +51,24 @@ Project scope is the default. `-g` switches to user-level installation.
 Install only one skill from this repository.
 
 ```bash
-npx skills@latest add YangZhaoWeblog/skills-develop --skill harness-init -y
+npx skills@latest add YangZhaoWeblog/skills-develop --skill td-harness-build -y
 ```
 
-Use `--skill harness-build` for the canonical safe upgrade flow. `harness-init`
-remains a compatibility name that delegates to it.
+Use `--skill td-harness-build` for the canonical harness build/upgrade flow.
 
 Install one local skill directory.
 
 ```bash
-npx skills@latest add /Users/yangzhao/Code/skills-develop/skills/engineering/harness-init -y
+npx skills@latest add ./skills/engineering/td-harness-build -y
 ```
 
 Use one skill without installing it.
 
 ```bash
-npx skills@latest use YangZhaoWeblog/skills-develop@harness-init
+npx skills@latest use YangZhaoWeblog/skills-develop@td-harness-build
 ```
 
-Replace `harness-init` with the target skill name. Add `-g` to install that single skill globally.
+Replace `td-harness-build` with the target skill name. Add `-g` to install that single skill globally.
 
 * * *
 
@@ -78,11 +76,7 @@ Replace `harness-init` with the target skill name. Add `-g` to install that sing
 
 | Skill | What it does |
 | --- | --- |
-| `harness-build` | Safely force-upgrades an existing Git code repository to a source-validated Harness, preserving project rules and unrelated work with transactional rollback. |
-| `harness-init` | Compatibility entry that delegates to `harness-build`. |
-| `harness-score` | Reviews an existing harness and renders an offline HTML score report. |
-| `pge-workflow` | Coordinates Grill, Contract Challenge, Human Start, Generator/Evaluator roles, fallback, and parallel dispatch. |
-| `tdd` | Builds behavior incrementally with test-first red-green-refactor cycles. |
+| `td-harness-build` | Builds or upgrades a reusable project AI harness with canonical AGENTS.md, `.harness` templates, template-first merging, built-in TDD guidance, and Git hooks. |
 
 ## Layout
 
@@ -122,13 +116,13 @@ Sibling repos:
 项目级安装，适合只在当前仓库生效：
 
 ```bash
-npx skills add /Users/yangzhao/Code/skills-develop -y
+npx skills add . -y
 ```
 
 全局安装，适合所有项目都可用：
 
 ```bash
-npx skills add /Users/yangzhao/Code/skills-develop -g -y
+npx skills add . -g -y
 ```
 
 `npx skills add` 默认是项目级，`-g` 会切换成用户级安装。
@@ -136,15 +130,15 @@ npx skills add /Users/yangzhao/Code/skills-develop -g -y
 只安装一个 skill：
 
 ```bash
-npx skills add /Users/yangzhao/Code/skills-develop/skills/engineering/harness-init -y
+npx skills add ./skills/engineering/td-harness-build -y
 ```
 
-规范入口是 `harness-build`；`harness-init` 仅保留为一跳兼容名称。
+规范入口是 `td-harness-build`。
 
 不安装，直接生成单个 skill 的使用 prompt：
 
 ```bash
-npx skills use YangZhaoWeblog/skills-develop@harness-init
+npx skills use YangZhaoWeblog/skills-develop@td-harness-build
 ```
 
-把 `harness-init` 或本地路径换成目标 skill；要全局安装这个单个 skill 时加 `-g`。
+把 `td-harness-build` 或本地路径换成目标 skill；要全局安装这个单个 skill 时加 `-g`。

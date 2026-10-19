@@ -1,0 +1,63 @@
+version: "2"
+
+# 配置说明：https://golangci-lint.run/docs/configuration/file/
+linters:
+  settings:
+    gocyclo:
+      min-complexity: 10  # 本配置允许圈复杂度 ≤10；门槛及项目覆盖值见 verification.md
+    gocognit:
+      min-complexity: 15  # gocognit 报告 >15，允许 ≤15；项目可明确覆盖
+    revive:
+      confidence: 0
+      rules:
+        - name: max-control-nesting
+          arguments: [4]
+        - name: var-declaration
+        - name: dot-imports
+        - name: blank-imports
+        - name: range
+        - name: errorf
+        - name: error-strings
+        - name: receiver-naming
+        - name: increment-decrement
+        - name: error-return
+        - name: time-naming
+    govet:
+      enable:
+        - shadow
+    errcheck:
+      check-type-assertions: true
+    nolintlint:
+      require-explanation: true   # coding-style §5 例外与豁免：//nolint 必须附理由
+      require-specific: true      # 必须指定具体 linter 名
+    gosec:
+      excludes:
+        - G104  # errcheck 已覆盖，避免重复报告
+
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - std-error-handling
+  enable:
+    - gocyclo
+    - gocognit
+    - staticcheck
+    - revive
+    - govet
+    - rowserrcheck
+    - sqlclosecheck
+    - nolintlint     # coding-style §5：确保 //nolint 附带理由
+    - gosec          # coding-style §4 安全编码：安全检查
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+run:
+  timeout: 20m
+
+output:
+  sort-order:
+    - file

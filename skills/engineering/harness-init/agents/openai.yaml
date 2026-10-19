@@ -1,4 +1,0 @@
-interface:
-  display_name: "Harness Init"
-  short_description: "Compatibility entry for Harness Build."
-  default_prompt: "Use $harness-init as the compatibility entry and delegate the work to $harness-build."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Harness Build"
-  short_description: "Build or simplify a repository AI Agent Harness."
-  default_prompt: "Use $harness-build to upgrade this repository Harness with Git, explicit ownership, concise templates, preserved project knowledge, and independent review."
