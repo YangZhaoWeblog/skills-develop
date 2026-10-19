@@ -85,6 +85,8 @@ flowchart TD
 
 **Agent 分工**：主 Session 负责 Clarify、Plan 与编排；独立 Coder 实现，Verifier 验证，Reviewer 审查；Executor 更新文档并执行获准提交。派发、批量返工及权限见 **[agents.md](.harness/agents.md)**。
 
+每阶段按对应文件填写，核对其**完成检查**，更新 Overview 的进度与实际时间后再继续。批准范围内连续执行也保留这些记录；缺项先补齐，漏记时间如实注明。
+
 ### 2.4 目录与职责
 
 一个需求共用一份产品资料，按需拆成多个开发任务：
@@ -122,8 +124,19 @@ Submit 已预登记完成时，先核对 Git／平台实际结果；仍有获准
 **创建任务**
 
 1. **建目录与分支**：确定任务目录；开发任务从项目集成分支建立工作分支，一分支对应一任务，保留无关改动和历史任务。
-2. **复制并填写**：复制 `.harness/templates/product/` 到产品目录，或 `.harness/templates/development/` 到开发任务目录，按模板填写。
+2. **完整复制**：按下方命令复制整套模板；目标已存在时恢复任务，不覆盖。
 3. **清理模板说明**：填写后删除顶部创建说明；将 `WORKFLOW-GUIDANCE` 标记的整段规则块（含标记）替换为对应原模板文件的引用，保留表格和任务记录。
+
+在项目根目录执行，替换本次目标路径；产品任务将模板目录改为 **.harness/templates/product/**。
+
+```bash
+template_dir='.harness/templates/development'
+task_dir='.harness/plans/YYYY-MM-DD_<title>/development/<task>'
+mkdir -p "$(dirname "$task_dir")"
+test ! -e "$task_dir" && test ! -L "$task_dir" && cp -R "$template_dir" "$task_dir"
+```
+
+在副本中填写，**保留章节、表格与完成检查**；不适用项写明原因，后续阶段保持未开始。开发任务一次复制 **00–07** 全部文件，技术正文放外部时仍在 **05-docs.md** 记录目标、改动与一致性核对。
 
 ### 2.6 用户确认
 
