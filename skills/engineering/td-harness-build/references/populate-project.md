@@ -1,6 +1,6 @@
 # 项目文档生成与更新
 
-> 初始化后填充项目事实、补齐现有 Harness 或执行开发工作流的 05 Docs 时读取。只更新本次需要的文档。
+> 初始化后填充项目事实、补齐现有 Harness 或执行开发工作流的 05 Docs 时读取。独立 Agent 派发顺序与读写边界见 **[init-agents.md](init-agents.md)**；本文件维护共同填写规则。
 
 ## 1. 模板与修改边界
 
@@ -69,24 +69,24 @@
 
 ## 3. 按职责读取参考
 
-只读取当前受影响主题。子主题的文件结构、字段和项目事实由对应参考说明，本文件不重复维护。
+**init-agent-*.md** 是各专题的独立初始化指令，按 **init-agents.md** 派发。后续 **05 Docs** 增量维护也复用同一专题规则，只读取并更新本次受影响部分，不重跑全套初始化。子主题的文件结构、字段和项目事实由对应指令说明，本文件不重复维护。
 
 | 工作 | 读取 |
 |---|---|
-| 产品现状、长期能力与规则 | [write-product.md](write-product.md) |
-| 系统架构 | [write-architecture.md](write-architecture.md) |
-| 上下游与故障传播 | [write-dependencies.md](write-dependencies.md) |
-| 真实接口契约索引与字段历史 | [write-contracts.md](write-contracts.md) |
-| 持久化结构 | [write-data.md](write-data.md) |
-| 测试、覆盖、CRAP 和变异入口 | [write-testing.md](write-testing.md) |
-| 真实依赖测试 | [write-integration-test.md](write-integration-test.md) |
-| 环境、运行与部署 | [write-runtime.md](write-runtime.md) |
-| 编码规则和静态检查入口 | [write-coding-style.md](write-coding-style.md) |
-| 独立验收标准 | [write-code-review.md](write-code-review.md) |
-| 日志、术语、失败记录 | [日志](write-logging.md)、[术语](write-glossary.md)、[失败](write-failures.md) |
-| AGENTS 索引与项目规则 | [write-agents.md](write-agents.md) |
+| 产品现状、长期能力与规则 | [init-agent-product.md](init-agent-product.md) |
+| 系统架构 | [init-agent-architecture.md](init-agent-architecture.md) |
+| 上下游与故障传播 | [init-agent-dependencies.md](init-agent-dependencies.md) |
+| 真实接口契约索引与字段历史 | [init-agent-contracts.md](init-agent-contracts.md) |
+| 持久化结构 | [init-agent-data.md](init-agent-data.md) |
+| 测试、覆盖、CRAP 和变异入口 | [init-agent-testing.md](init-agent-testing.md) |
+| 真实依赖测试 | [init-agent-integration-test.md](init-agent-integration-test.md) |
+| 环境、运行与部署 | [init-agent-runtime.md](init-agent-runtime.md) |
+| 编码规则和静态检查入口 | [init-agent-coding-style.md](init-agent-coding-style.md) |
+| 独立验收标准 | [init-agent-code-review.md](init-agent-code-review.md) |
+| 日志、术语、失败记录 | [日志](init-agent-logging.md)、[术语](init-agent-glossary.md)、[失败](init-agent-failures.md) |
+| AGENTS 索引与项目规则 | [init-agent-entry.md](init-agent-entry.md) |
 
-长期产品文档固定为 `.harness/docs/product-state/product-map.md`、`user-flows.md`、`business-rules.md`。本轮需求与 AC 在产品任务中维护；长期文档用产品全景图、用户流程图和业务规则图表达现状；精确条件用短表或图注。图形要求见 write-product.md，不复制本轮 AT 步骤和历史结果。
+长期产品文档固定为 `.harness/docs/product-state/product-map.md`、`user-flows.md`、`business-rules.md`。本轮需求与 AC 在产品任务中维护；长期文档用产品全景图、用户流程图和业务规则图表达现状；精确条件用短表或图注。图形要求见 init-agent-product.md，不复制本轮 AT 步骤和历史结果。
 
 **术语表必建**：每个 Harness 保留 **glossary.md**；没有符合收录标准的术语时注明“暂无”，不为填满模板编造术语。
 
@@ -107,7 +107,7 @@
 - 接口名、字段注释、默认值、兼容性及历史依据与真实契约一致。
 - 命令确实存在；可执行且已授权的入口实跑，缺工具或环境时写明缺口，不标通过。
 - 固定命令、数值门槛和结果各有唯一维护位置：测试/编码规范、verification.md、本次 04-verify.md。
-- 项目内容和历史未丢失；按 [AGENTS 生成指导](write-agents.md) 完成主题索引填充，核对实际路径及项目专属入口，修复已移除入口的引用。
+- 项目内容和历史未丢失；按 [AGENTS 生成指导](init-agent-entry.md) 完成主题索引填充，核对实际路径及项目专属入口，修复已移除入口的引用。
 - 实际扫描或核验的文档更新 Source / Last-verified，不能给未核验内容统一刷时间。
 
 发现文档事实错误，按其来源修正；仅确定性生成的产物才修生成源并重新生成，不禁止对人工维护的说明做最小修改。

@@ -1,5 +1,7 @@
 # 上下游与集成关系生成指导
 
+> **独立初始化 Agent 指令**：执行前读取 [派发约定](init-agents.md#2-派发约定)，按主控指定的输入、文件范围和授权处理本专题。
+
 > 填写 **.harness/docs/dependencies.md** 时读取。模板为 **[dependencies.md](../assets/project/docs/dependencies.md)**，与 Architecture 分别维护外部集成明细和系统整体结构。
 
 ## 1. 核对真实集成

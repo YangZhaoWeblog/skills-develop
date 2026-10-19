@@ -1,5 +1,7 @@
 # Code Review 规范生成
 
+> **独立初始化 Agent 指令**：执行前读取 [派发约定](init-agents.md#2-派发约定)，按主控指定的输入、文件范围和授权处理本专题。
+
 > 初始化或升级 `.harness/docs/code-review.md` 时读取。先遵守 `upgrade-project.md` 的项目内容保护规则。
 
 ## 目标

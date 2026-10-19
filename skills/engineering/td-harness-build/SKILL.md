@@ -30,9 +30,9 @@ description: 为 AI Coding 项目初始化、迁移或升级协作规则、项�
 
 1. 读取目标项目的 AGENTS、Harness、Git 状态、分支及已有规则。多项目仓库先确定目标目录。
 2. 按 [upgrade-project.md](references/upgrade-project.md) 判断文件归属和修改边界。需要确认的迁移整批列出；获准后连续执行，出现新的越界操作才停止。
-3. 按 [能力探测](references/inspect-capabilities.md) 核对 API 和持久化证据；探测失败先解决缺口，不用默认值冒充结果。成功后使用 `scripts/build_harness.sh` 复制缺失骨架及产品、开发模板。脚本不负责语义融合；迁移遇到 `[CONFIRM]` 时，获准后用 `--accept-migrations` 重跑。
-4. 按 upgrade-project.md 融合已有文档和 AI 入口，保留独有内容，冲突交用户决定。AGENTS 作为统一入口；按实际平台连接入口；已有入口先保留并融合。
-5. 按 [文档生成指导](references/populate-project.md) 填项目事实、接入检查命令；每个 Harness 必须包含术语表 `glossary.md`。已有有效工具优先复用；缺少的工具或环境明确报告。
+3. 按 [独立初始化派发](references/init-agents.md) 先派只读能力探测 Agent，核对 API 和持久化证据；探测失败先解决缺口，不用默认值冒充结果。成功后使用 `scripts/build_harness.sh` 复制缺失骨架及产品、开发模板。脚本不负责语义融合；迁移遇到 `[CONFIRM]` 时，获准后用 `--accept-migrations` 重跑。
+4. 依次派入口、架构初始化 Agent，按 upgrade-project.md 融合并核对项目规则及结构。AGENTS 作为统一入口；按实际平台连接入口，保留已有内容，冲突交用户决定。
+5. 按 init-agents.md 派发适用专题：独立任务并行，有依赖则等待；主控统一核对事实和索引。各 Agent 按 [文档生成指导](references/populate-project.md) 填项目事实；每个 Harness 必须包含术语表 `glossary.md`。空项目、局部更新及平台限制按派发规则处理，缺工具或环境明确报告。
 6. 按 [检查命令接入](references/populate-project.md#接入检查命令) 固定项目命令并验证，再运行 `scripts/setup_hooks.sh` 启用 Git hooks。未配置的检查只准备脚本、不启用；已有 Hook、core.hooksPath 和项目脚本按授权融合，不覆盖。
 7. 按 [原生 Agent 接入](references/agent-setup.md) 配置并核验 Coder、Verifier、Reviewer、Executor；主 Session 保留规划与编排。职责在项目 .harness/agents.md 维护，平台配置绑定实际模型与权限。
 8. 检查实际差异、链接、退役入口和项目内容保留情况，执行适用验证，按下方“完成与反馈”报告结论。
@@ -95,9 +95,10 @@ AI 将想法或外部资料整理为 Overview、Requirements 和 AC。外部链�
 | 当前工作 | 读取 |
 |---|---|
 | 融合旧内容、处理迁移或多项目归属 | [upgrade-project.md](references/upgrade-project.md) |
+| 初始化、升级或首次补齐项目文档，派发独立专题 Agent | [init-agents.md](references/init-agents.md) |
 | 填项目文档、统一术语、接入检查命令 | [populate-project.md](references/populate-project.md) |
 | 接入平台原生角色、核对模型与权限 | [agent-setup.md](references/agent-setup.md) |
-| 探测 API 和持久化能力 | [inspect-capabilities.md](references/inspect-capabilities.md) |
+| 探测 API 和持久化能力 | [init-agent-detect.md](references/init-agent-detect.md) |
 | 产品澄清或开发独立核验 | [clarify.md](assets/project/docs/clarify.md)，按产品或开发部分读取 |
 | 设计行为改动的单元测试（Unit Test，UT） | [tdd.md](assets/project/docs/testing/tdd.md) |
 | 选择检查、处理失败及判断复验范围 | [verification.md](assets/project/docs/verification.md) |

@@ -1,5 +1,7 @@
 # 失败记录生成指导
 
+> **独立初始化 Agent 指令**：执行前读取 [派发约定](init-agents.md#2-派发约定)，按主控指定的输入、文件范围和授权处理本专题。
+
 > 维护 **.harness/docs/failures.md** 时读取。记录范围、复盘方法和验证要求统一见 **[failures.md](../assets/project/docs/failures.md)**。
 
 ## 1. 定位相关证据

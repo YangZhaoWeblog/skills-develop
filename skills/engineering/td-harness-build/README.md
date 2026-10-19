@@ -88,6 +88,8 @@ AI 核实现有工程：没有 Harness 就接入，已有则补缺或升级。�
 
 **确定性工具优先**：模板通过复制建立，机械代码优先由已有工具生成；项目检查命令在接入时选定，执行时不临时换工具。未配置的 Hook 不自动启用，已有 Hook 与项目脚本按授权保留或融合。
 
+**多 Agent 初始化**：先核对入口与架构，再让独立 Agent 按专题填充适用文档；无写入权限时返回候选，由主控写入并统一核对。空项目不派整批 Agent 填写不存在的事实。
+
 <details>
 <summary><strong>查看规则、模板与工具参考</strong></summary>
 
@@ -95,6 +97,7 @@ AI 核实现有工程：没有 Harness 就接入，已有则补缺或升级。�
 |---|---|
 | Skill 执行规则与完整完成条件 | [SKILL.md](SKILL.md) |
 | 旧内容保留、升级与冲突处理 | [模板融合规则](references/upgrade-project.md) |
+| 多 Agent 初始化顺序、专题职责与读写范围 | [独立初始化派发](references/init-agents.md) |
 | 项目事实填充与检查命令接入 | [文档生成指导](references/populate-project.md) |
 | Go / JS、TS / Python 工具参考 | [Go](references/language-profiles/go.md) · [JS / TS](references/language-profiles/javascript-typescript.md) · [Python](references/language-profiles/python.md) |
 | 原生 Agent 安装与核验 | [接入说明](references/agent-setup.md) · [角色职责](assets/project/agents.md) |
