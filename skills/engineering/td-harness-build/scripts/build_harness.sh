@@ -148,7 +148,70 @@ if [[ -f "$target/go.mod" ]]; then
   done
   [[ "$lint_present" == true ]] || copy_missing "$skill/assets/.golangci.yml" .golangci.yml
 fi
-copy_missing "$skill/assets/agents.md" AGENTS.md
+# The standard Workflow is owned by the Skill; project chapters remain intact.
+workflow_bounds() {
+  awk '
+    {
+      line = $0
+      sub(/^[ \t]*/, "", line)
+      if (fence != "") {
+        if ($0 ~ /^## 二、/ || $0 ~ /^## 三、/) uncertain = 1
+        closing = line
+        gsub(fence, "", closing)
+        if (substr(line, 1, width) == marker && closing ~ /^[ \t]*$/) fence = ""
+        next
+      }
+      if (line ~ /^```/ || line ~ /^~~~/) {
+        fence = substr(line, 1, 1)
+        match(line, /^`+|^~+/)
+        width = RLENGTH; marker = substr(line, 1, width)
+        next
+      }
+    }
+    /^## 二、/ {
+      start = NR; starts++
+      if ($0 !~ /^## 二、(Workflow|SOP)([[:space:]（(]|$)/) uncertain = 1
+    }
+    /^## 三、/ { finish = NR; finishes++ }
+    END {
+      if (uncertain || fence != "" || starts != 1 || finishes != 1 || start >= finish) exit 1
+      print start, finish
+    }
+  ' "$1"
+}
+refresh_entry() (
+  local entry="$target/AGENTS.md" source="$skill/assets/agents.md"
+  local old_bounds source_bounds old_start old_end source_start source_end scratch
+  if [[ ! -e "$entry" && ! -L "$entry" ]]; then
+    copy_missing "$source" AGENTS.md; return
+  fi
+  if [[ -L "$entry" || ! -f "$entry" ]]; then
+    printf '%s\n' '[MERGE] AGENTS.md retained; resolve its file type before merging.'; return
+  fi
+  if ! old_bounds="$(workflow_bounds "$entry")"; then
+    printf '%s\n' '[MERGE] AGENTS.md retained; merge project rules into the source template before retrying.'; return
+  fi
+  source_bounds="$(workflow_bounds "$source")" || {
+    printf '%s\n' '[ERROR] Source Workflow chapter boundaries are invalid.' >&2; return 2
+  }
+  read -r old_start old_end <<< "$old_bounds"
+  read -r source_start source_end <<< "$source_bounds"
+  scratch="$(mktemp -d "$target/.harness/entry-refresh.XXXXXX")"
+  trap 'rm -rf "$scratch"' EXIT
+  cp -p "$entry" "$scratch/AGENTS.md"
+  {
+    head -n "$((old_start - 1))" "$entry"
+    sed -n "${source_start},$((source_end - 1))p" "$source"
+    tail -n "+$old_end" "$entry"
+  } > "$scratch/AGENTS.md"
+  if cmp -s "$entry" "$scratch/AGENTS.md"; then
+    printf '%s\n' '[KEEP] AGENTS.md; source Workflow is intact.'
+  else
+    mv "$scratch/AGENTS.md" "$entry"
+    printf '%s\n' '[WORKFLOW] AGENTS.md chapter II restored from source; other chapters retained.'
+  fi
+)
+refresh_entry
 if [[ ! -e "$target/CLAUDE.md" && ! -L "$target/CLAUDE.md" ]]; then
   ln -s AGENTS.md "$target/CLAUDE.md"
   printf '%s\n' '[LINK] CLAUDE.md -> AGENTS.md'
