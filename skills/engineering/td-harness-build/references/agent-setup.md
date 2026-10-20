@@ -43,6 +43,6 @@ python3 scripts/configure_agents.py /path/to/project --platform codex \
 
 按职责配置最小权限。Verifier 运行测试可能写临时产物，不能简单设为完全只读；平台无法强制的文件边界注明“指令约束”。
 
-结果写入 **.harness/agents.md §3**，引用实际配置。需重载或新会话时给出操作；**未调用核验，仍属未完成**，不能以文件存在或主控自检代替。完整完成条件见 **[SKILL.md](../SKILL.md#完成与反馈)**。
+按 **[职责模板 §3](../assets/project/agents.md#3-项目接入)** 更新项目 **.harness/agents.md §3**，记录配置与核验结论。需重载或新会话时给出操作；**未调用核验，仍属未完成**，不能以文件存在或主控自检代替。完整完成条件见 **[SKILL.md](../SKILL.md#完成与反馈)**。
 
 后续直接调用已配置角色；平台、模型或权限变化时复验相关项。
