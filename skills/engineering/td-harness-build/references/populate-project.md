@@ -80,7 +80,7 @@
 | 持久化结构 | [init-agent-data.md](init-agent-data.md) |
 | 测试、覆盖、CRAP 和变异入口 | [init-agent-testing.md](init-agent-testing.md) |
 | 真实依赖测试 | [init-agent-integration-test.md](init-agent-integration-test.md) |
-| 环境、运行与部署 | [init-agent-runtime.md](init-agent-runtime.md) |
+| 环境、运行与部署 | [init-agent-devops.md](init-agent-devops.md) |
 | 编码规则和静态检查入口 | [init-agent-coding-style.md](init-agent-coding-style.md) |
 | 独立验收标准 | [init-agent-code-review.md](init-agent-code-review.md) |
 | 日志、术语、失败记录 | [日志](init-agent-logging.md)、[术语](init-agent-glossary.md)、[失败](init-agent-failures.md) |

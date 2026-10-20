@@ -21,8 +21,8 @@
 | 编写或修改代码时           | **编码与分层**            | `.harness/docs/coding-style.md`                                      |
 | 新增日志或排查问题时         | **Logging**          | `.harness/docs/logging.md`                                           |
 | 独立审查和人工验收时         | **Code Review**      | `.harness/docs/code-review.md`                                       |
-| 准备环境、启动或调试时 | **本地开发** | `.harness/docs/runtime/local-dev.md` |
-| 准备交付版本或执行发布、恢复时         | **发布与恢复**             | `.harness/docs/runtime/release.md`                                 |
+| 准备环境、启动或调试时 | **本地开发** | `.harness/docs/devops/local-dev.md` |
+| 准备交付版本或执行发布、恢复时         | **发布与恢复**             | `.harness/docs/devops/release.md`                                 |
 | 核对项目专用概念时          | **术语表**              | `.harness/docs/glossary.md`                                          |
 | 排查已知问题或完成复盘时       | **失败记录**             | `.harness/docs/failures.md`                                          |
 | 讨论本轮需求或协调开发安排时     | **产品任务**             | 本轮 `product/00-overview.md`                                          |

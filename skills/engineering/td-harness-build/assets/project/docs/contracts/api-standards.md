@@ -8,7 +8,7 @@
 
 当前契约与实现入口见 **[接口契约索引](index.md)**；字段含义、单位、约束和默认值由契约维护，不复制字段表。调用方式仍不清楚时，补充示例或跨接口流程说明。
 
-字段或接口语义变化时，追加 **[变更历史](change-history.md)**。代码生成入口见 **[local-dev.md](../runtime/local-dev.md)**；框架分层与依赖注入见 **[coding-style.md](../coding-style.md)**。
+字段或接口语义变化时，追加 **[变更历史](change-history.md)**。代码生成入口见 **[local-dev.md](../devops/local-dev.md)**；框架分层与依赖注入见 **[coding-style.md](../coding-style.md)**。
 
 ## 2. 命名与字段
 

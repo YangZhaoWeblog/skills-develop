@@ -23,10 +23,10 @@ class BuildHarnessTests(unittest.TestCase):
         self.project = Path(self.directory.name)
         self.entry = self.project / "AGENTS.md"
 
-    def build(self):
+    def build(self, *options):
         result = subprocess.run(
             ["bash", str(SKILL / "scripts/build_harness.sh"), str(self.project),
-             "--has-api=false", "--has-db=false"],
+             "--has-api=false", "--has-db=false", *options],
             capture_output=True, text=True, check=False,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -35,6 +35,44 @@ class BuildHarnessTests(unittest.TestCase):
     def test_missing_entry_copies_template(self):
         self.build()
         self.assertEqual(self.entry.read_bytes(), TEMPLATE)
+
+    def test_devops_layout_is_current_and_project_content_is_preserved(self):
+        self.build()
+        folder = self.project / ".harness/docs/devops"
+        self.assertTrue((folder / "release.md").is_file())
+        local = folder / "local-dev.md"
+        local.write_text("Actual project startup command\n")
+        self.build()
+        self.assertEqual(local.read_text(), "Actual project startup command\n")
+        self.assertFalse((self.project / ".harness/docs/runtime").exists())
+
+    def test_legacy_runtime_requires_approval_and_keeps_original_documents(self):
+        folder = self.project / ".harness/docs/runtime"
+        folder.mkdir(parents=True)
+        for name in ("local-dev.md", "release.md"):
+            (folder / name).write_text("Existing project instructions: " + name)
+        result = subprocess.run(
+            ["bash", str(SKILL / "scripts/build_harness.sh"), str(self.project)],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertFalse(self.entry.exists())
+        output = self.build("--accept-migrations")
+        for name in ("local-dev.md", "release.md"):
+            self.assertEqual((folder / name).read_text(), "Existing project instructions: " + name)
+            self.assertFalse((self.project / ".harness/docs/devops" / name).exists())
+            self.assertIn("[MERGE] Populate .harness/docs/devops/" + name, output)
+
+    def test_legacy_devops_filenames_do_not_get_shadowed_by_empty_templates(self):
+        folder = self.project / ".harness/docs/devops"
+        folder.mkdir(parents=True)
+        for name in ("env.md", "development.md", "deployment.md"):
+            (folder / name).write_text("Existing " + name)
+        self.build("--accept-migrations")
+        for name in ("env.md", "development.md", "deployment.md"):
+            self.assertEqual((folder / name).read_text(), "Existing " + name)
+        self.assertFalse((folder / "local-dev.md").exists())
+        self.assertFalse((folder / "release.md").exists())
 
     def test_refresh_restores_workflow_and_preserves_project_rules(self):
         prefix = "# 自有项目\n\n## 一、Index\n\n自有入口\n\n".encode()

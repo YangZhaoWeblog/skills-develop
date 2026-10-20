@@ -40,7 +40,7 @@
 | [init-agent-coding-style.md](init-agent-coding-style.md) | **coding-style.md** | 已知语言、项目配置和工具证据；不修改工具配置 |
 | [init-agent-testing.md](init-agent-testing.md) | **testing/unit-tests.md** | 有代码及测试工具证据；工具缺失如实记录 |
 | [init-agent-logging.md](init-agent-logging.md) | **logging.md** | 有日志机制或已有项目说明 |
-| [init-agent-runtime.md](init-agent-runtime.md) | **runtime/** | 读取已核验的测试、日志入口；未建立发布方式只说明现状 |
+| [init-agent-devops.md](init-agent-devops.md) | **devops/** | 读取已核验的测试、日志入口；未建立发布方式只说明现状 |
 | [init-agent-integration-test.md](init-agent-integration-test.md) | **testing/integration-test.md** | 依赖、运行与测试入口已核对；无 IT 时只登记未接入 |
 | [init-agent-code-review.md](init-agent-code-review.md) | **code-review.md** | 编码、测试及项目门禁已核对；不另维护命令或阈值 |
 | [init-agent-glossary.md](init-agent-glossary.md) | **glossary.md** | 每个 Harness 必备；无有效术语时写“暂无” |

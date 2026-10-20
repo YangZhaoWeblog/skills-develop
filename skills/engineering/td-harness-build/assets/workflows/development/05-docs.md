@@ -22,8 +22,8 @@
 | ⬜ **字段与接口变更历史** | 字段或接口语义变化 | .harness/docs/contracts/change-history.md |
 | ⬜ **数据库说明** | 数据库用途、关系、约束或文档链接变化 | .harness/docs/data/database.md |
 | ⬜ **单元测试规范** | 测试约定、命名或 Mock 策略变化 | .harness/docs/testing/unit-tests.md |
-| ⬜ **本地环境与开发** | 环境、配置、启动或调试方式变化 | .harness/docs/runtime/local-dev.md |
-| ⬜ **发布与恢复** | 发布、检查或恢复方式变化 | .harness/docs/runtime/release.md |
+| ⬜ **本地环境与开发** | 环境、配置、启动或调试方式变化 | .harness/docs/devops/local-dev.md |
+| ⬜ **发布与恢复** | 发布、检查或恢复方式变化 | .harness/docs/devops/release.md |
 | ⬜ **用户说明** | 用户可见的变化 | 对外 README / 用户指南，按实际路径填写 |
 | ⬜ **版本变更日志** | 项目版本记录约定要求更新时 | CHANGELOG，按实际路径填写 |
 

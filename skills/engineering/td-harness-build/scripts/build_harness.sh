@@ -46,7 +46,7 @@ for path in .harness/docs/entry .harness/plans/entry .harness/templates/product/
 done
 
 legacy=false
-for path in harness .harness/context .harness/tasks .harness/docs/sqls .harness/docs/apis .harness/docs/devops .harness/docs/unittest .harness/docs/integration_test .harness/docs/database.md .harness/docs/relationship.md .harness/plans/_template .harness/plans/_dev-template .harness/plans/_product-template ARCHITECTURE.md; do
+for path in harness .harness/context .harness/tasks .harness/docs/sqls .harness/docs/apis .harness/docs/runtime .harness/docs/devops/development.md .harness/docs/devops/env.md .harness/docs/devops/deployment.md .harness/docs/devops/test-env-deploy.md .harness/docs/unittest .harness/docs/integration_test .harness/docs/database.md .harness/docs/relationship.md .harness/plans/_template .harness/plans/_dev-template .harness/plans/_product-template ARCHITECTURE.md; do
   if [[ -e "$target/$path" || -L "$target/$path" ]]; then
     legacy=true; printf '[MERGE] Existing layout retained: %s\n' "$path"
   fi
@@ -75,7 +75,7 @@ legacy_context() {
   case "$path" in
     contracts/*) path="apis/${path#contracts/}" ;;
     data/*) path="sqls/${path#data/}" ;;
-    runtime/*) path="devops/${path#runtime/}" ;;
+    devops/*) path="runtime/${path#devops/}" ;;
     testing/unit-tests.md) path="unittest/unit_test.md" ;;
     testing/integration-test.md) path="integration_test/integration_test.md" ;;
     testing/*) path="unittest/${path#testing/}" ;;
@@ -98,18 +98,18 @@ while IFS= read -r -d '' source; do
   case "$relative" in
     docs/architecture.md) [[ ! -e "$target/ARCHITECTURE.md" && ! -L "$target/ARCHITECTURE.md" ]] || old_found=true ;;
     docs/testing/unit-tests.md) [[ ! -e "$target/.harness/docs/unittest/unittest.md" && ! -L "$target/.harness/docs/unittest/unittest.md" ]] || old_found=true ;;
-    docs/runtime/local-dev.md)
-      for name in local-dev.md development.md env.md; do
+    docs/devops/local-dev.md)
+      for name in development.md env.md; do
         [[ ! -e "$target/.harness/docs/devops/$name" && ! -L "$target/.harness/docs/devops/$name" ]] || old_found=true
       done ;;
-    docs/runtime/release.md) [[ ! -e "$target/.harness/docs/devops/deployment.md" && ! -L "$target/.harness/docs/devops/deployment.md" ]] || old_found=true ;;
+    docs/devops/release.md) [[ ! -e "$target/.harness/docs/devops/deployment.md" && ! -L "$target/.harness/docs/devops/deployment.md" ]] || old_found=true ;;
   esac
   flat_names=""
   case "$relative" in
     docs/data/database.md) flat_names="database.md" ;;
     docs/contracts/api-standards.md) flat_names="api-standards.md" ;;
-    docs/runtime/local-dev.md) flat_names="development.md env.md local-dev.md" ;;
-    docs/runtime/release.md) flat_names="deployment.md release.md" ;;
+    docs/devops/local-dev.md) flat_names="development.md env.md local-dev.md" ;;
+    docs/devops/release.md) flat_names="deployment.md release.md" ;;
   esac
   for name in $flat_names; do
     for base in "$target/.harness/docs" "$target/harness"; do
