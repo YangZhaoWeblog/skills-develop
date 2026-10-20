@@ -6,7 +6,7 @@
 
 ## 1. 项目约定与工具
 
-已有项目按真实代码、配置和规则构建；默认约定与项目规则冲突时确认，不静默覆盖。新项目采用适用语言的默认约定，后续在本文补充；未确定的工具和配置标明待接入。
+核对已有规则、配置与实际代码，保留有效约定，不把历史写法自动当作规范。发现冲突或坏写法时，说明问题与改进建议，按授权更新规则。缺少规范时，引用实际语言与框架的适用规范，形成可执行的项目约定；未确定的工具和配置标明待接入。
 
 **格式化与 Import**交给项目固定工具，缩进、分组及排序沿用语言与项目配置。不设通用行长、文件或函数行数限制，不按个人偏好强制折行。
 
@@ -47,25 +47,16 @@
 
 生成代码不手改，未触及的旧函数不批量补写。函数外文档注释不加步骤编号。Coder 编写，独立 Reviewer 核对分块和语义；不新增 Verify 命令或正则检查。
 
-示例（省略类型和依赖定义；实际缩进由项目 formatter 处理）：
+### 2.3 可读性与接口设计
 
-```go
-func submitOrder(order Order) (Result, error) {
-    // 1. 校验订单，确认当前状态允许提交。
-    if err := validateOrder(order); err != nil {
-        return Result{}, err
-    }
+- **深模块（Deep Modules）**：以简单接口提供完整能力，将复杂处理集中在模块内部。接口负担包括参数、配置、调用顺序、错误及使用约束；按调用方必须理解什么判断，不以形参数量或实现行数衡量。
+- **删除检验**：假设删掉模块，复杂度会消失，还是分散回调用方？检查它是否集中承担实际职责，而非仅增加转发层。
+- **改善阅读**：类型定义、判断条件或嵌套代码难读时，可以提取命名类型、变量或函数，让主要处理步骤更清楚。
+- **避免机械拆分**：参数多、条件多或复杂度超标时，先找原因，再选择合适的处理方式，例如简化接口、合并重复逻辑、用早返回减少嵌套或按职责拆分等。不要只把代码搬进另一个函数，让数字变小、阅读却需要来回跳转。
+- **输入校验**：按需求、接口契约和安全规则，拒绝不符合要求的输入。
+- **新增限制**：增加校验条件前，说明要防止什么具体问题，并给出需求、契约或安全依据。
 
-    // 2. 提交订单，在同一事务中扣减库存并更新订单状态。
-    if err := persistOrderWithStock(order); err != nil {
-        return Result{}, err
-    }
-
-    // 3. 返回提交结果。
-    return Result{OrderID: order.ID}, nil
-}
-```
-
+参数数量、复杂度等由项目已接入的适用工具检查；工具未覆盖的语义由 Coder 自检和独立 Reviewer 核对。分块与注释沿用上方规范，不以工具通过代替可读性审阅。
 
 ## 3. 错误、资源与并发
 
@@ -117,5 +108,87 @@ Go 循环中使用 defer 时核对释放时机，避免把每轮资源积压到�
 **确定性工具优先**：执行 §1 的项目检查入口，保留真实失败状态；工具缺失与检查失败分开报告，不因缺工具宣称通过。记录与复验按 **[verification.md](verification.md)**，独立审查按 **[code-review.md](code-review.md)**。
 
 **例外先批准**：说明具体规则、理由、影响及缓解方式。获准后按需添加限定范围的 lint 抑制及说明，在当前任务或 PR 记录决定，由独立 Reviewer 核对；不能只加 nolint 就自行放行。
+
+## 6. 正反例
+
+示例省略依赖定义，只比较注明的问题；生成项目文档时可换成项目语言。同类例子合并或替换，注明适用条件与改善点。
+
+### 6.1 处理分块
+
+**反例：校验与提交挤在同一块。**
+
+```go
+func submitOrder(order Order) error {
+    // 1. 处理订单。
+    if err := validateOrder(order); err != nil {
+        return err
+    }
+    return persistOrder(order)
+}
+```
+
+**正例：按处理阶段分块，块间留空行。**
+
+```go
+func submitOrder(order Order) error {
+    // 1. 校验订单，确认允许提交。
+    if err := validateOrder(order); err != nil {
+        return err
+    }
+
+    // 2. 保存订单与库存变更。
+    return persistOrder(order)
+}
+```
+
+### 6.2 接口负担
+
+普通业务调用方只选择导出条件；导出模块内部负责并发与重试。以下展示调用处。
+
+**反例：包装成一个参数，仍暴露内部调度。**
+
+```typescript
+exportService.create({ range, columns, workerCount: 8, retryLimit: 3 });
+```
+
+**正例：调用方只提供业务条件。**
+
+```typescript
+exportService.create({ range, columns });
+```
+
+### 6.3 回调编号
+
+**反例：嵌套回调反复从 `1.` 开始。**
+
+```typescript
+function watch(child: ChildProcess, session: Session) {
+  // 1. 监听进程。
+  child.once("error", () => {
+    // 1. 结束会话。
+    session.close(new Error("CLI process failed"));
+  });
+  child.once("close", () => {
+    // 1. 结束会话。
+    session.close(new Error("CLI process exited"));
+  });
+}
+```
+
+**正例：外层阶段编号，回调只补充必要约束。**
+
+```typescript
+function watch(child: ChildProcess, session: Session) {
+  // 1. 监听进程失败与退出，结束协议会话。
+  child.once("error", () => {
+    session.close(new Error("CLI process failed"));
+  });
+
+  child.once("close", () => {
+    // 进程退出不代表模型成功完成。
+    session.close(new Error("CLI process exited"));
+  });
+}
+```
 
 <!-- PROJECT-CONTENT -->
