@@ -46,7 +46,7 @@ for path in .harness/docs/entry .harness/plans/entry .harness/templates/product/
 done
 
 legacy=false
-for path in harness .harness/context .harness/tasks .harness/docs/sqls .harness/docs/apis .harness/docs/runtime .harness/docs/devops/development.md .harness/docs/devops/env.md .harness/docs/devops/deployment.md .harness/docs/devops/test-env-deploy.md .harness/docs/unittest .harness/docs/integration_test .harness/docs/database.md .harness/docs/relationship.md .harness/plans/_template .harness/plans/_dev-template .harness/plans/_product-template ARCHITECTURE.md; do
+for path in harness .harness/agents.md .harness/context .harness/tasks .harness/docs/sqls .harness/docs/apis .harness/docs/runtime .harness/docs/devops/development.md .harness/docs/devops/env.md .harness/docs/devops/deployment.md .harness/docs/devops/test-env-deploy.md .harness/docs/unittest .harness/docs/integration_test .harness/docs/database.md .harness/docs/relationship.md .harness/plans/_template .harness/plans/_dev-template .harness/plans/_product-template ARCHITECTURE.md; do
   if [[ -e "$target/$path" || -L "$target/$path" ]]; then
     legacy=true; printf '[MERGE] Existing layout retained: %s\n' "$path"
   fi
@@ -96,6 +96,7 @@ while IFS= read -r -d '' source; do
     if [[ -e "$candidate" || -L "$candidate" ]]; then old_found=true; fi
   done
   case "$relative" in
+    agent-roles.md) [[ ! -e "$target/.harness/agents.md" && ! -L "$target/.harness/agents.md" ]] || old_found=true ;;
     docs/architecture.md) [[ ! -e "$target/ARCHITECTURE.md" && ! -L "$target/ARCHITECTURE.md" ]] || old_found=true ;;
     docs/testing/unit-tests.md) [[ ! -e "$target/.harness/docs/unittest/unittest.md" && ! -L "$target/.harness/docs/unittest/unittest.md" ]] || old_found=true ;;
     docs/devops/local-dev.md)

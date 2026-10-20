@@ -7,7 +7,7 @@
 
 | 何时读取               | 主题                   | 文件                                                                   |
 | ------------------ | -------------------- | -------------------------------------------------------------------- |
-| 派发工作或处理返工时 | **Agent 分工** | `.harness/agents.md` |
+| 派发工作或处理返工时 | **Agent 分工** | `.harness/agent-roles.md` |
 | 查看产品全景、用户流程和业务规则时  | **产品现状**             | `.harness/docs/product-state/product-map.md`                         |
 | 讨论产品 或 核验开发条件 时    | **需求澄清**             | `.harness/docs/clarify.md`                                           |
 | 修改模块或调用链时          | **架构与模块**            | `.harness/docs/architecture.md`                                      |
@@ -83,7 +83,7 @@ flowchart TD
 | 07  | **Submit（提交）**    | `07-submit.md`    | 按授权执行 commit、push 或 PR；合并和发布另行授权。提交策略、预登记与冻结见本阶段文件，报告实际结果                             |
 
 
-**Agent 分工**：主 Session 负责 Clarify、Plan 与编排；独立 Coder 实现，Verifier 验证，Reviewer 审查；Executor 更新文档并执行获准提交。派发、批量返工及权限见 **[agents.md](.harness/agents.md)**。
+**Agent 分工**：主 Session 负责 Clarify、Plan 与编排；独立 Coder 实现，Verifier 验证，Reviewer 审查；Executor 更新文档并执行获准提交。派发、批量返工及权限见 **[agent-roles.md](.harness/agent-roles.md)**。
 
 每阶段按对应文件填写，核对其**完成检查**，更新 Overview 的进度与实际时间后再继续。批准范围内连续执行也保留这些记录；缺项先补齐，漏记时间如实注明。
 

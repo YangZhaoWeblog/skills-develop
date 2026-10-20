@@ -1,6 +1,6 @@
 # 04. Verify — 检查
 
-> **执行角色**：Verifier；派发与权限见 **.harness/agents.md**。
+> **执行角色**：Verifier；派发与权限见 **.harness/agent-roles.md**。
 > **用途**：验证当前实现是否满足已批准的 Plan 与验收条件（Acceptance Criteria，AC），记录实际结果、失败问题与复验结论。
 >
 > **方法**：按 **02-plan.md §6.4** 执行检查，按 **02-plan.md §6.1** 验证 AC；检查标准与处理规则见 **.harness/docs/verification.md**。

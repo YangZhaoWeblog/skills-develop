@@ -34,7 +34,7 @@ def render(platform, role, model, effort):
     name = f"harness-{role}"
     instructions = (
         f"You are the {label}. Before acting, read project AGENTS.md and "
-        f".harness/agents.md, then follow the {label} responsibilities and shared handoff rules. "
+        f".harness/agent-roles.md, then follow the {label} responsibilities and shared handoff rules. "
         "Read the current task sources identified by the parent. If required guidance is missing, "
         "report the gap before acting. Work only within the assigned scope and authorization."
     )
@@ -76,7 +76,7 @@ def main():
     if not root.is_dir():
         raise ValueError(f"Project directory does not exist: {root}")
     safe_directory(root / ".harness")
-    for required in (root / "AGENTS.md", root / ".harness/agents.md"):
+    for required in (root / "AGENTS.md", root / ".harness/agent-roles.md"):
         if not required.is_file():
             raise ValueError(f"Required guidance is missing: {required}")
     destination = root / f".{args.platform}" / "agents"

@@ -34,7 +34,7 @@ description: 为 AI Coding 项目初始化、迁移或升级协作规则、项�
 4. 依次派 [入口](references/init-agent-entry.md)、[架构](references/init-agent-architecture.md) 初始化 Agent，按 upgrade-project.md 融合并核对项目规则及结构。AGENTS 作为统一入口；按实际平台连接入口，保留已有内容，冲突交用户决定。
 5. 按 init-agents.md 派发适用专题：独立任务并行，有依赖则等待；主控统一核对事实和索引。各 Agent 按 [文档生成指导](references/populate-project.md) 填项目事实；每个 Harness 必须包含术语表 `glossary.md`。空项目、局部更新及平台限制按派发规则处理，缺工具或环境明确报告。
 6. 按 [检查命令接入](references/populate-project.md#接入检查命令) 固定项目命令并验证，再运行 `scripts/setup_hooks.sh` 启用 Git hooks。未配置的检查只准备脚本、不启用；已有 Hook、core.hooksPath 和项目脚本按授权融合，不覆盖。
-7. 按 [原生 Agent 接入](references/agent-setup.md) 配置并核验 Coder、Verifier、Reviewer、Executor；主 Session 保留规划与编排。职责在项目 .harness/agents.md 维护，平台配置绑定实际模型与权限。
+7. 按 [原生 Agent 接入](references/agent-setup.md) 配置并核验 Coder、Verifier、Reviewer、Executor；主 Session 保留规划与编排。职责在项目 .harness/agent-roles.md 维护，平台配置绑定实际模型与权限。
 8. 项目融合结束后，以本次已确认的能力参数重跑 `scripts/build_harness.sh`，恢复标准 Workflow、同步模板；`[MERGE]` 缺口先处理，再派未参与本轮生成的独立 **Reviewer**，按 [交付审阅](references/upgrade-project.md#5-独立交付审阅) 核对最终产物与验证证据；主控修正后复审，再按下方“完成与反馈”报告结论。
 
 ## 完成与反馈

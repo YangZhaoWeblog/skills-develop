@@ -17,7 +17,7 @@ class RendererTests(unittest.TestCase):
         self.root = Path(self.temp.name).resolve()
         (self.root / ".harness").mkdir()
         (self.root / "AGENTS.md").write_text("Project entry")
-        (self.root / ".harness/agents.md").write_text("Role rules")
+        (self.root / ".harness/agent-roles.md").write_text("Role rules")
 
     def run_renderer(self, platform="codex", *extra, expected=0):
         proc = subprocess.run(
@@ -51,7 +51,8 @@ class RendererTests(unittest.TestCase):
                     strong = "verifier" in path.name or "reviewer" in path.name
                     self.assertEqual(data["model"], 'strong:"quoted"\\model' if strong else "cheap/model")
                     self.assertEqual(effort, "high" if strong else "low")
-                    self.assertIn(".harness/agents.md", instructions)
+                    self.assertIn(".harness/agent-roles.md", instructions)
+                    self.assertNotIn(".harness/agents.md", instructions)
                 self.run_renderer(platform, "--strong-effort", "high", "--economy-effort", "low")
                 self.assertEqual(before, {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in files})
 
@@ -84,10 +85,10 @@ class RendererTests(unittest.TestCase):
         self.assertEqual(list(target.iterdir()), [link])
 
     def test_missing_guidance_and_invalid_parameters(self):
-        (self.root / ".harness/agents.md").unlink()
+        (self.root / ".harness/agent-roles.md").unlink()
         self.run_renderer(expected=2)
         self.assertFalse((self.root / ".codex").exists())
-        (self.root / ".harness/agents.md").write_text("Role rules")
+        (self.root / ".harness/agent-roles.md").write_text("Role rules")
         for value in ("", "   ", "bad\nmodel"):
             self.run_renderer("codex", "--strong-model", value, expected=2)
         self.assertFalse((self.root / ".codex").exists())
@@ -99,6 +100,13 @@ class RendererTests(unittest.TestCase):
         self.assertEqual(data["model"], model)
         self.assertFalse((self.root / "SHOULD_NOT_EXIST").exists())
         self.assertNotIn("model_reasoning_effort", data)
+
+    def test_legacy_guidance_alone_does_not_satisfy_new_role_entry(self):
+        (self.root / ".harness/agent-roles.md").rename(self.root / ".harness/agents.md")
+        for platform in ("codex", "claude"):
+            with self.subTest(platform=platform):
+                self.run_renderer(platform, expected=2)
+                self.assertFalse((self.root / f".{platform}").exists())
 
 
 if __name__ == "__main__":

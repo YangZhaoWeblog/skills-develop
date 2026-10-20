@@ -1,6 +1,6 @@
 # 07. Submit
 
-> **执行角色**：Executor；派发与权限见 **.harness/agents.md**。
+> **执行角色**：Executor；派发与权限见 **.harness/agent-roles.md**。
 > **用途**：按用户授权提交代码、推送远端或创建 PR。
 >
 > **前置条件**：Verify 已完成必要检查，Docs 已按需更新，Review 已确认最终版本与 Submit 授权范围。

@@ -1,6 +1,6 @@
 # 06. Review — 独立验收
 
-> **执行角色**：Reviewer；派发与权限见 **.harness/agents.md**。
+> **执行角色**：Reviewer；派发与权限见 **.harness/agent-roles.md**。
 > **用途**：独立核对最终改动、需求与验收条件（Acceptance Criteria，AC）及验证证据，记录审阅发现、处置和用户确认。
 >
 > **方法**：按 **.harness/docs/code-review.md** 审阅，读取 **04-verify.md** 的验证结果；作者自检不替代独立审阅，不默认重跑全部验证，不复制长期检查清单。

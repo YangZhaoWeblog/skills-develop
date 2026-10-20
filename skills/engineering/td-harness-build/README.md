@@ -100,7 +100,7 @@ AI 核实现有工程：没有 Harness 就接入，已有则补缺或升级。�
 | 多 Agent 初始化顺序、专题职责与读写范围 | [独立初始化派发](references/init-agents.md) |
 | 项目事实填充与检查命令接入 | [文档生成指导](references/populate-project.md) |
 | Go / JS、TS / Python 工具参考 | [Go](references/language-profiles/go.md) · [JS / TS](references/language-profiles/javascript-typescript.md) · [Python](references/language-profiles/python.md) |
-| 原生 Agent 安装与核验 | [接入说明](references/agent-setup.md) · [角色职责](assets/project/agents.md) |
+| 原生 Agent 安装与核验 | [接入说明](references/agent-setup.md) · [角色职责](assets/project/agent-roles.md) |
 | 生成后的项目协作入口 | [AGENTS 模板](assets/agents.md) |
 
 </details>

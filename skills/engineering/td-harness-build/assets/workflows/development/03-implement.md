@@ -1,6 +1,6 @@
 # 03. Implement
 
-> **执行角色**：Coder；派发与权限见 **.harness/agents.md**。
+> **执行角色**：Coder；派发与权限见 **.harness/agent-roles.md**。
 > **用途**：按已批准的 **[02-plan.md](02-plan.md)** 实现代码，记录关键处理、计划差异与检查结果。
 >
 > **方法**：行为改动按 **02-plan.md §6.2** 逐用例执行测试驱动开发（Test-Driven Development，TDD）的红绿循环；测试边界见 **.harness/docs/testing/tdd.md**，检查方法与授权边界见 **.harness/docs/verification.md**。
