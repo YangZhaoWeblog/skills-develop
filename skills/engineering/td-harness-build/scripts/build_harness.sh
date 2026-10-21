@@ -141,14 +141,6 @@ for kind in product development; do
   done < <(find "$skill/assets/workflows/$kind" -type f ! -name '.DS_Store' -print0)
 done
 
-# Keep every existing lint configuration, regardless of the supported filename.
-if [[ -f "$target/go.mod" ]]; then
-  lint_present=false
-  for name in .golangci.yml .golangci.yaml .golangci.json .golangci.toml; do
-    [[ ! -e "$target/$name" && ! -L "$target/$name" ]] || lint_present=true
-  done
-  [[ "$lint_present" == true ]] || copy_missing "$skill/assets/.golangci.yml" .golangci.yml
-fi
 # The standard Workflow is owned by the Skill; project chapters remain intact.
 workflow_bounds() {
   awk '

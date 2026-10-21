@@ -23,9 +23,9 @@ class BuildHarnessTests(unittest.TestCase):
         self.project = Path(self.directory.name)
         self.entry = self.project / "AGENTS.md"
 
-    def build(self, *options):
+    def build(self, *options, project=None):
         result = subprocess.run(
-            ["bash", str(SKILL / "scripts/build_harness.sh"), str(self.project),
+            ["bash", str(SKILL / "scripts/build_harness.sh"), str(project or self.project),
              "--has-api=false", "--has-db=false", *options],
             capture_output=True, text=True, check=False,
         )
@@ -37,6 +37,33 @@ class BuildHarnessTests(unittest.TestCase):
         self.assertEqual(self.entry.read_bytes(), TEMPLATE)
         self.assertTrue((self.project / ".harness/agent-roles.md").is_file())
         self.assertFalse((self.project / ".harness/agents.md").exists())
+
+    def test_skeleton_does_not_guess_language_configuration(self):
+        for relative in (".", "apps/server"):
+            with self.subTest(module=relative):
+                project = self.project / ("root" if relative == "." else "nested")
+                folder = project / relative
+                folder.mkdir(parents=True)
+                (folder / "go.mod").write_text("module example.test/server\n\ngo 1.24\n")
+                for _ in range(2):
+                    self.build(project=project)
+                    self.assertEqual(list(project.rglob(".golangci.*")), [])
+
+    def test_existing_root_and_module_lint_configurations_are_preserved(self):
+        for relative in (".", "apps/server"):
+            for extension in ("yml", "yaml", "json", "toml"):
+                with self.subTest(module=relative, extension=extension):
+                    project = self.project / (("root-" if relative == "." else "nested-") + extension)
+                    folder = project / relative
+                    folder.mkdir(parents=True)
+                    (folder / "go.mod").write_text("module example.test/server\n\ngo 1.24\n")
+                    path = folder / (".golangci." + extension)
+                    content = ("Existing project configuration: " + str(path)).encode()
+                    path.write_bytes(content)
+                    for _ in range(2):
+                        self.build(project=project)
+                        self.assertEqual(path.read_bytes(), content)
+                        self.assertEqual(set(project.rglob(".golangci.*")), {path})
 
     def test_legacy_role_document_requires_review_and_is_not_shadowed(self):
         old = self.project / ".harness/agents.md"

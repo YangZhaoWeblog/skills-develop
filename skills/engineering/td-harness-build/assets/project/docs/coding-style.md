@@ -41,9 +41,9 @@
 
 ### 中文步骤分块（强制）
 
-新增或修改的手写函数，按主要处理阶段写中文注释，使用单层编号 `1. 2. 3.`，块间留空行，块内正常缩进。阶段内也按处理目的分组，初始化与事件注册等不同组之间留空行；服务同一目的的连续操作保持成组，不按语句或 API 逐个拆开。
+新增或修改的手写函数，编号只用于函数顶层的主要处理阶段，使用中文和单层编号 `1. 2. 3.`。主要阶段之间留空行，同一处理组保持连续；缩进和格式沿用项目 formatter。
 
-嵌套回调、闭包及局部方法不另起编号；必要说明使用无编号注释。测试主体单独编号，只有一个处理阶段时可保留 `1.`。注释说明动作目的、关键条件或约束，删除仅复述代码的内容；修改逻辑时同步注释。
+嵌套回调、闭包及局部方法不另起编号，默认不写注释；必要时补简短的无编号说明。测试主体单独编号，只有一个处理阶段时可保留 `1.`。注释说明阶段目的或必要约束，不逐句解释代码；修改逻辑时同步注释。
 
 生成代码不手改，未触及的旧函数不批量补写。函数外文档注释不加步骤编号。Coder 编写，独立 Reviewer 核对分块和语义；不新增 Verify 命令或正则检查。
 
@@ -175,7 +175,7 @@ function watch(child: ChildProcess, session: Session) {
 }
 ```
 
-**正例：外层阶段编号，回调只补充必要约束。**
+**正例：外层阶段编号，同组连续，回调只补必要说明。**
 
 ```typescript
 function watch(child: ChildProcess, session: Session) {
@@ -183,7 +183,6 @@ function watch(child: ChildProcess, session: Session) {
   child.once("error", () => {
     session.close(new Error("CLI process failed"));
   });
-
   child.once("close", () => {
     // 进程退出不代表模型成功完成。
     session.close(new Error("CLI process exited"));
