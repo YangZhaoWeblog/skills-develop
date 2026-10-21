@@ -4,3 +4,9 @@ dist
 out
 *.tgz
 
+/.idea/.gitignore
+/.idea/CopilotChatHistory.xml
+/.idea/CopilotChatTabs.xml
+/.idea/modules.xml
+/.idea/skills-develop.iml
+/.idea/vcs.xml
