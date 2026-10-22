@@ -24,11 +24,18 @@ $td-harness-build 我想做一个 Obsidian 插件。
 $td-harness-build
 ```
 
+完成后检查差异，确认原有规则得到保留。
+
 ## 二、工作流
 
 [![产品与开发工作流](assets/workflow-overview.svg)](assets/workflow-overview.svg)
 
-[查看详细返工图](assets/workflow-feedback.svg)
+<details>
+<summary>查看详细返工图</summary>
+
+![开发工作流与反馈闭环](assets/workflow-feedback.svg)
+
+</details>
 
 ### 产品任务与开发任务
 

@@ -24,11 +24,18 @@ $td-harness-build I want to build an Obsidian plugin.
 $td-harness-build
 ```
 
+After completion, review the diff and confirm that existing rules have been preserved.
+
 ## 2. Workflow
 
 [![Product and development workflow](assets/workflow-overview.en.svg)](assets/workflow-overview.en.svg)
 
-[Detailed rework diagram](assets/workflow-feedback.en.svg)
+<details>
+<summary>Detailed rework diagram</summary>
+
+![Development workflow and feedback loops](assets/workflow-feedback.en.svg)
+
+</details>
 
 ### Product and development tasks
 

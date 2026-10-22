@@ -41,7 +41,8 @@ for path in "${paths[@]}"; do
   fi
   bytes="$(wc -c < "$work/content" | tr -d ' ')"
   if [[ "$bytes" -gt 5242880 ]]; then block "$path" 'File exceeds 5 MiB; use an approved large-file storage method.'; fi
-  if grep -Iq . "$work/content" && grep -Eq '^(<{7}|>{7}|={7})( |$)' "$work/content"; then
+  # A separator alone can be a Markdown heading; retain conflict boundary/base checks.
+  if grep -Iq . "$work/content" && grep -Eq '^(<{7,}|>{7,}|\|{7,})([[:space:]]|$)' "$work/content"; then
     block "$path" 'Unresolved merge markers in the staged content.'
   fi
   git diff --cached --no-ext-diff --no-textconv -U0 -- "$path" > "$work/diff"
