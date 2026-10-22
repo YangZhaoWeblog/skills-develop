@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="745" viewBox="0 0 1260 745" role="img" aria-labelledby="title desc"><title id="title">Product and development workflow</title><desc id="desc">The Main Agent is the AI in the current user conversation. Product discovery proceeds through Clarify, Design and user Confirm. Product-only work ends with confirmed product documents; continuing development requires development Clarify and Plan. The user approves the Plan before implementation, and accepts the final result and authorizes submission after independent review. Coder implements and tests, Verifier checks, Reviewer reviews, Executor updates docs and performs approved submissions. Stage failures return to the Main Agent for routing by cause, impact and authorization. The preserved detailed feedback diagram explains the specific routes.</desc>
+<style>svg{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:white}text{fill:#253347;font-size:19px}.small{font-size:16px;fill:#66758a}.name{font-size:23px;font-weight:650}.accent{fill:#b45309}.blue{fill:#2563eb}</style><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#64748b" stroke-width="1.6" /></marker></defs><rect width="1260" height="745" fill="white" />
+<text x="24" y="29" class="small" text-anchor="start">Main Agent: the AI in your current conversation; plans, coordinates and reports to you.</text>
+<text x="24" y="77" class="name" text-anchor="start">Product discovery</text>
+<rect x="14" y="94" width="746" height="134" rx="12" fill="#f5f8ff" stroke="#d9e4fb" />
+<rect x="30" y="108" width="305" height="101" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4" />
+<text x="182.5" y="140" class="name" text-anchor="middle">01 Clarify</text>
+<text x="182.5" y="169" text-anchor="middle" class="small">Main Agent: Clarify the need<tspan x="182.5" dy="20">Problem, goals &amp; scope</tspan></text><rect x="425" y="108" width="305" height="101" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4" />
+<text x="577.5" y="140" class="name" text-anchor="middle">02 Design</text>
+<text x="577.5" y="169" text-anchor="middle" class="small">Main Agent: Compare options<tspan x="577.5" dy="20">Prototype as needed</tspan></text><path d="M335 158H425" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="875" y="108" width="360" height="101" rx="9" fill="#fff7ed" stroke="#e5a35c" stroke-width="1.4" />
+<text x="1055.0" y="140" class="name" text-anchor="middle">03 Confirm</text>
+<text x="1055.0" y="169" text-anchor="middle" class="small" style="font-size:15px">User: Approve requirements, scope &amp; design<tspan x="1055.0" dy="20">Acceptance criteria (AC) &amp; required prototypes</tspan></text><path d="M760 158H875" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<path d="M1055 209V273H960" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<text x="1005" y="260" class="small" text-anchor="middle">Design only</text>
+<circle cx="1055" cy="273" r="3" fill="#64748b" />
+<rect x="750" y="250" width="210" height="46" rx="9" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4" />
+<text x="855.0" y="280.0" class="" text-anchor="middle">Product defined</text>
+<rect x="14" y="395" width="1232" height="175" rx="12" fill="#f8fafc" stroke="#e2e8f0" />
+<text x="24" y="350" class="name" text-anchor="start">Development</text>
+<path d="M1055 209V375H101V410" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<text x="590" y="364" class="small" text-anchor="start">Continue development</text>
+<rect x="22" y="410" width="158" height="98" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4" />
+<text x="101.0" y="444" class="" text-anchor="middle">01 Clarify</text>
+<text x="101.0" y="470" text-anchor="middle" class="small" style="font-size:15px">Main Agent:<tspan x="101.0" dy="20">Validate requirements</tspan></text><path d="M180 459H198" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="198" y="410" width="158" height="98" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4" />
+<text x="277.0" y="444" class="" text-anchor="middle">02 Plan</text>
+<text x="277.0" y="470" text-anchor="middle" class="small" style="font-size:15px">Main Agent:<tspan x="277.0" dy="20">Create the plan</tspan></text><path d="M356 459H374" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="374" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4" />
+<text x="453.0" y="444" class="" text-anchor="middle">03 Implement</text>
+<text x="453.0" y="470" text-anchor="middle" class="small" style="font-size:15px">Coder:<tspan x="453.0" dy="20">Implement &amp; test</tspan></text><path d="M532 459H550" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="550" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4" />
+<text x="629.0" y="444" class="" text-anchor="middle">04 Verify</text>
+<text x="629.0" y="470" text-anchor="middle" class="small" style="font-size:15px">Verifier:<tspan x="629.0" dy="20">Run checks</tspan></text><path d="M708 459H726" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="726" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4" />
+<text x="805.0" y="444" class="" text-anchor="middle">05 Docs</text>
+<text x="805.0" y="470" text-anchor="middle" class="small" style="font-size:15px">Executor:<tspan x="805.0" dy="20">Update docs</tspan></text><path d="M884 459H902" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="902" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4" />
+<text x="981.0" y="444" class="" text-anchor="middle">06 Review</text>
+<text x="981.0" y="470" text-anchor="middle" class="small" style="font-size:15px">Reviewer:<tspan x="981.0" dy="20">Independent review</tspan></text><path d="M1060 459H1078" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="1078" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4" />
+<text x="1157.0" y="444" class="" text-anchor="middle">07 Submit</text>
+<text x="1157.0" y="470" text-anchor="middle" class="small" style="font-size:15px">Executor:<tspan x="1157.0" dy="20">Submit as approved</tspan></text><text x="277" y="545" class="small" text-anchor="middle" style="font-size:14px">User approves before implementation</text>
+<text x="1025" y="545" class="small" text-anchor="middle" style="font-size:14px">User acceptance &amp; submit approval</text>
+<path d="M1157 508V608H1130" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<rect x="930" y="585" width="200" height="46" rx="9" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4" />
+<text x="1030.0" y="615.0" class="" text-anchor="middle">Delivered</text>
+<path d="M630 570V640" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<text x="650" y="615" class="small" text-anchor="start">Stage did not pass</text>
+<rect x="420" y="640" width="420" height="76" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4" />
+<text x="630.0" y="674.0" class="" text-anchor="middle">Main Agent: Diagnose and delegate</text>
+<text x="630.0" y="703.0" class="small" text-anchor="middle">Route by cause, impact and authorization</text>
+<path d="M420 678H5V558H14" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+<text x="30" y="622" class="small" text-anchor="start">Recheck affected parts after fixes</text>
+<text x="30" y="648" class="small" text-anchor="start">Independent re-review after Review</text>
+</svg>

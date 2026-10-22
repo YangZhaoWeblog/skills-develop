@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1090" height="535" viewBox="0 0 1090 535" role="img" aria-labelledby="title desc">
+  <title id="title">产品任务与开发任务</title>
+  <desc id="desc">一个产品任务可以对应一个或多个开发任务。开发Clarify中判断是否拆分，由用户确认。开发任务01、02及延续图形仅为示意，不限定为两个任务；各任务按依赖安排，独立执行01–07并维护范围、AC对应与进度。</desc>
+  <style>svg{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:white}text{fill:#253347;font-size:19px}.small{font-size:16px;fill:#66758a}.name{font-size:23px;font-weight:650}.accent{fill:#b45309}.blue{fill:#2563eb}</style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#64748b" stroke-width="1.6" />
+    </marker>
+  </defs>
+  <rect width="1090" height="535" fill="white" />
+  <rect x="25" y="125" width="320" height="120" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4" />
+  <text x="185.0" y="181" class="name" text-anchor="middle">一个产品任务</text>
+  <text x="185.0" y="210" class="small" text-anchor="middle">共用需求、方案与 AC</text>
+  <text x="185" y="291" class="small" text-anchor="middle">默认一个开发任务，按需拆分</text>
+  <path d="M345 185H540" fill="none" stroke="#64748b" stroke-width="1.7" />
+  <path d="M540 185V95H620" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+  <path d="M540 185V270H620" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+  <circle cx="540" cy="185" r="3" fill="#64748b" />
+  <text x="440" y="139" class="small" text-anchor="middle">开发 Clarify 判断</text>
+  <text x="440" y="165" class="small" text-anchor="middle">用户确认</text>
+  <rect x="620" y="30" width="440" height="130" rx="12" fill="#f8fafc" stroke="#cbd5e1" />
+  <text x="644" y="64" class="name" text-anchor="start">开发任务 01：创建导出任务</text>
+  <text x="644" y="106" class="" text-anchor="start">01 → 02 → 03 → 04 → 05 → 06 → 07</text>
+  <text x="644" y="140" class="small" text-anchor="start">独立维护范围、AC 对应与进度</text>
+  <rect x="620" y="205" width="440" height="130" rx="12" fill="#f8fafc" stroke="#cbd5e1" />
+  <text x="644" y="239" class="name" text-anchor="start">开发任务 02：下载导出文件（按需）</text>
+  <text x="644" y="281" class="" text-anchor="start">01 → 02 → 03 → 04 → 05 → 06 → 07</text>
+  <text x="644" y="315" class="small" text-anchor="start">独立维护范围、AC 对应与进度</text>
+  <path d="M540 270V330" fill="none" stroke="#64748b" stroke-width="1.7" />
+  <path d="M540 330V390" fill="none" stroke="#64748b" stroke-width="1.7" stroke-dasharray="5 5" />
+  <path d="M540 390V450H620" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+  <text x="840" y="366" class="" text-anchor="middle" style="font-size:37px">⋮</text>
+  <rect x="620" y="385" width="440" height="130" rx="12" fill="#f8fafc" stroke="#cbd5e1" />
+  <text x="644" y="419" class="name" text-anchor="start" style="font-size:23px">开发任务 N</text>
+  <text x="644" y="461" class="" text-anchor="start" style="font-size:19px">01 → 02 → 03 → 04 → 05 → 06 → 07</text>
+  <text x="644" y="495" class="small" text-anchor="start" style="font-size:16px">独立维护范围、AC 对应与进度</text>
+</svg>

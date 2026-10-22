@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1090" height="535" viewBox="0 0 1090 535" role="img" aria-labelledby="title desc">
+  <title id="title">Product and development tasks</title>
+  <desc id="desc">One product task can map to one or more development tasks. Development Clarify assesses whether to split the work; the user confirms the split. Task 01, task 02, omitted tasks and task N illustrate a variable number of tasks, not a fixed count. Each task follows development stages 01–07, references shared requirements and acceptance criteria, and maintains its own scope, AC mapping and progress. Dependencies determine execution order; the branches do not require parallel execution.</desc>
+  <style>svg{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:white}text{fill:#253347;font-size:19px}.small{font-size:16px;fill:#66758a}.name{font-size:23px;font-weight:650}.accent{fill:#b45309}.blue{fill:#2563eb}</style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#64748b" stroke-width="1.6" />
+    </marker>
+  </defs>
+  <rect width="1090" height="535" fill="white" />
+  <rect x="25" y="125" width="320" height="120" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4" />
+  <text x="185.0" y="168" class="name" text-anchor="middle">One product task</text>
+  <text x="185.0" y="195" class="small" text-anchor="middle">Shared requirements &amp; design</text>
+  <text x="185" y="291" class="small" text-anchor="middle">One dev task by default; split as needed</text>
+  <path d="M345 185H540" fill="none" stroke="#64748b" stroke-width="1.7" />
+  <path d="M540 185V95H620" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+  <path d="M540 185V270H620" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+  <circle cx="540" cy="185" r="3" fill="#64748b" />
+  <text x="440" y="139" class="small" text-anchor="middle">Development Clarify</text>
+  <text x="440" y="165" class="small" text-anchor="middle">User confirms split</text>
+  <rect x="620" y="30" width="440" height="130" rx="12" fill="#f8fafc" stroke="#cbd5e1" />
+  <text x="644" y="59" class="name" text-anchor="start" style="font-size:22px">Development task 01<tspan x="644" dy="25" style="font-size:20px">Create an export</tspan>
+  </text>
+  <text x="644" y="117" class="" text-anchor="start">01 → 02 → 03 → 04 → 05 → 06 → 07</text>
+  <text x="644" y="146" class="small" text-anchor="start">Own scope, AC mapping and progress</text>
+  <rect x="620" y="205" width="440" height="130" rx="12" fill="#f8fafc" stroke="#cbd5e1" />
+  <text x="644" y="234" class="name" text-anchor="start" style="font-size:22px">Development task 02<tspan x="644" dy="25" style="font-size:20px">Download export (as needed)</tspan>
+  </text>
+  <text x="644" y="292" class="" text-anchor="start">01 → 02 → 03 → 04 → 05 → 06 → 07</text>
+  <text x="644" y="321" class="small" text-anchor="start">Own scope, AC mapping and progress</text>
+  <path d="M540 270V330" fill="none" stroke="#64748b" stroke-width="1.7" />
+  <path d="M540 330V390" fill="none" stroke="#64748b" stroke-width="1.7" stroke-dasharray="5 5" />
+  <path d="M540 390V450H620" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)" />
+  <text x="840" y="366" class="" text-anchor="middle" style="font-size:37px">⋮</text>
+  <rect x="620" y="385" width="440" height="130" rx="12" fill="#f8fafc" stroke="#cbd5e1" />
+  <text x="644" y="419" class="name" text-anchor="start" style="font-size:22px">Development task N</text>
+  <text x="644" y="461" class="" text-anchor="start" style="font-size:19px">01 → 02 → 03 → 04 → 05 → 06 → 07</text>
+  <text x="644" y="495" class="small" text-anchor="start" style="font-size:16px">Own scope, AC mapping and progress</text>
+  <text x="185" y="221" text-anchor="middle" class="small">Acceptance criteria (AC)</text>
+</svg>

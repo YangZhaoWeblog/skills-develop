@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="745" viewBox="0 0 1260 745" role="img" aria-labelledby="title desc"><title id="title">产品与开发工作流总览</title><desc id="desc">主 Agent 是当前用户会话中的 AI。产品 01 Clarify 明确问题目标范围、02 Design 比较方案并按需做原型，03 Confirm 由用户确认需求与 AC。仅做产品时结束，继续开发时依次进入开发01核验、02计划、03实现、04验证、05文档、06独立审阅、07获准提交。Plan 需用户批准，Review 后需用户验收并授权提交。阶段问题交主 Agent 按原因和授权派发至受影响阶段；详细返工去向见保留的原图。</desc>
+<style>svg{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:white}text{fill:#253347;font-size:19px}.small{font-size:16px;fill:#66758a}.name{font-size:23px;font-weight:650}.accent{fill:#b45309}.blue{fill:#2563eb}</style><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#64748b" stroke-width="1.6"/></marker></defs><rect width="1260" height="745" fill="white"/>
+<text x="24" y="29" class="small" text-anchor="start">主 Agent：当前与你对话的 AI，负责规划、编排与沟通。</text>
+<text x="24" y="77" class="name" text-anchor="start">产品讨论</text>
+<rect x="14" y="94" width="746" height="134" rx="12" fill="#f5f8ff" stroke="#d9e4fb"/>
+<rect x="30" y="108" width="305" height="101" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4"/>
+<text x="182.5" y="154.5" class="name" text-anchor="middle">01 Clarify</text>
+<text x="182.5" y="183.5" class="small" text-anchor="middle">主 Agent：明确问题、目标与范围</text>
+<rect x="425" y="108" width="305" height="101" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4"/>
+<text x="577.5" y="154.5" class="name" text-anchor="middle">02 Design</text>
+<text x="577.5" y="183.5" class="small" text-anchor="middle">主 Agent：比较方案，按需做原型</text>
+<path d="M335 158H425" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="875" y="108" width="360" height="101" rx="9" fill="#fff7ed" stroke="#e5a35c" stroke-width="1.4"/>
+<text x="1055.0" y="154.5" class="name" text-anchor="middle">03 Confirm</text>
+<text x="1055.0" y="183.5" class="small" text-anchor="middle">用户：确认需求与验收条件（AC）</text>
+<path d="M760 158H875" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M1055 209V273H960" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<text x="1005" y="260" class="small" text-anchor="middle">仅做产品</text>
+<circle cx="1055" cy="273" r="3" fill="#64748b"/>
+<rect x="750" y="250" width="210" height="46" rx="9" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="855.0" y="280.0" class="" text-anchor="middle">产品设计完成</text>
+<rect x="14" y="395" width="1232" height="175" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="24" y="350" class="name" text-anchor="start">开发交付</text>
+<path d="M1055 209V375H101V410" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<text x="590" y="364" class="small" text-anchor="start">继续开发</text>
+<rect x="22" y="410" width="158" height="98" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4"/>
+<text x="101.0" y="455.0" class="" text-anchor="middle">01 Clarify</text>
+<text x="101.0" y="484.0" class="small" text-anchor="middle">主 Agent：核验需求</text>
+<path d="M180 459H198" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="198" y="410" width="158" height="98" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4"/>
+<text x="277.0" y="455.0" class="" text-anchor="middle">02 Plan</text>
+<text x="277.0" y="484.0" class="small" text-anchor="middle">主 Agent：制订计划</text>
+<path d="M356 459H374" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="374" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="453.0" y="455.0" class="" text-anchor="middle">03 Implement</text>
+<text x="453.0" y="484.0" class="small" text-anchor="middle">Coder：实现与补测</text>
+<path d="M532 459H550" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="550" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="629.0" y="455.0" class="" text-anchor="middle">04 Verify</text>
+<text x="629.0" y="484.0" class="small" text-anchor="middle">Verifier：执行核验</text>
+<path d="M708 459H726" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="726" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="805.0" y="455.0" class="" text-anchor="middle">05 Docs</text>
+<text x="805.0" y="484.0" class="small" text-anchor="middle">Executor：更新文档</text>
+<path d="M884 459H902" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="902" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="981.0" y="455.0" class="" text-anchor="middle">06 Review</text>
+<text x="981.0" y="484.0" class="small" text-anchor="middle">Reviewer：独立审阅</text>
+<path d="M1060 459H1078" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="1078" y="410" width="158" height="98" rx="9" fill="#fff" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="1157.0" y="455.0" class="" text-anchor="middle">07 Submit</text>
+<text x="1157.0" y="484.0" class="small" text-anchor="middle">Executor：获准提交</text>
+<text x="277" y="545" class="small" text-anchor="middle">用户批准后实现</text>
+<text x="1025" y="545" class="small" text-anchor="middle">用户验收、授权后提交</text>
+<path d="M1157 508V608H1130" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="930" y="585" width="200" height="46" rx="9" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="1030.0" y="615.0" class="" text-anchor="middle">交付完成</text>
+<path d="M630 570V640" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<text x="650" y="615" class="small" text-anchor="start">阶段交付未通过</text>
+<rect x="420" y="640" width="420" height="76" rx="9" fill="#eff6ff" stroke="#93b4f6" stroke-width="1.4"/>
+<text x="630.0" y="674.0" class="" text-anchor="middle">主 Agent：定位问题并派发</text>
+<text x="630.0" y="703.0" class="small" text-anchor="middle">按原因、影响与授权返回受影响阶段</text>
+<path d="M420 678H5V558H14" fill="none" stroke="#64748b" stroke-width="1.7" marker-end="url(#arrow)"/>
+<text x="30" y="622" class="small" text-anchor="start">修正后补做受影响检查</text>
+<text x="30" y="648" class="small" text-anchor="start">已进入 Review 的，再独立复审</text>
+</svg>
