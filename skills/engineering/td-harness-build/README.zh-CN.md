@@ -12,8 +12,6 @@
 npx skills@latest add YangZhaoWeblog/skills-develop --skill td-harness-build -y
 ```
 
-在项目目录调用：
-
 **新项目**
 
 ```text

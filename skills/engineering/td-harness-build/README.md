@@ -12,8 +12,6 @@ Install in the project directory:
 npx skills@latest add YangZhaoWeblog/skills-develop --skill td-harness-build -y
 ```
 
-Run in the project directory:
-
 **New project**
 
 ```text
