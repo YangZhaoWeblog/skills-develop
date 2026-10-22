@@ -26,6 +26,12 @@ $td-harness-build
 
 After completion, review the diff and confirm that existing rules have been preserved.
 
+**Start developing, for example:**
+
+- **Add a feature**: I want to export selected notes as Anki cards.
+- **Fix a bug**: Images are missing from exported notes. Help me investigate and fix it.
+- **Improve the experience**: The export settings are too complicated. Help me redesign them.
+
 ## 2. Workflow
 
 [![Product and development workflow](assets/workflow-overview.en.svg)](assets/workflow-overview.en.svg)
