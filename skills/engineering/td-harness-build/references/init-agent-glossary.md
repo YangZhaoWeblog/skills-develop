@@ -1,6 +1,6 @@
 # 术语表生成指导
 
-> **独立初始化 Agent 指令**：执行前读取 [派发约定](init-agents.md#2-派发约定)，按主控指定的输入、文件范围和授权处理本专题。
+> **独立初始化 Agent 指令**：执行前读取 [派发约定](init-agents.md#2-派发约定)，按主 Agent 指定的输入、文件范围和授权处理本专题。
 
 > 填写 **.harness/docs/glossary.md** 时读取；收录标准与记录结构统一见 **[glossary.md](../assets/project/docs/glossary.md)**，本文件不另设标准。
 

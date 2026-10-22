@@ -15,11 +15,11 @@ Build 接入或升级角色时读取。使用用户现有平台，不另建跨�
 
 ## 2. 配置角色
 
-将 **[职责模板](../assets/project/agent-roles.md)** 复制或融合到 **.harness/agent-roles.md**。主控负责规划；四个独立角色按职责文件执行。先核对职责和有效权限，再复用已有角色；名称相同不代表职责相同。
+将 **[职责模板](../assets/project/agent-roles.md)** 复制或融合到 **.harness/agent-roles.md**。主 Agent 沿用当前用户会话，无需另建；仅接入 Coder、Verifier、Reviewer、Executor 四个独立角色。先核对职责和有效权限，再复用已有角色；名称相同不代表职责相同。
 
 **只读探子不能代替 Coder**。Coder 须能实现与补测，Verifier 须能执行检查，Reviewer 独立审阅。上层规则禁止必要操作时，保留角色职责，记录冲突并报告未完成；不能把职责改成只读检索后宣称接入完成。
 
-**AI 确认参数，脚本填配置**。核对用户指定模型；未指定则推荐实际可用型号。强模型用于 Verifier、Reviewer，经济模型用于 Coder、Executor；主控模型在当前会话设置，不由脚本修改。
+**AI 确认参数，脚本填配置**。核对用户指定模型；未指定则推荐实际可用型号。强模型用于 Verifier、Reviewer，经济模型用于 Coder、Executor；主 Agent 模型在当前会话设置，不由脚本修改。
 
 新建角色使用 **[configure_agents.py](../scripts/configure_agents.py)**（Python 3.11+，仅标准库）：
 
@@ -43,6 +43,6 @@ python3 scripts/configure_agents.py /path/to/project --platform codex \
 
 按职责配置最小权限。Verifier 运行测试可能写临时产物，不能简单设为完全只读；平台无法强制的文件边界注明“指令约束”。
 
-按 **[职责模板 §3](../assets/project/agent-roles.md#3-项目接入)** 更新项目 **.harness/agent-roles.md §3** 的接入摘要，覆盖对应角色的旧摘要，不累积调用流水；本轮未验证的项保留其原日期与适用范围，不统一刷新为通过。需重载或新会话时给出操作；**未调用核验，仍属未完成**，不能以文件存在或主控自检代替。完整完成条件见 **[SKILL.md](../SKILL.md#完成与反馈)**。
+按 **[职责模板 §3](../assets/project/agent-roles.md#3-项目接入)** 更新项目 **.harness/agent-roles.md §3** 的接入摘要，覆盖对应角色的旧摘要，不累积调用流水；本轮未验证的项保留其原日期与适用范围，不统一刷新为通过。需重载或新会话时给出操作；**未调用核验，仍属未完成**，不能以文件存在或主 Agent 自检代替。完整完成条件见 **[SKILL.md](../SKILL.md#完成与反馈)**。
 
 后续直接调用已配置角色；平台、模型或权限变化时复验相关项。

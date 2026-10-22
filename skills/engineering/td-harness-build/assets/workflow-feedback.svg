@@ -1,0 +1,54 @@
+<svg width="1520" height="900" viewBox="0 0 1520 900" role="img" aria-labelledby="fan-title fan-desc" xmlns="http://www.w3.org/2000/svg" id="fan-flow">
+<style>:root{--foreground:#1f2937;--background:#fff;--border:#cbd5e1;--blue:#2563eb;--orange:#b45309;--muted-foreground:#64748b;--control-fill:#eff6ff;--human-fill:#fff7ed} @media(prefers-color-scheme:dark){:root{--foreground:#e5e7eb;--background:#111827;--border:#475569;--blue:#60a5fa;--orange:#fb923c;--muted-foreground:#cbd5e1;--control-fill:#182946;--human-fill:#38281d}}
+#fan-flow{color:var(--foreground);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;max-width:1600px;margin:auto}#fan-flow{display:block;max-width:100%;height:auto}#fan-flow text{fill:var(--foreground);font-size:19px}#fan-flow .heading{font-size:27px;font-weight:500}#fan-flow .name{font-size:21px;font-weight:500}#fan-flow .small{font-size:16px}#fan-flow .node{fill:var(--background);stroke:var(--border);stroke-width:1.5}#fan-flow .control{fill:var(--control-fill);stroke:var(--blue);stroke-width:1.5}#fan-flow .human{fill:var(--human-fill);stroke:var(--orange);stroke-width:1.5}#fan-flow .quiet{fill:var(--background)}#fan-flow .normal{fill:none;stroke:var(--muted-foreground);stroke-width:1.6;marker-end:url(#fan-normal)}#fan-flow .back{fill:none;stroke:var(--blue);stroke-width:1.8;marker-end:url(#fan-back)}#fan-flow .inferred{stroke-dasharray:6 5}#fan-flow .sources{text-align:right}
+</style><title id="fan-title">开发 Workflow 与反馈闭环</title><desc id="fan-desc">01至07每阶段仅一节点。阶段未通过时向下汇入明确的报告节点，报告回到主 Agent按条件派发。返回箭头列出常见处理位置，由主 Agent 按原因、影响和授权安排。需求或AC有误先修正产品文档并用户确认。代码或测试有误回03，再沿主线验证审阅。灰色箭头表示正常推进，蓝色箭头表示反馈返工。</desc>
+<rect width="1520" height="900" fill="var(--background)"/>
+<defs><marker id="fan-normal" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="var(--muted-foreground)" stroke-width="1.3" /></marker><marker id="fan-back" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="var(--blue)" stroke-width="1.3" /></marker></defs>
+<text x="20" y="35" class="heading">开发 Workflow 与反馈闭环</text><text x="20" y="73" class="small">主 Agent 是当前用户会话中的 AI；受派发 Agent 按指定角色执行。</text>
+<path d="M1110 30H1150" class="normal" /><text x="1162" y="36" class="small">正常推进</text><path d="M1260 30H1300" class="back" /><text x="1312" y="36" class="small">反馈返工</text>
+
+
+<path id="node-route" d="M750 105L930 175L750 245L570 175Z" class="control" />
+<text x="750" y="166" text-anchor="middle" class="name">③ 判断原因与影响</text><text x="750" y="194" text-anchor="middle" class="small">主 Agent 按阶段派发</text>
+<path data-from="route" data-to="user" d="M930 175H1110" class="back" /><text x="1020" y="161" text-anchor="middle" class="small">越界／争议／例外</text>
+<rect id="node-user" x="1110" y="125" width="270" height="85" rx="8" class="human" /><text x="1245" y="157" text-anchor="middle" class="name">用户决定</text><text x="1245" y="186" text-anchor="middle" class="small">说明影响、建议后等待决定</text>
+<path data-from="user" data-to="route" d="M1245 210V260H860V202" class="back" /><text x="1050" y="251" text-anchor="middle" class="small">决定后再派发</text>
+
+<path data-from="route" data-to="product" d="M750 245C750 280 225 270 225 290V365" class="back" />
+<path data-from="route" data-to="02" d="M750 245C750 280 415 270 415 290V480" class="back" />
+<path data-from="route" data-to="03" d="M750 245C750 280 605 270 605 290V480" class="back" />
+<path data-from="route" data-to="04" d="M750 245C750 280 795 270 795 290V480" class="back" />
+<path data-from="route" data-to="05" d="M750 245C750 280 985 270 985 290V480" class="back" />
+<path data-from="route" data-to="06" d="M750 245C750 280 1175 270 1175 290V480" class="back" />
+<path data-from="route" data-to="07" d="M750 245C750 280 1365 270 1365 290V480" class="back" />
+<rect x="140" y="300" width="170" height="44" class="quiet" /><text x="225" y="326" text-anchor="middle" class="small">需求或 AC 有误</text>
+<rect x="330" y="300" width="170" height="44" class="quiet" /><text x="415" y="315" text-anchor="middle" class="small">方案／用例需修改</text><text x="415" y="337" text-anchor="middle" class="small">或 Plan 未获批准</text>
+<rect x="520" y="300" width="170" height="44" class="quiet" /><text x="605" y="326" text-anchor="middle" class="small">代码或测试有误</text>
+<rect x="710" y="300" width="170" height="44" class="quiet" /><text x="795" y="326" text-anchor="middle" class="small">证据缺失／失效</text>
+<rect x="900" y="300" width="170" height="44" class="quiet" /><text x="985" y="326" text-anchor="middle" class="small">文档错误／遗漏</text>
+<rect x="1090" y="297" width="170" height="58" class="quiet" /><text x="1175" y="320" text-anchor="middle" class="small">独立审阅、最终验收</text><text x="1175" y="344" text-anchor="middle" class="small">或提交授权未完成</text>
+<rect x="1280" y="300" width="170" height="44" class="quiet" /><text x="1365" y="326" text-anchor="middle" class="small">提交操作失败</text>
+<rect id="node-product" x="150" y="365" width="150" height="60" rx="7" class="human" /><text x="225" y="391" text-anchor="middle" class="small">修正产品文档</text><text x="225" y="414" text-anchor="middle" class="small">用户确认</text><path data-from="product" data-to="01" d="M225 425V480" class="back" />
+
+<text x="20" y="459" class="name">① 正常推进</text>
+<ellipse id="node-start" cx="65" cy="525" rx="45" ry="25" class="node" /><text x="65" y="531" text-anchor="middle">开始</text><path data-from="start" data-to="01" d="M110 525H150" class="normal" />
+<rect id="node-01" x="150" y="480" width="150" height="90" rx="7" class="node" /><text x="225" y="511" text-anchor="middle" class="name">01 Clarify</text><text x="225" y="540" text-anchor="middle" class="small">主 Agent 核验</text><path data-from="01" data-to="02" d="M300 525H340" class="normal" />
+<rect id="node-02" x="340" y="480" width="150" height="90" rx="7" class="node" /><text x="415" y="508" text-anchor="middle" class="name">02 Plan</text><text x="415" y="534" text-anchor="middle" class="small">主 Agent</text><text x="415" y="558" text-anchor="middle" class="small">用户批准后实现</text><path data-from="02" data-to="03" d="M490 525H530" class="normal" />
+<rect id="node-03" x="530" y="480" width="150" height="90" rx="7" class="node" /><text x="605" y="511" text-anchor="middle" class="name">03 Implement</text><text x="605" y="540" text-anchor="middle" class="small">Coder</text><path data-from="03" data-to="04" d="M680 525H720" class="normal" />
+<rect id="node-04" x="720" y="480" width="150" height="90" rx="7" class="node" /><text x="795" y="511" text-anchor="middle" class="name">04 Verify</text><text x="795" y="540" text-anchor="middle" class="small">Verifier</text><path data-from="04" data-to="05" d="M870 525H910" class="normal" />
+<rect id="node-05" x="910" y="480" width="150" height="90" rx="7" class="node" /><text x="985" y="511" text-anchor="middle" class="name">05 Docs</text><text x="985" y="540" text-anchor="middle" class="small">Executor</text><path data-from="05" data-to="06" d="M1060 525H1100" class="normal" />
+<rect id="node-06" x="1100" y="480" width="150" height="90" rx="7" class="node" /><text x="1175" y="508" text-anchor="middle" class="name">06 Review</text><text x="1175" y="534" text-anchor="middle" class="small">Reviewer</text><text x="1175" y="558" text-anchor="middle" class="small">用户验收、授权</text><path data-from="06" data-to="07" d="M1250 525H1290" class="normal" />
+<rect id="node-07" x="1290" y="480" width="150" height="90" rx="7" class="node" /><text x="1365" y="511" text-anchor="middle" class="name">07 Submit</text><text x="1365" y="540" text-anchor="middle" class="small">Executor</text><path data-from="07" data-to="end" d="M1440 525H1462" class="normal" /><ellipse id="node-end" cx="1490" cy="525" rx="28" ry="25" class="node" /><text x="1490" y="531" text-anchor="middle" class="small">完成</text>
+
+
+<path data-from="01" data-to="report" d="M225 570C225 640 620 640 620 720" class="back" />
+<path data-from="02" data-to="report" d="M415 570C415 640 660 640 660 720" class="back" />
+<path data-from="03" data-to="report" d="M605 570C605 640 700 640 700 720" class="back" />
+<path data-from="04" data-to="report" d="M795 570C795 640 750 640 750 720" class="back" />
+<path data-from="05" data-to="report" d="M985 570C985 640 800 640 800 720" class="back" />
+<path data-from="06" data-to="report" d="M1175 570C1175 640 840 640 840 720" class="back" />
+<path data-from="07" data-to="report" d="M1365 570C1365 640 880 640 880 720" class="back" />
+<rect id="node-report" x="600" y="720" width="300" height="90" rx="8" class="control" /><text x="750" y="749" text-anchor="middle" class="name">② 报告阶段问题</text><text x="750" y="777" text-anchor="middle">失败阶段＋问题＋证据</text><text x="750" y="800" text-anchor="middle" class="small">主 Agent 核对</text>
+<path data-from="report" data-to="route" d="M600 765H30Q10 765 10 745V195Q10 175 30 175H570" class="back" />
+<text x="20" y="858" class="small">② 仅用于阶段交付未通过或需协调的阻塞；预期 Red、阶段内自修仍在原阶段处理。</text><text x="20" y="887" class="small">常见去向供判断，多个问题按依赖处理；只复验受影响部分，再独立复审。Submit 按本阶段规则处理。</text>
+</svg>
