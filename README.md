@@ -1,6 +1,6 @@
 # skills-develop
 
-<p align="center"><em>Agent-facing development skills. No study notes, no reference dump.</em></p>
+<p align="center"><em>Agent-facing development skills.</em></p>
 
 <p align="center">
   <img alt="Agent Skills Standard" src="https://img.shields.io/badge/Agent%20Skills-Standard-6DA544?style=for-the-badge">
@@ -13,18 +13,6 @@
 English | [中文](README.zh-CN.md)
 
 * * *
-
-## What belongs here
-
-- workflows that change code, tests, config, docs, or repo structure
-- skills that help agents plan, diagnose, review, triage, or ship
-- reusable engineering flows that should stay discoverable
-
-## What stays out
-
-- learning notes and teaching material
-- personal reference archives
-- one-off external installs
 
 ## Install
 
@@ -77,6 +65,7 @@ Replace `td-harness-build` with the target skill name. Add `-g` to install that 
 | Skill | What it does |
 | --- | --- |
 | `td-harness-build` | Builds or upgrades a reusable project AI harness with canonical AGENTS.md, `.harness` templates, template-first merging, built-in TDD guidance, and Git hooks. |
+| [td-coding-retro](skills/engineering/td-coding-retro/README.md) | Reviews one AI coding session, separates general and project improvements, captures evidence-backed examples, and generates an offline HTML report. |
 
 ## Layout
 
@@ -142,3 +131,7 @@ npx skills use YangZhaoWeblog/skills-develop@td-harness-build
 ```
 
 把 `td-harness-build` 或本地路径换成目标 skill；要全局安装这个单个 skill 时加 `-g`。
+
+---
+
+This repository maintains reusable development workflows for agents to discover and invoke, covering planning, diagnosis, review, triage, delivery, and changes to code, tests, configuration, documentation, or repository structure. Learning notes, teaching material, personal reference archives, and one-off external installs are outside its scope.

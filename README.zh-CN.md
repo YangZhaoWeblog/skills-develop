@@ -1,6 +1,6 @@
 # skills-develop
 
-<p align="center"><em>面向 agent 的开发类 skill。不要放学习笔记，也不要放参考库。</em></p>
+<p align="center"><em>面向 agent 的开发类 skill。</em></p>
 
 <p align="center">
   <img alt="Agent Skills Standard" src="https://img.shields.io/badge/Agent%20Skills-Standard-6DA544?style=for-the-badge">
@@ -13,18 +13,6 @@
 中文 | [English](README.md)
 
 * * *
-
-## 放这里
-
-- 会改变代码、测试、配置、文档或目录结构的工作流
-- 帮助 agent 做规划、诊断、评审、分诊、交付的 skill
-- 需要长期保持可发现的工程流程
-
-## 不放这里
-
-- 学习笔记和教学材料
-- 个人参考档案
-- 外部一次性安装品
 
 ## 安装
 
@@ -77,6 +65,7 @@ npx skills@latest use YangZhaoWeblog/skills-develop@td-harness-build
 | Skill | 作用 |
 | --- | --- |
 | `td-harness-build` | 为项目搭建或升级 AI harness：AGENTS.md、`.harness` 模板、模板优先融合、内置 TDD 方法和 Git hooks。 |
+| [td-coding-retro](skills/engineering/td-coding-retro/README.zh-CN.md) | 复盘单次 AI Coding 会话，区分通用与项目改进，提炼正反例，并生成可离线阅读的 HTML 报告。 |
 
 ## 目录
 
@@ -88,3 +77,7 @@ npx skills@latest use YangZhaoWeblog/skills-develop@td-harness-build
 
 - [skills-learning](../skills-learning/README.zh-CN.md)
 - [skills-common](../skills-common/README.zh-CN.md)
+
+---
+
+本仓库收录供 agent 长期发现与调用的开发工作流，涵盖规划、诊断、评审、分诊、交付，以及代码、测试、配置、文档和目录结构的修改。学习笔记、教学材料、个人参考档案和外部一次性安装品不在收录范围内。

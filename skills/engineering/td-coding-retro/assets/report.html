@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
+    />
+    <title>{{报告标题}}</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #191922;
+        --muted: #696779;
+        --line: #e7e3ef;
+        --accent: #6841d9;
+        --shadow: 0 12px 28px rgba(42, 33, 74, 0.07);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        font:
+          15px/1.7 -apple-system,
+          BlinkMacSystemFont,
+          "PingFang SC",
+          "Microsoft YaHei",
+          sans-serif;
+        background:
+          radial-gradient(
+            ellipse at 5% 0,
+            rgba(104, 65, 217, 0.08),
+            transparent 38%
+          ),
+          #fdfdff;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p {
+        margin: 0;
+      }
+      h1 {
+        font-size: 30px;
+        line-height: 1.4;
+      }
+      h2 {
+        font-size: 25px;
+        line-height: 1.5;
+      }
+      h3 {
+        font-size: 18px;
+      }
+      a {
+        color: var(--accent);
+      }
+      a:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid #9d7aeb;
+        outline-offset: 4px;
+      }
+      p,
+      dd,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      a,
+      span,
+      strong {
+        overflow-wrap: anywhere;
+      }
+      main {
+        max-width: 1380px;
+        margin: auto;
+        padding: 28px 40px 70px;
+      }
+      .report-header {
+        padding: 27px 0 20px;
+      }
+      .meta {
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        margin-top: 12px;
+      }
+      .banner {
+        padding: 20px 24px;
+        margin-bottom: 25px;
+        background: linear-gradient(95deg, #efe9ff, #f3f7ff);
+        border: 1px solid #e2d9f3;
+        border-radius: 12px;
+      }
+      .banner h2 {
+        font-size: 12px;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+      .conclusion {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .next {
+        margin-top: 10px;
+        color: var(--muted);
+      }
+      .next strong {
+        color: var(--accent);
+        font-size: 12px;
+        margin-right: 12px;
+      }
+      .workbench {
+        display: grid;
+        grid-template-columns: 270px minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+      }
+      .item-nav {
+        padding: 18px 12px;
+        background: #f8f6fc;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        position: sticky;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        overflow: auto;
+      }
+      .nav-group + .nav-group {
+        margin-top: 22px;
+      }
+      .nav-group h2 {
+        font-size: 12px;
+        color: var(--muted);
+        padding: 0 12px;
+        margin-bottom: 12px;
+      }
+      .choice {
+        display: block;
+        text-decoration: none;
+        color: var(--ink);
+        padding: 16px 14px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        margin: 4px 0;
+      }
+      .choice strong {
+        display: block;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 5px;
+      }
+      .choice small {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .choice[aria-current="true"] {
+        background: white;
+        border-color: #d7c6f5;
+        box-shadow: 0 5px 13px #432e6b08;
+      }
+      .choice[aria-current="true"] strong {
+        color: var(--accent);
+      }
+      .choice:hover {
+        background: white;
+      }
+      .panels {
+        min-width: 0;
+      }
+      .detail {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 8px 24px rgba(42, 33, 74, 0.035);
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+      .detail h2 {
+        font-size: 23px;
+        font-weight: 600;
+        line-height: 1.5;
+        letter-spacing: -0.3px;
+      }
+      .facts > div {
+        display: block;
+      }
+      .facts dt {
+        display: inline;
+        margin: 0 10px 0 0;
+      }
+      .facts > div + div {
+        margin-top: 18px;
+      }
+      .facts dt {
+        color: var(--ink);
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.55;
+      }
+      .facts dd {
+        display: inline;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.55;
+        color: #55525e;
+        white-space: pre-wrap;
+      }
+      .facts dd strong {
+        font-weight: 500;
+      }
+      .detail-top {
+        padding: 30px 34px 0;
+      }
+      .detail-top p {
+        margin-top: 18px;
+        color: #55525e;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .kicker {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--accent);
+      }
+      .tag.project {
+        color: #3269a9;
+      }
+      .tag.verdict { color: var(--muted); border-left: 1px solid var(--line); padding-left: 12px; }
+      .tag.state {
+        color: var(--muted);
+        border-left: 1px solid var(--line);
+        padding-left: 12px;
+      }
+      .proposal-heading { display:flex; align-items:baseline; flex-wrap:wrap; gap:12px; margin-bottom:6px; }
+      .proposal-heading h3 { font-size:14px; font-weight:600; }
+      .proposal-heading span { font-size:12px; color:var(--muted); }
+      .proposal, .rationale { font-size: 16px; line-height: 1.55; color: #55525e; }
+      .rationale { margin-top: 8px; }
+      .detail-body {
+        padding: 14px 34px 28px;
+      }
+      .action {
+        display: block;
+        padding: 0;
+        border: 0;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+      .action span {
+        display: inline;
+        color: var(--ink);
+        font-size: inherit;
+        font-weight: 600;
+        margin: 0 10px 0 0;
+      }
+      .action strong {
+        display: inline;
+        font-size: inherit;
+        line-height: inherit;
+        font-weight: 400;
+        color: #55525e;
+      }
+      .facts {
+        display: block;
+        margin: 18px 0 0;
+        padding: 0;
+        border: 0;
+      }
+      .boundaries dt {
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .boundaries dd {
+        margin: 0;
+        font-size: 14px;
+        white-space: pre-wrap;
+      }
+      .destination {
+        display: inline;
+        font-size: inherit;
+        color: inherit;
+        margin: 0 0 0 10px;
+      }
+      .pattern {
+        border-top: 1px solid var(--line);
+        margin-top: 26px;
+        padding-top: 22px;
+      }
+      .situation {
+        font-size: 14px;
+        color: var(--muted);
+        margin: 10px 0 16px;
+      }
+      .contrast {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+        gap: 16px;
+      }
+      .example {
+        padding: 20px;
+        border-radius: 12px;
+        background: #fff3f7;
+        border: 1px solid #f2dce5;
+      }
+      .example.positive {
+        background: #eff6ff;
+        border-color: #dce8f6;
+      }
+      .example h4 {
+        font-size: 13px;
+        color: #a35072;
+        margin-bottom: 10px;
+      }
+      .positive h4 {
+        color: #316fac;
+      }
+      .boundaries {
+        margin: 20px 0 0;
+      }
+      .boundaries dt:not(:first-child) {
+        margin-top: 14px;
+      }
+      .limits {
+        padding: 18px 22px;
+        border: 1px solid #ecd8ba;
+        background: #fff9ef;
+        border-radius: 12px;
+        margin: 0 0 25px;
+      }
+      .limits h2 {
+        font-size: 14px;
+        color: #875d29;
+      }
+      .limits ul {
+        padding-left: 20px;
+        margin: 8px 0 0;
+        font-size: 13px;
+      }
+      .empty {
+        padding: 24px;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        margin-top: 30px;
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .evidence {
+        margin-top: 18px;
+        border: 1px dashed #d8cee4;
+        border-radius: 10px;
+        padding: 16px 20px;
+      }
+      .evidence summary {
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .evidence-item {
+        margin-top: 20px;
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+      }
+      .evidence-item h3 {
+        font-size: 14px;
+      }
+      .evidence-item p {
+        margin: 6px 0;
+      }
+      .evidence pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font:
+          12px/1.7 ui-monospace,
+          monospace;
+        background: #f6f3fa;
+        border-radius: 6px;
+        padding: 16px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (max-width: 900px) {
+        .workbench {
+          grid-template-columns: 220px minmax(0, 1fr);
+          gap: 16px;
+        }
+        .detail-top {
+          padding: 26px 26px 0;
+        }
+        .detail-body {
+          padding: 22px 26px 26px;
+        }
+      }
+      @media (max-width: 760px) {
+        main {
+          padding: 20px 16px 40px;
+        }
+        h1 {
+          font-size: 26px;
+        }
+        .detail h2 {
+          font-size: 21px;
+        }
+        .workbench {
+          display: block;
+        }
+        .item-nav {
+          position: static;
+          max-height: 240px;
+          margin-bottom: 16px;
+        }
+        .choice {
+          padding: 10px 12px;
+        }
+        .choice strong {
+          font-size: 13px;
+        }
+        .detail-top {
+          padding: 22px 20px 0;
+        }
+        .detail-body {
+          padding: 22px 20px;
+        }
+        .facts > div {
+          display: block;
+        }
+        .action,
+        .facts {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .action {
+          padding: 0;
+        }
+        .action strong {
+          font-size: 16px;
+        }
+        .meta {
+          display: block;
+          font-size: 12px;
+        }
+        .meta span {
+          display: block;
+        }
+        .banner {
+          padding: 18px;
+        }
+        .conclusion {
+          font-size: 17px;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+        }
+        main {
+          padding: 0;
+        }
+        .item-nav {
+          display: none;
+        }
+        .workbench {
+          display: block;
+        }
+        .detail[hidden] {
+          display: block !important;
+        }
+        .detail {
+          box-shadow: none;
+          break-inside: avoid;
+        }
+        .evidence {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <main>
+      <header class="report-header"><h1>{{报告标题}}</h1></header>
+      <section class="banner" aria-labelledby="conclusion-heading">
+        <h2 id="conclusion-heading">本次结论</h2>
+        <p class="conclusion">{{本次结论}}</p>
+        <p class="next"><strong>建议下一步</strong>{{优先建议}}</p>
+      </section>
+      <!-- 无影响判断的缺口时删除整个 limits 区块。 -->
+      <aside class="limits"><h2>结论边界</h2><ul><li>{{影响判断的具体缺口}}</li></ul></aside>
+      <div class="workbench">
+        <nav class="item-nav" aria-label="选择复盘事项">
+          <!-- 按需复制组和 choice；经验组标题用“可复用经验”。编号跨组连续。 -->
+          <div class="nav-group"><h2>改进事项 · {{本组数量}}</h2>
+            <a class="choice" href="#finding-1" aria-controls="finding-1"><strong><span class="item-number">1.</span> {{发现标题}}</strong><small>{{通用改进或项目改进}} · {{处理状态}}</small></a>
+          </div>
+        </nav>
+        <div class="panels">
+          <!-- 每个 choice 对应一个 detail；复制后同步修改 finding-N、heading-N 及显示编号。 -->
+          <article class="detail" id="finding-1" aria-labelledby="heading-1">
+            <header class="detail-top">
+              <div class="kicker"><span class="tag project">{{分类}}</span><span class="tag state">{{处理状态}}</span><span class="tag verdict">{{是否推荐改进}}</span></div>
+              <h2 id="heading-1"><span class="item-number">1.</span> {{发现标题}}</h2>
+              <p>{{发生了什么、后果及结束状态}}</p>
+            </header>
+            <div class="detail-body">
+              <div class="proposal-heading"><h3>改进方案</h3></div>
+              <p class="proposal">{{具体建议}}</p>
+              <p class="rationale">{{推荐或不推荐的原因，以及是否新增内容、写入何处}}</p>
+              <!-- 无正反例时删除整个 pattern；只有一侧时删除另一侧 example。 -->
+              <section class="pattern" aria-label="正反例"><h3>正反例</h3>
+                <p class="situation">{{适用情境}}</p>
+                <div class="contrast">
+                  <div class="example negative"><h4>反例</h4><p>{{反例}}</p></div>
+                  <div class="example positive"><h4>正向做法（以证据状态为准）</h4><p>{{正例或明确标示的待验证建议}}</p></div>
+                </div>
+                <dl class="boundaries"><dt>证据状态</dt><dd>{{真实验证、示意或待验证}}</dd><dt>适用边界</dt><dd>{{适用条件与限制}}</dd></dl>
+              </section>
+            </div>
+          </article>
+        </div>
+      </div>
+      <footer>
+        <p>改进建议 · 待选择</p>
+        <div class="meta"><span>会话 {{来源与会话标识}}</span><span>{{日期}}</span></div>
+        <!-- 无证据时可删除 details；有发现就必须有对应证据。 -->
+        <details class="evidence"><summary>原始记录与核验说明</summary>
+          <ul><li>1. {{发现标题}}：<a href="#evidence-item-E1">E1</a><small> · 沉淀：{{推荐或不新增或待验证}}；位置：{{实际落点或待确定}}</small></li></ul>
+          <article class="evidence-item" id="evidence-item-E1"><h3>E1 · {{原文或摘要}}</h3><p>{{来源及定位}}</p><pre>{{最小必要证据，作为文本转义}}</pre></article>
+        </details>
+      </footer>
+    </main>
+    <script>
+      (() => {
+        const links = Array.from(document.querySelectorAll(".choice"));
+        const panels = Array.from(document.querySelectorAll(".detail"));
+        if (!links.length) return;
+        function select(id) {
+          if (!panels.some((panel) => panel.id === id)) return;
+          panels.forEach((panel) => {
+            panel.hidden = panel.id !== id;
+          });
+          links.forEach((link) => {
+            if (link.getAttribute("aria-controls") === id)
+              link.setAttribute("aria-current", "true");
+            else link.removeAttribute("aria-current");
+          });
+        }
+        links.forEach((link) =>
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            select(link.getAttribute("aria-controls"));
+          }),
+        );
+        function selectHash() {
+          const id = location.hash.slice(1);
+          if (panels.some((panel) => panel.id === id)) select(id);
+        }
+        select(links[0].getAttribute("aria-controls"));
+        selectHash();
+        window.addEventListener("hashchange", selectHash);
+      })();
+    </script>
+  </body>
+</html>

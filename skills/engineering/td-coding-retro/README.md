@@ -1,0 +1,46 @@
+<p align="right">English | <a href="README.zh-CN.md">中文</a></p>
+
+# TD Coding Retro
+
+Review one **AI coding session**, identify problems worth addressing and practices worth keeping, and produce an **HTML report** for choosing the next improvement.
+
+## 1. Getting started
+
+Install the local version from the repository root:
+
+```bash
+npx skills@latest add ./skills/engineering/td-coding-retro -y
+```
+
+**Review the current session**
+
+```text
+$td-coding-retro Review the current session.
+```
+
+**Review a specific session**
+
+```text
+$td-coding-retro Review session <Session ID>.
+```
+
+The agent reads the original session and checks relevant code, plans, check configurations and collaboration rules as needed. Missing records are reported as gaps, not treated as verified.
+
+## 2. Read the report and choose an improvement
+
+[![AI coding retrospective: select an item and read its proposed improvement](assets/report-preview.png)](assets/report-preview.png)
+
+| Scope | Applies to |
+| --- | --- |
+| **General improvement** | Methods, rules or examples transferable to other applicable situations |
+| **Project improvement** | This project's code, business behavior, rules or harness |
+
+## 3. Implement only selected changes
+
+By default, the skill proposes improvements without modifying the project or shared rules. After reading the report, you can say:
+
+```text
+Implement items 1, 3 and 5. Leave the others unchanged.
+```
+
+The agent uses the selected items to improve the project's harness: collaboration rules, workflows, templates or automated checks. Reusable methods and examples go into the relevant shared collaboration resources.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "TD Coding Retro"
+  short_description: "复盘单次 AI Coding 会话，区分通用与项目改进并提炼正反例"
+  default_prompt: "使用 $td-coding-retro 复盘当前会话，生成简洁的 HTML 报告，只提出改进建议。"
