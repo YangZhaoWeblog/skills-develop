@@ -2,9 +2,18 @@
 
 # TD Coding Retro
 
-Review one **AI coding session**, identify problems worth addressing and practices worth keeping, and produce an **HTML report** for choosing the next improvement.
+Review one **AI coding session**, identify problems worth addressing and practices worth keeping, and produce an **HTML report** to help improve your harness.
 
-## 1. Getting started
+## 1. Report preview
+
+| Scope | Applies to |
+| --- | --- |
+| **General improvement** | Methods, rules or examples transferable to other applicable situations |
+| **Project improvement** | This project's code, business behavior, rules or harness |
+
+[![AI coding retrospective: select an item and read its proposed improvement](./assets/report-preview-en.png)](./assets/report-preview-en.png)
+
+## 2. Getting started
 
 Install the local version from the repository root:
 
@@ -25,15 +34,6 @@ $td-coding-retro Review session <Session ID>.
 ```
 
 The agent reads the original session and checks relevant code, plans, check configurations and collaboration rules as needed. Missing records are reported as gaps, not treated as verified.
-
-## 2. Read the report and choose an improvement
-
-[![AI coding retrospective: select an item and read its proposed improvement](assets/report-preview.png)](assets/report-preview.png)
-
-| Scope | Applies to |
-| --- | --- |
-| **General improvement** | Methods, rules or examples transferable to other applicable situations |
-| **Project improvement** | This project's code, business behavior, rules or harness |
 
 ## 3. Implement only selected changes
 
