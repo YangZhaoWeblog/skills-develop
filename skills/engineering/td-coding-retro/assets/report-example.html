@@ -7,7 +7,7 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
     />
-    <title>本地 CLI 会话复盘</title>
+    <title>本地 CLI 会话复盘 · 示例</title>
     <style>
       :root {
         color-scheme: light;
@@ -246,6 +246,7 @@
         border-left: 1px solid var(--line);
         padding-left: 12px;
       }
+      .implementation-result { margin-top: 18px; }
       .proposal-heading { display:flex; align-items:baseline; flex-wrap:wrap; gap:12px; margin-bottom:6px; }
       .proposal-heading h3 { font-size:14px; font-weight:600; }
       .proposal-heading span { font-size:12px; color:var(--muted); }
@@ -498,7 +499,7 @@
   <body>
     <main>
       <header class="report-header">
-        <h1>本地 CLI 会话复盘</h1>
+        <h1>本地 CLI 会话复盘 · 示例</h1>
       </header>
       <section class="banner" aria-labelledby="conclusion-heading">
         <h2 id="conclusion-heading">本次结论</h2>
@@ -509,22 +510,22 @@
 <header class="detail-top"><div class="kicker"><span class="tag project">项目改进</span><span class="tag state">已处理</span><span class="tag verdict">推荐改进</span></div>
 <h2 id="heading-1"><span class="item-number">1.</span> 提交后补写编号，导致反复补提交</h2><p>Agent 提交代码后，又按要求把提交编号写进任务记录。记录因此再次出现未提交的修改，需要再提交一次。最后已经处理完毕。</p></header>
 <div class="detail-body"><div class="proposal-heading"><h3>改进方案</h3></div><p class="proposal">下次在提交前完成任务记录，提交后直接向你报告结果。</p>
-<p class="rationale">这次问题出在派发与执行环节。 现有提交规则已经要求这样做，因此不需要新增规则。</p></div></article><article class="detail" id="finding-2" aria-labelledby="heading-2">
+<p class="rationale">这次问题出在派发与执行环节。 现有提交规则已经要求这样做，因此不需要新增规则。</p><section class="implementation-result" aria-label="实施结果"><div class="proposal-heading"><h3>实施结果</h3></div><p class="rationale">经独立 Agent 验证，本项改进有效：减少了重复提交，且没有遗漏结果报告，<strong>已保留</strong>。</p></section></div></article><article class="detail" id="finding-2" aria-labelledby="heading-2">
 <header class="detail-top"><div class="kicker"><span class="tag project">项目改进</span><span class="tag state">未处理</span><span class="tag verdict">推荐改进</span></div>
 <h2 id="heading-2"><span class="item-number">2.</span> “不用追查”被写成“原因已查明”</h2><p>用户表示一直在使用相关应用、不必追查，不能据此证明配置变化与本任务无关。</p></header>
 <div class="detail-body"><div class="proposal-heading"><h3>改进方案</h3></div><p class="proposal">将记录改为“来源未确定，用户决定不再调查”。</p>
-<p class="rationale">只修正证据强度，不扩大调查。 建议修改当前任务 Overview 中的归因记录，不再调查配置变化。</p></div></article><article class="detail" id="finding-3" aria-labelledby="heading-3">
+<p class="rationale">只修正证据强度，不扩大调查。 建议修改当前任务 Overview 中的归因记录，不再调查配置变化。</p><section class="implementation-result" aria-label="实施结果"><div class="proposal-heading"><h3>实施结果</h3></div><p class="rationale">经独立 Agent 验证，本项改进无效：修改后的记录仍把未知原因写成确定结论，<strong>已回退</strong>。原记录的错误归因仍需修正。</p></section></div></article><article class="detail" id="finding-3" aria-labelledby="heading-3">
 <header class="detail-top"><div class="kicker"><span class="tag">通用改进</span><span class="tag state">经验保留</span><span class="tag verdict">推荐改进</span></div>
 <h2 id="heading-3"><span class="item-number">3.</span> 测试通过，还要检查它证明了什么</h2><p>独立验证发现：并发替身返回相同结果，测试通过也不能证明输出没有串线。</p></header>
 <div class="detail-body"><div class="proposal-heading"><h3>改进方案</h3></div><p class="proposal">保留按行为核对断言、用具体反例检查测试的做法。</p>
-<p class="rationale">可区分的执行数据，才能让断言发现输出串线。 无需为此增加验证规则；这个案例可用于解释已有验证规范。</p><section class="pattern" aria-label="正反例"><h3>正反例</h3>
+<p class="rationale">可区分的执行数据，才能让断言发现输出串线。 无需为此增加验证规则；这个案例可用于解释已有验证规范。</p><section class="implementation-result" aria-label="实施结果"><div class="proposal-heading"><h3>实施结果</h3></div><p class="rationale">经独立 Agent 核对，本项改进尚未证实有效：没有取得新测试能识别输出串线的证据，<strong>已回退</strong>。</p></section><section class="pattern" aria-label="正反例"><h3>正反例</h3>
 <p class="situation">测试使用替身，且需要证明多个执行互不干扰。</p><div class="contrast"><div class="example negative"><h4>反例</h4><p>所有执行返回相同标识和文本，断言无法区分结果来源。</p></div><div class="example positive"><h4>正向做法（以证据状态为准）</h4><p>后续补上可区分的执行数据与不串线断言，再独立复验。</p></div></div>
 <dl class="boundaries"><dt>证据状态</dt><dd>会话记录包含缺陷发现、补测要求及后续验证；本报告未重跑测试。</dd>
 <dt>适用边界</dt><dd>适用于隔离性测试；不能由此要求所有任务都增加同一种检查。</dd></dl></section></div></article></div></div>
       <footer>
-        <p>改进建议 · 待选择</p>
-        <div class="meta"><span>会话 497c0fbf · NestJS 与本地 CLI</span><span>2026-10-21 — 10-22</span></div>
-        <details class="evidence"><summary>原始记录与核验说明</summary><ul><li>1. F1 · 提交后补写编号，导致反复补提交：<a href="#evidence-item-E1">E1</a><small> · 沉淀：不新增；位置：项目现有提交规则</small></li><li>2. F2 · “不用追查”被写成“原因已查明”：<a href="#evidence-item-E2">E2</a><small> · 沉淀：推荐；位置：当前任务 Overview 的归因记录</small></li><li>3. F3 · 测试通过，还要检查它证明了什么：<a href="#evidence-item-E3">E3</a><small> · 沉淀：不新增；位置：已有验证规范</small></li></ul><article class="evidence-item" id="evidence-item-E1"><h3>E1 · 原文</h3><p>s1-records.jsonl L944、L958、L989、L998</p><pre>Fill 07-submit.md with the actual commit hash and result. Do not push.</pre></article><article class="evidence-item" id="evidence-item-E2"><h3>E2 · 原文</h3><p>s1-records.jsonl L756；归因改写见 L761</p><pre>全局配置变动那件事，还要你回复一下：09:58 前后、11:16 前后有没有用过 tcodex 或 Codex 应用。我一直在用，不用关心</pre></article><article class="evidence-item" id="evidence-item-E3"><h3>E3 · 原文</h3><p>s1-records.jsonl L195；补测要求 L210，后续验证 L790</p><pre>| AT1 isolation | Failed | UT3 passes. The IT2 concurrent case has no &quot;no cross-talk&quot; assertion |</pre></article></details>
+        <p>选定事项 · 部分未完成</p>
+        <div class="meta"><span>示例 · NestJS 与本地 CLI</span><span>2026-10-21 — 10-22</span></div>
+        <details class="evidence"><summary>原始记录与核验说明</summary><p>实施结果为构造的话术与版式示例，不表示重新测试了历史项目。历史摘录仅用于展示来源呈现方式。</p><ul><li>1. F1 · 提交后补写编号，导致反复补提交：<a href="#evidence-item-E1">E1</a><small> · 沉淀：不新增；位置：项目现有提交规则</small></li><li>2. F2 · “不用追查”被写成“原因已查明”：<a href="#evidence-item-E2">E2</a><small> · 沉淀：推荐；位置：当前任务 Overview 的归因记录</small></li><li>3. F3 · 测试通过，还要检查它证明了什么：<a href="#evidence-item-E3">E3</a><small> · 沉淀：不新增；位置：已有验证规范</small></li></ul><article class="evidence-item" id="evidence-item-E1"><h3>E1 · 原文</h3><p>s1-records.jsonl L944、L958、L989、L998</p><pre>Fill 07-submit.md with the actual commit hash and result. Do not push.</pre></article><article class="evidence-item" id="evidence-item-E2"><h3>E2 · 原文</h3><p>s1-records.jsonl L756；归因改写见 L761</p><pre>全局配置变动那件事，还要你回复一下：09:58 前后、11:16 前后有没有用过 tcodex 或 Codex 应用。我一直在用，不用关心</pre></article><article class="evidence-item" id="evidence-item-E3"><h3>E3 · 原文</h3><p>s1-records.jsonl L195；补测要求 L210，后续验证 L790</p><pre>| AT1 isolation | Failed | UT3 passes. The IT2 concurrent case has no &quot;no cross-talk&quot; assertion |</pre></article></details>
       </footer>
     </main>
     <script>

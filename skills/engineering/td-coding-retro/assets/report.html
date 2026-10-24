@@ -246,6 +246,7 @@
         border-left: 1px solid var(--line);
         padding-left: 12px;
       }
+      .implementation-result { margin-top: 18px; }
       .proposal-heading { display:flex; align-items:baseline; flex-wrap:wrap; gap:12px; margin-bottom:6px; }
       .proposal-heading h3 { font-size:14px; font-weight:600; }
       .proposal-heading span { font-size:12px; color:var(--muted); }
@@ -508,7 +509,7 @@
       <aside class="limits"><h2>结论边界</h2><ul><li>{{影响判断的具体缺口}}</li></ul></aside>
       <div class="workbench">
         <nav class="item-nav" aria-label="选择复盘事项">
-          <!-- 按需复制组和 choice；经验组标题用“可复用经验”。编号跨组连续。 -->
+          <!-- 先分组排序再连续编号；已处理仍归改进事项，仅经验保留归可复用经验。编号跨组不重置。 -->
           <div class="nav-group"><h2>改进事项 · {{本组数量}}</h2>
             <a class="choice" href="#finding-1" aria-controls="finding-1"><strong><span class="item-number">1.</span> {{发现标题}}</strong><small>{{通用改进或项目改进}} · {{处理状态}}</small></a>
           </div>
@@ -525,6 +526,11 @@
               <div class="proposal-heading"><h3>改进方案</h3></div>
               <p class="proposal">{{具体建议}}</p>
               <p class="rationale">{{推荐或不推荐的原因，以及是否新增内容、写入何处}}</p>
+              <!-- 选定事项实施后填写；首次提出建议时删除整个 implementation-result。 -->
+              <section class="implementation-result" aria-label="实施结果">
+                <div class="proposal-heading"><h3>实施结果</h3></div>
+                <p class="rationale">{{实际验证方法与明确结论，如“经独立 Agent 验证，本项改进有效”}}：{{具体效果及必要的范围限制}}，<strong>{{已保留、已回退或验证未完成}}</strong>。</p>
+              </section>
               <!-- 无正反例时删除整个 pattern；只有一侧时删除另一侧 example。 -->
               <section class="pattern" aria-label="正反例"><h3>正反例</h3>
                 <p class="situation">{{适用情境}}</p>

@@ -7,7 +7,7 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
     />
-    <title>Local CLI session retrospective</title>
+    <title>Local CLI session retrospective · Example</title>
     <style>
       :root {
         color-scheme: light;
@@ -246,6 +246,7 @@
         border-left: 1px solid var(--line);
         padding-left: 12px;
       }
+      .implementation-result { margin-top: 18px; }
       .proposal-heading { display:flex; align-items:baseline; flex-wrap:wrap; gap:12px; margin-bottom:6px; }
       .proposal-heading h3 { font-size:14px; font-weight:600; }
       .proposal-heading span { font-size:12px; color:var(--muted); }
@@ -498,7 +499,7 @@
   <body>
     <main>
       <header class="report-header">
-        <h1>Local CLI session retrospective</h1>
+        <h1>Local CLI session retrospective · Example</h1>
       </header>
       <section class="banner" aria-labelledby="conclusion-heading">
         <h2 id="conclusion-heading">Conclusion</h2>
@@ -509,22 +510,22 @@
 <header class="detail-top"><div class="kicker"><span class="tag project">Project improvement</span><span class="tag state">Resolved</span><span class="tag verdict">Recommended</span></div>
 <h2 id="heading-1"><span class="item-number">1.</span> Updating records after a commit caused extra commits</h2><p>After committing the code, the agent was asked to add the commit hash to the task notes. That left another uncommitted change and required another commit. The cleanup is complete.</p></header>
 <div class="detail-body"><div class="proposal-heading"><h3>Proposed improvement</h3></div><p class="proposal">Complete the task notes before committing. Report the result to you after the commit.</p>
-<p class="rationale">The problem arose during delegation and execution. The existing commit rules already cover this sequence; no new rule is needed.</p></div></article><article class="detail" id="finding-2" aria-labelledby="heading-2">
+<p class="rationale">The problem arose during delegation and execution. The existing commit rules already cover this sequence; no new rule is needed.</p><section class="implementation-result" aria-label="Implementation result"><div class="proposal-heading"><h3>Implementation result</h3></div><p class="rationale">Independent agent testing confirmed that this improvement is effective: it reduced extra commits without omitting the result report. <strong>Kept</strong>.</p></section></div></article><article class="detail" id="finding-2" aria-labelledby="heading-2">
 <header class="detail-top"><div class="kicker"><span class="tag project">Project improvement</span><span class="tag state">Open</span><span class="tag verdict">Recommended</span></div>
 <h2 id="heading-2"><span class="item-number">2.</span> “Stop investigating” became “cause confirmed”</h2><p>The user said they had been using the apps and did not need further investigation. This does not establish that the configuration change was unrelated to the task.</p></header>
 <div class="detail-body"><div class="proposal-heading"><h3>Proposed improvement</h3></div><p class="proposal">Update the record to: “The source is unknown; the user chose not to investigate further.”</p>
-<p class="rationale">Correct the attribution in the current task overview to reflect the available evidence. No further investigation is proposed.</p></div></article><article class="detail" id="finding-3" aria-labelledby="heading-3">
+<p class="rationale">Correct the attribution in the current task overview to reflect the available evidence. No further investigation is proposed.</p><section class="implementation-result" aria-label="Implementation result"><div class="proposal-heading"><h3>Implementation result</h3></div><p class="rationale">Independent agent testing found this improvement ineffective: the revised record still presented an unknown cause as confirmed. <strong>Rolled back</strong>. The incorrect attribution still needs correction.</p></section></div></article><article class="detail" id="finding-3" aria-labelledby="heading-3">
 <header class="detail-top"><div class="kicker"><span class="tag">General improvement</span><span class="tag state">Practice to keep</span><span class="tag verdict">Recommended</span></div>
 <h2 id="heading-3"><span class="item-number">3.</span> Check what a passing test actually proves</h2><p>Independent verification found that concurrent test doubles returned identical results. A passing test could not establish that outputs stayed isolated.</p></header>
 <div class="detail-body"><div class="proposal-heading"><h3>Proposed improvement</h3></div><p class="proposal">Keep checking assertions against the intended behavior and use counterexamples to test their sensitivity.</p>
-<p class="rationale">Distinct execution data lets assertions detect mixed outputs. Use this example to explain the existing verification guidance.</p><section class="pattern" aria-label="Examples"><h3>Examples</h3>
+<p class="rationale">Distinct execution data lets assertions detect mixed outputs. Use this example to explain the existing verification guidance.</p><section class="implementation-result" aria-label="Implementation result"><div class="proposal-heading"><h3>Implementation result</h3></div><p class="rationale">An independent agent could not confirm effectiveness: no evidence showed that the new test detects mixed outputs. <strong>Rolled back</strong>.</p></section><section class="pattern" aria-label="Examples"><h3>Examples</h3>
 <p class="situation">Tests use doubles and need to establish isolation between executions.</p><div class="contrast"><div class="example negative"><h4>Counterexample</h4><p>Every execution returns the same ID and text, so assertions cannot distinguish the source.</p></div><div class="example positive"><h4>Positive practice — see evidence status</h4><p>Use distinct execution data and assertions against mixed outputs, then verify independently.</p></div></div>
 <dl class="boundaries"><dt>Evidence status</dt><dd>Session records contain the finding, the requested test changes and subsequent verification. Tests were not rerun for this report.</dd>
 <dt>Applicability</dt><dd>Applies to isolation tests; this does not justify adding the same check to every task.</dd></dl></section></div></article></div></div>
       <footer>
-        <p>Proposed improvements · Awaiting selection</p>
-        <div class="meta"><span>Session 497c0fbf · NestJS and local CLI</span><span>2026-10-21 — 10-22</span></div>
-        <details class="evidence"><summary>Source records and verification notes</summary><ul><li>1. F1 · Updating records after a commit caused extra commits：<a href="#evidence-item-E1">E1</a><small> · Retention: no addition; location: existing project commit rules</small></li><li>2. F2 · “Stop investigating” became “cause confirmed”：<a href="#evidence-item-E2">E2</a><small> · Retention: recommended; location: attribution in the current task overview</small></li><li>3. F3 · Check what a passing test actually proves：<a href="#evidence-item-E3">E3</a><small> · Retention: no addition; location: existing verification guidance</small></li></ul><article class="evidence-item" id="evidence-item-E1"><h3>E1 · Original excerpt</h3><p>s1-records.jsonl L944、L958、L989、L998</p><pre>Fill 07-submit.md with the actual commit hash and result. Do not push.</pre></article><article class="evidence-item" id="evidence-item-E2"><h3>E2 · Original excerpt</h3><p>s1-records.jsonl L756; attribution rewritten at L761</p><pre>全局配置变动那件事，还要你回复一下：09:58 前后、11:16 前后有没有用过 tcodex 或 Codex 应用。我一直在用，不用关心</pre></article><article class="evidence-item" id="evidence-item-E3"><h3>E3 · Original excerpt</h3><p>s1-records.jsonl L195; test changes requested at L210, subsequent verification at L790</p><pre>| AT1 isolation | Failed | UT3 passes. The IT2 concurrent case has no &quot;no cross-talk&quot; assertion |</pre></article></details>
+        <p>Selected items · Partly incomplete</p>
+        <div class="meta"><span>Example · NestJS and local CLI</span><span>2026-10-21 — 10-22</span></div>
+        <details class="evidence"><summary>Source records and verification notes</summary><p>Implementation results are constructed examples of wording and layout, not new tests of the historical project. Historical excerpts illustrate source attribution.</p><ul><li>1. F1 · Updating records after a commit caused extra commits：<a href="#evidence-item-E1">E1</a><small> · Retention: no addition; location: existing project commit rules</small></li><li>2. F2 · “Stop investigating” became “cause confirmed”：<a href="#evidence-item-E2">E2</a><small> · Retention: recommended; location: attribution in the current task overview</small></li><li>3. F3 · Check what a passing test actually proves：<a href="#evidence-item-E3">E3</a><small> · Retention: no addition; location: existing verification guidance</small></li></ul><article class="evidence-item" id="evidence-item-E1"><h3>E1 · Original excerpt</h3><p>s1-records.jsonl L944、L958、L989、L998</p><pre>Fill 07-submit.md with the actual commit hash and result. Do not push.</pre></article><article class="evidence-item" id="evidence-item-E2"><h3>E2 · Original excerpt</h3><p>s1-records.jsonl L756; attribution rewritten at L761</p><pre>全局配置变动那件事，还要你回复一下：09:58 前后、11:16 前后有没有用过 tcodex 或 Codex 应用。我一直在用，不用关心</pre></article><article class="evidence-item" id="evidence-item-E3"><h3>E3 · Original excerpt</h3><p>s1-records.jsonl L195; test changes requested at L210, subsequent verification at L790</p><pre>| AT1 isolation | Failed | UT3 passes. The IT2 concurrent case has no &quot;no cross-talk&quot; assertion |</pre></article></details>
       </footer>
     </main>
     <script>

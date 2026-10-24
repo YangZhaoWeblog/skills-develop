@@ -44,3 +44,5 @@ Implement items 1, 3 and 5. Leave the others unchanged.
 ```
 
 The agent uses the selected items to improve the project's **Harness**: collaboration rules, workflows, templates or automated checks. Reusable methods and examples go into the relevant shared collaboration resources.
+
+An agent in a separate context then checks effectiveness to decide whether to keep or roll back each change. The method, observed effects and outcome are added to the original HTML report, with a brief notification in the terminal.
