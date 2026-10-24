@@ -41,6 +41,6 @@ $td-coding-retro Review session <Session ID>.
 Implement items 1, 3 and 5. Leave the others unchanged.
 ```
 
-Improvements are classified as general or project-specific: reusable methods and examples go into shared resources; project-specific changes are applied to the current project.
+Improvements are classified as general or project-specific. After you select items, the agent identifies where to make the changes, then implements and verifies them.
 
 After an agent in a separate context verifies the selected changes, results are added to the original HTML report. Retained changes stay in the working tree for your Git Diff review; commit and push require your explicit authorization.
