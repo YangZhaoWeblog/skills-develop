@@ -13,12 +13,16 @@
 
 [![AI Coding 复盘报告：左侧选择事项，右侧查看改进方案](assets/report-preview.png)](assets/report-preview.png)
 
-## 二、开始使用
+## 二、工作流
 
-从本仓库根目录安装本地版本：
+[![复盘与改进流程](assets/workflow-overview.svg)](assets/workflow-overview.svg)
+
+## 三、开始使用
+
+在本仓库根目录执行，安装到个人技能目录：
 
 ```bash
-npx skills@latest add ./skills/engineering/td-coding-retro -y
+npx skills@latest add ./skills/engineering/td-coding-retro -g -y
 ```
 
 **复盘当前会话**
@@ -35,7 +39,7 @@ $td-coding-retro 复盘会话 <Session ID>。
 
 Agent 会读取原始会话，按需核对相关代码、Plan、检查配置和协作规则。无法取得的记录会明确说明，不把缺失部分当作已经核验。
 
-## 三、选定后再实施
+## 四、选定改进
 
 默认只提出建议，不自动修改项目或共享规则。看完报告后可以说：
 
@@ -45,4 +49,4 @@ Agent 会读取原始会话，按需核对相关代码、Plan、检查配置和�
 
 Agent 根据选定事项，改进项目 **Harness** 中的协作规则、工作流、模板或检查机制；可复用的方法和案例写入相应的通用协作资料。
 
-实施后由独立上下文 Agent 验证效果，决定保留或回退。验证方法、具体效果和处理结果更新到原 HTML 报告，终端简短通知。
+验证结果更新到原 HTML。保留的改动留在工作区，供你查看 Git Diff；commit、push 按你的明确授权执行。

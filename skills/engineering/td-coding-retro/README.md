@@ -13,12 +13,16 @@ Review one **AI coding session**, identify problems worth addressing and practic
 
 [![AI coding retrospective: select an item and read its proposed improvement](./assets/report-preview-en.png)](./assets/report-preview-en.png)
 
-## 2. Getting started
+## 2. Workflow
 
-Install the local version from the repository root:
+[![Retrospective and improvement workflow](assets/workflow-overview.en.svg)](assets/workflow-overview.en.svg)
+
+## 3. Getting started
+
+Run from the repository root to install for your user account:
 
 ```bash
-npx skills@latest add ./skills/engineering/td-coding-retro -y
+npx skills@latest add ./skills/engineering/td-coding-retro -g -y
 ```
 
 **Review the current session**
@@ -35,7 +39,7 @@ $td-coding-retro Review session <Session ID>.
 
 The agent reads the original session and checks relevant code, plans, check configurations and collaboration rules as needed. Missing records are reported as gaps, not treated as verified.
 
-## 3. Implement only selected changes
+## 4. Select changes
 
 By default, the skill proposes improvements without modifying the project or shared rules. After reading the report, you can say:
 
@@ -45,4 +49,4 @@ Implement items 1, 3 and 5. Leave the others unchanged.
 
 The agent uses the selected items to improve the project's **Harness**: collaboration rules, workflows, templates or automated checks. Reusable methods and examples go into the relevant shared collaboration resources.
 
-An agent in a separate context then checks effectiveness to decide whether to keep or roll back each change. The method, observed effects and outcome are added to the original HTML report, with a brief notification in the terminal.
+Results are added to the original HTML report. Retained changes stay in the working tree for your Git Diff review; commit and push require your explicit authorization.
