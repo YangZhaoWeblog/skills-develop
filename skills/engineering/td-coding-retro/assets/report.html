@@ -337,22 +337,6 @@
       .boundaries dt:not(:first-child) {
         margin-top: 14px;
       }
-      .limits {
-        padding: 18px 22px;
-        border: 1px solid #ecd8ba;
-        background: #fff9ef;
-        border-radius: 12px;
-        margin: 0 0 25px;
-      }
-      .limits h2 {
-        font-size: 14px;
-        color: #875d29;
-      }
-      .limits ul {
-        padding-left: 20px;
-        margin: 8px 0 0;
-        font-size: 13px;
-      }
       .empty {
         padding: 24px;
         background: white;
@@ -505,8 +489,6 @@
         <p class="conclusion">{{本次结论}}</p>
         <p class="next"><strong>建议下一步</strong>{{优先建议}}</p>
       </section>
-      <!-- 无影响判断的缺口时删除整个 limits 区块。 -->
-      <aside class="limits"><h2>结论边界</h2><ul><li>{{影响判断的具体缺口}}</li></ul></aside>
       <div class="workbench">
         <nav class="item-nav" aria-label="选择复盘事项">
           <!-- 先分组排序再连续编号；已处理仍归改进事项，仅经验保留归可复用经验。编号跨组不重置。 -->
