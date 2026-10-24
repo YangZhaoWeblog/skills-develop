@@ -64,7 +64,7 @@ npx skills@latest use YangZhaoWeblog/skills-develop@td-harness-build
 
 | Skill | 作用 |
 | --- | --- |
-| `td-harness-build` | 为项目搭建或升级 AI harness：AGENTS.md、`.harness` 模板、模板优先融合、内置 TDD 方法和 Git hooks。 |
+| [td-harness-build](skills/engineering/td-harness-build/README.zh-CN.md) | 为项目搭建或升级 AI harness：AGENTS.md、`.harness` 模板、模板优先融合、内置 TDD 方法和 Git hooks。 |
 | [td-coding-retro](skills/engineering/td-coding-retro/README.zh-CN.md) | 复盘单次 AI Coding 会话，区分通用与项目改进，提炼正反例，并生成可离线阅读的 HTML 报告。 |
 
 ## 目录
@@ -75,8 +75,8 @@ npx skills@latest use YangZhaoWeblog/skills-develop@td-harness-build
 
 兄弟仓库：
 
-- [skills-learning](../skills-learning/README.zh-CN.md)
-- [skills-common](../skills-common/README.zh-CN.md)
+- [skills-learning](https://github.com/YangZhaoWeblog/skills-learning/blob/main/README.zh-CN.md)
+- [skills-common](https://github.com/YangZhaoWeblog/skills-common/blob/main/README.zh-CN.md)
 
 ---
 

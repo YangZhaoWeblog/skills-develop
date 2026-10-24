@@ -64,7 +64,7 @@ Replace `td-harness-build` with the target skill name. Add `-g` to install that 
 
 | Skill | What it does |
 | --- | --- |
-| `td-harness-build` | Builds or upgrades a reusable project AI harness with canonical AGENTS.md, `.harness` templates, template-first merging, built-in TDD guidance, and Git hooks. |
+| [td-harness-build](skills/engineering/td-harness-build/README.md) | Builds or upgrades a reusable project AI harness with canonical AGENTS.md, `.harness` templates, template-first merging, built-in TDD guidance, and Git hooks. |
 | [td-coding-retro](skills/engineering/td-coding-retro/README.md) | Reviews one AI coding session, separates general and project improvements, captures evidence-backed examples, and generates an offline HTML report. |
 
 ## Layout
@@ -75,8 +75,8 @@ Replace `td-harness-build` with the target skill name. Add `-g` to install that 
 
 Sibling repos:
 
-- [skills-learning](../skills-learning/README.md)
-- [skills-common](../skills-common/README.md)
+- [skills-learning](https://github.com/YangZhaoWeblog/skills-learning/blob/main/README.md)
+- [skills-common](https://github.com/YangZhaoWeblog/skills-common/blob/main/README.md)
 
 ## 中文
 
@@ -97,8 +97,8 @@ Sibling repos:
 
 兄弟仓库：
 
-- [skills-learning](../skills-learning/README.md)
-- [skills-common](../skills-common/README.md)
+- [skills-learning](https://github.com/YangZhaoWeblog/skills-learning/blob/main/README.md)
+- [skills-common](https://github.com/YangZhaoWeblog/skills-common/blob/main/README.md)
 
 ### 安装
 
