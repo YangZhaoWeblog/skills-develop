@@ -4,25 +4,23 @@
 
 Review one **AI coding session**, identify problems worth addressing and practices worth keeping, and produce an **HTML report** to help improve your **Harness**.
 
-## 1. Report preview
+## 1. Retrospective results
 
-| Scope | Applies to |
-| --- | --- |
-| **General improvement** | Methods, rules or examples transferable to other applicable situations |
-| **Project improvement** | This project's code, business behavior, rules or **Harness** |
+![Retrospective and improvement workflow](assets/workflow-overview.en.svg)
 
-[![AI coding retrospective: select an item and read its proposed improvement](./assets/report-preview-en.png)](./assets/report-preview-en.png)
+<details>
+<summary>View a sample report</summary>
 
-## 2. Workflow
+![Retrospective report](assets/report-preview-en.png)
 
-[![Retrospective and improvement workflow](assets/workflow-overview.en.svg)](assets/workflow-overview.en.svg)
+</details>
 
-## 3. Getting started
+## 2. Getting started
 
-Run from the repository root to install for your user account:
+**Install**
 
 ```bash
-npx skills@latest add ./skills/engineering/td-coding-retro -g -y
+npx skills@latest add YangZhaoWeblog/skills-develop --skill td-coding-retro -g -y
 ```
 
 **Review the current session**
@@ -37,16 +35,12 @@ $td-coding-retro Review the current session.
 $td-coding-retro Review session <Session ID>.
 ```
 
-The agent reads the original session and checks relevant code, plans, check configurations and collaboration rules as needed. Missing records are reported as gaps, not treated as verified.
-
-## 4. Select changes
-
-By default, the skill proposes improvements without modifying the project or shared rules. After reading the report, you can say:
+**After reading the report, select improvements to implement**
 
 ```text
 Implement items 1, 3 and 5. Leave the others unchanged.
 ```
 
-The agent uses the selected items to improve the project's **Harness**: collaboration rules, workflows, templates or automated checks. Reusable methods and examples go into the relevant shared collaboration resources.
+Improvements are classified as general or project-specific: reusable methods and examples go into shared resources; project-specific changes are applied to the current project.
 
-Results are added to the original HTML report. Retained changes stay in the working tree for your Git Diff review; commit and push require your explicit authorization.
+After an agent in a separate context verifies the selected changes, results are added to the original HTML report. Retained changes stay in the working tree for your Git Diff review; commit and push require your explicit authorization.
