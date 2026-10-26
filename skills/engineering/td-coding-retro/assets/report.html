@@ -251,6 +251,12 @@
       .proposal-heading h3 { font-size:14px; font-weight:600; }
       .proposal-heading span { font-size:12px; color:var(--muted); }
       .proposal, .rationale { font-size: 16px; line-height: 1.55; color: #55525e; }
+      .proposal strong, .rationale strong { font-weight: 600; }
+      .proposal p + p, .rationale p + p { margin-top: 10px; }
+      .proposal ol, .proposal ul { margin: 10px 0 0; padding-left: 1.5em; }
+      .proposal li + li { margin-top: 8px; }
+      .proposal table { width: 100%; table-layout: fixed; border-collapse: collapse; margin-top: 10px; }
+      .proposal th, .proposal td { padding: 8px; text-align: left; vertical-align: top; overflow-wrap: anywhere; border-bottom: 1px solid var(--line); }
       .rationale { margin-top: 8px; }
       .detail-body {
         padding: 14px 34px 28px;
@@ -502,12 +508,15 @@
             <header class="detail-top">
               <div class="kicker"><span class="tag project">{{分类}}</span><span class="tag state">{{处理状态}}</span><span class="tag verdict">{{是否推荐改进}}</span></div>
               <h2 id="heading-1"><span class="item-number">1.</span> {{发现标题}}</h2>
-              <p>{{发生了什么、后果及结束状态}}</p>
+              <p><strong>{{当前判断}}</strong> {{理解判断所需的最短事实或缺口}}</p>
             </header>
             <div class="detail-body">
               <div class="proposal-heading"><h3>改进方案</h3></div>
-              <p class="proposal">{{具体建议}}</p>
-              <p class="rationale">{{推荐或不推荐的原因，以及是否新增内容、写入何处}}</p>
+              <div class="proposal">
+                <!-- 按任务选择短段、清单、编号步骤或比较表；不要重复首段判断，删除本提示。 -->
+                <p>{{具体建议与必要条件}}</p>
+              </div>
+              <p class="rationale">{{仍需补充的理由、实际落点或未完成状态；不复述前文}}</p>
               <!-- 选定事项实施后填写；首次提出建议时删除整个 implementation-result。 -->
               <section class="implementation-result" aria-label="实施结果">
                 <div class="proposal-heading"><h3>实施结果</h3></div>
